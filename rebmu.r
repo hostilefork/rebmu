@@ -3,7 +3,7 @@ REBOL [
 	Description: {Rebol dialect designed for participating in "Code Golf" challenges}
 	
 	Author: "Hostile Fork"
-	Home: http://hostilefork.com/2010/01/08/modest-proposal-for-code-golf-in-rebol/
+	Home: http://hostilefork.com/rebmu/
 	License: mit
 	
 	Date: 10-Jan-2010
@@ -62,7 +62,7 @@ REBOL [
 	set up the environment of abbreviated routines, and run the code:
 	
 		>> rebmu [p"Hello World"]
-	    Hello World
+		Hello World
 	    
 	You can also pass in named arguments via a block:
 	
@@ -91,7 +91,7 @@ REBOL [
     History: [
         0.1.0 [10-Jan-2010 {Sketchy prototype written to cover only the
         Roman Numeral example I worked through when coming up with the
-        idea.} "Fork"]
+        idea.  So very incomplete, more a proof of concept.} "Fork"]
     ]
 ]
 
@@ -353,14 +353,14 @@ rebmu-single-defaults: [
 ]
 
 rebmu: func [
-	{"Visit http://hostilefork.com/2010/01/08/modest-proposal-for-code-golf-in-rebol/}
+	{"Visit http://hostilefork.com/rebmu/}
 	code [any-block! string!] "The Rebmu or Rebol code"
 	/args arg [block! string!] 
 	"named arguments ([a: 10 b: 20], etc) to pass to the script.  Rebmu format ok"
 	/stats "print out statistical information"
 	/debug "output debug information"
-	/env "return the runnable object plus environment, but don't execute main()"
-	/inject injection [block! string!] "run some test code in the environment after main()"
+	/env "return the runnable object plus environment, but don't execute main function"
+	/inject injection [block! string!] "run some test code in the environment after main function"
 	/local result elem obj
 ] [
 	either string? code [
