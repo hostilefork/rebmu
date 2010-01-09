@@ -54,9 +54,11 @@ REBOL [
 		
 	Despite being a little bit "silly" (as Code Golf is sort of silly), there is
 	a serious side to the design.  Rebmu is a genuine dialect... meaning that it
-	uses the Rebol parser and does not use any tricks.  And although there are several
-	shorthands defined for common Rebol operations, even as far as I for IF... the
+	uses the Rebol parser and does not a custom string format.  Also, despite several
+	shorthands defined for common Rebol operations (even as far as I for IF) the
 	functions are true to their Rebol bretheren for all inputs that Rebol accepts.
+	Hence one does not have to re-learn the meaning of such constructs to use
+	Rebol in its unadulterated form!
 	
 	Rebmu programs get their own execution context.  They will unmush their input,
 	set up the environment of abbreviated routines, and run the code:
