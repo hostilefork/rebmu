@@ -97,112 +97,110 @@ REBOL [
     ]
 ]
 
-to-string-mu: func [
-    value
-] [
-	either any-word? value [
-		; This code comes from spelling? from an old version of Bindology
-		; Ladislav and Fork are hoping for this to be the functionality of to-string in Rebol 3.0
-		; for words (then this function would then be unnecessary).
-		
-	    case [
-	        word? :word [mold :word]
-	        set-word? :word [head remove back tail mold :word]
-	        true [next mold :word]
-	    ]
-	] [
-		to-string value
-	]
+; Load the library of xxx-mu functions
+do %mulibrary.r
+
+; Table of double-character length commands in Rebmu
+rebmu-double-defaults: [
+	w!: word!
+	i!: integer!
+	s!: string!
+	b!: block!
+	p!: paren!
+	d!: decimal!
+	l!: logic!
+	n!: none!
+	
+	w?: :word?
+	i?: :integer?
+	s?: :string?
+	b?: :block?
+	p?: :paren?
+	d?: :decimal?
+	l?: logic?
+	n?: none?
+
+	IF: :if-mu ; use wrap and do [/else e]
+	EI: :either-mu
+	EL: :either-lesser?-mu
+
+	FN: :funct-mu ; use wrap and do [/with w]?
+
+	FE: :foreach
+	WH: :while
+	CN: :continue
+	
+	CO: rebmu-wrap 'compose/deep [] ; default to deep composition
+	
+	CY: rebmu-wrap 'copy/part/deep [] ; default to a deep copy
+	CP: rebmu-wrap 'copy/part [] ; default to a deep copy
+	
+	RA: rebmu-wrap 'replace/all []
+	
+	TW: :to-word-mu
+	TS: :to-string-mu
+	
+	SE: :select
+	AL: :also
+	
+	PR: :print
+	RI: :readin-mu
+	
+	DR: :rebmu ; "Do Rebmu"
+	
+	RV: :reverse
+	
+	; Although a caret in isolation means "copy", a letter and a caret means "factory"
+	a^: :array
+	m^: :make-matrix-mu
+	s^: :make-string-mu
 ]
 
-to-word-mu: func [value] [
-	either char? value [
-		to-word to-string value
-	] [
-		to-word value
-	]
-]
-
-do-mu: func [
-    {Is like Rebol's do except does not interpret string literals as loadable code.}
-    value
-] [    
-    either string? :value [value] [do value]
-]
-
-if-mu: func [
-	{If condition is TRUE, runs do-mu on the then parameter.}
-    condition
-    then-param
-	/else "If not true, then run do-mu on this parameter"
-	else-param
-] [
-	either condition [do-mu then-param] [if else [do-mu else-param]]
-]
-
-either-mu: func [
-    {If condition is TRUE, evaluates the first block, else evaluates the second.}
-    condition
-    true-param
-    false-param
-] [
-	either condition [do-mu true-param] [do-mu false-param]
-]
-
-either-lesser?-mu: func [
-    {If condition is TRUE, evaluates the first block, else evaluates the second.}
-	value1
-	value2
-    true-param
-    false-param
-] [
-	either-mu lesser? value1 value2 true-param false-param
-]
-
-readin-mu: funct [
-	{Use data type after getting the quoted argument to determine input coercion}
-	'value
-] [
-	switch/default type?/word get value [
-		string! [set value ask "Input String: "]
-		integer! [set value to-integer ask "Input Integer: "]
-		decimal! [set value to-integer ask "Input Float: "]
-		block! [set value to-block ask "Input Series of Items: "]
-	] [
-		throw "Unhandled type to readin-mu"
-	]
-]
-
-; Don't think want to call it not-mu because we probably want a more powerful operator
-; defined as ~ in order to compete with GolfScript/etc.
-inversion-mu: func [
-	value
-] [
-	either not value [
-		true
-	] [
-		either zero? value [
-			true
-		] [
-			false
-		]
-	]
-]
-
-funct-mu: func [
-    "Defines a function with all set-words as locals."
-    spec [block! word!] {Help string (opt) followed by arg words (and opt type and string)
-    but may be a word in which case the word is just wrapped in a block}
-    body [block!] "The body block of the function"
-] [
-	funct to-block spec body
+; Table of single-character length instructions in Rebmu
+; It is more common for user code to redefine these
+rebmu-single-defaults: [
+	~: :inversion-mu
+	|: :reduce
+	
+	; ^ is copy because it breaks symbols; a^b becomes a^ b but A^b bcomes a: ^ b
+	; This means that it is verbose to reset the a^ type symbols due to forcing a space
+	^: :CY 
+	
+	a: copy [] ; "array"
+	b: to-char 0 ; "byte"
+	c: #"A" ; "char"
+	d: #"0" ; "digit"
+	e: :EI ; "either"
+	f: :FN ; "function"
+	g: copy [] ; "group"
+	h: none ; ?
+	i: :IF ; "if"
+	j: 0
+	k: 0
+	l: copy [] ; "list"
+	m: copy "" ; "message"
+	n: 1
+	o: none
+	p: :PR
+	q: none ; not quit, but what?
+	r: :RI
+	s: copy "" ; "string"
+	t: :TO ; note that to can use example types, e.g. t "foo" 10 is "10"!
+	u: none ; more integer values?
+	v: none
+	w: :WH
+	; decimal! values starting at 0.0 (common mathematical variables)
+	x: 0.0
+	y: 1.0 
+	z: -1.0
 ]
 
 upper: charset [#"A" - #"Z"]
 lower: charset [#"a" - #"z"]
 digit: charset [#"0" - #"9" #"."]
-slashlike: charset [#"/" #":" #"?" #"!"]
+slashlike: charset [#"/" #":"]
 apostrophelike: charset [#"'"]
+exclamationlike: charset [#"!" #"?" #"^^"]
 
 type-of-char: func [c [char!]] [
 	if upper/(c) [
@@ -222,28 +220,34 @@ type-of-char: func [c [char!]] [
 		; space before if not at start
 		return 'apostrophelike
 	]
+	if exclamationlike/(c) [
+		; space afterwards but not before (we use ~ for not)
+		return 'exclamationlike
+	]
 	; space before and after
 	return 'symbol
 ]
 
 ; Simplistic routine, open to improvements.  Use PARSE dialect instead?
+; IF unmush returns a block! (and you didn't pass in a block!) then it is a sequence
+; There may be a better convention
 unmush: funct [value /deep] [
 	if (any-word? :value) or (any-path? :value) [
 		pos: str: mold :value
 		thisType: type-of-char first pos
 	
 		thisIsSetWord: 'upper = thisType
-		nextCanSetWord: ('apostrophelike = thisType) or ('symbol = thisType)
+		nextCanSetWord: found? find [apostrophelike symbol exclamationlike] thisType 
 		while [not tail? next pos] [
 			thisType: type-of-char first pos
 			nextType: type-of-char first next pos
 	
-			; Helps w/debugging if something goes wrong...
 			comment [	
 				print [
 					"this:" first pos "next:" first next pos
 					"thisType:" to-string thisType "nextType:" to-string nextType 
 					"thisIsSetWord:" thisIsSetWord "nextCanSetWord:" nextCanSetWord
+					"str:" str
 				]
 			]
 	
@@ -256,16 +260,20 @@ unmush: funct [value /deep] [
 					thisIsSetWord: false
 					nextCanSetWord: 'upper <> nextType
 				]
+				exclamationlike
 				symbol [
-					thisIsSetWord: upper = nextType
-					nextCanSetWord: false
-					pos: insert pos space
-					if 'symbol = thisType [
-						pos: insert next pos space
+					if ('symbol = thisType) or thisIsSetWord [
+						if thisIsSetWord [
+							pos: insert pos ":"
+						]
+						pos: insert pos space
 					]
+					pos: back insert next pos space
+					thisIsSetWord: 'upper = nextType
+					nextCanSetWord: false
 				]
 			] [
-				if (nextType <> 'slashlike) and (thisType <> nextType) [
+				if (thisType <> nextType) and none? find [slashlike exclamationlike] nextType [
 					if ('digit = thisType) or ('symbol = thisType) [
 						nextCanSetWord: true
 					]
@@ -293,10 +301,11 @@ unmush: funct [value /deep] [
 		result: make type? :value copy []
 		while [not tail? :value] [
 			elem: first+ value
-			either (any-block? :elem) and (not any-path? :elem) [
-				append/only result either deep [unmush/deep :elem] [:elem]
+			unmushed: either deep [unmush/deep :elem] [unmush :elem]
+			either (block? unmushed) and (not block? :elem) [
+				append result unmushed
 			] [
-				append result unmush :elem
+				append/only result unmushed
 			]
 		]
 		return result
@@ -305,53 +314,39 @@ unmush: funct [value /deep] [
 	return :value
 ]
 
-rebmu-command-defaults: [
-	~: :inversion-mu
-	
-	IF: :if-mu
-	EI: :either-mu
-	EL: :either-lesser?-mu
-
-	FN: :funct-mu
-
-	FE: :foreach
-	WH: :while
-	CN: :continue
-	CO: :compose
-	CY: :copy
-	
-	;CP **copy/part**
-	
-	TW: :to-word-mu
-	TS: :to-string-mu
-	
-	SE: :select
-	AL: :also
-	
-	PR: :print
-	RI: :readin-mu
-	
-	DR: :rebmu ; "Do Rebmu"
-]
-
-rebmu-single-defaults: [
-	; shorthands for the most common control structures / functions
-	i: :IF
-	e: :EI
-	w: :WH
-	f: :FN
-	p: :PR
-	r: :RI
-	d: :DR ; maybe unnecessary
-	
-	; decimal! values starting at 0.0 (common mathematical variables)
-	x: y: z: 0.0
-	
-	; integer! values starting at zero (usually integer indexes, excluding i)
-	n: j: k: 0
-	
-	; string! values starting at empty (string, message, text)
-	s: m: t: ""
+; A rebmu wrapper lets you wrap a function or a refined version of a function
+rebmu-wrap: funct [arg [word! path!] refinemap [block!]] [
+	either word? arg [
+		; need to use refinemap!
+		:arg
+	] [
+		; need to write generalization of spec capture with reflect, e.g.
+		; spec: reflect :arg 'spec 
+		; just testing concept for the moment with a couple of cases though
+		; so writing by hand
+		switch arg [
+			replace/all [
+				func [target search value] [
+					replace/all target search value
+				]
+			]
+			compose/deep [
+				func [value] [
+					compose/deep value
+				]
+			] 
+			copy/part/deep [
+				func [value length] [
+					copy/part/deep value length
+				]
+			]
+			copy/part [
+				func [value length] [
+					copy/part value length
+				]
+			]
+		]
+	]
 ]
 
 rebmu: func [
@@ -416,8 +411,8 @@ rebmu: func [
 	]
 	
 	obj: object compose/deep [
-		(rebmu-command-defaults)
-		(rebmu-single-defaults)
+		(rebmu-double-defaults) ; Generally, don't overwrite these in your Rebmu code
+		(rebmu-single-defaults) ; Overwriting is okay here
 		(arg) 
 		main: func [] [(unmush/deep code)]
 		injection: func [] [(injection)]
