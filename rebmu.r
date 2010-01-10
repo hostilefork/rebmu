@@ -100,70 +100,12 @@ REBOL [
 ; Load the library of xxx-mu functions
 do %mulibrary.r
 
-; Table of double-character length commands in Rebmu
-rebmu-double-defaults: [
-	w!: word!
-	i!: integer!
-	s!: string!
-	b!: block!
-	p!: paren!
-	d!: decimal!
-	l!: logic!
-	n!: none!
-	
-	w?: :word?
-	i?: :integer?
-	s?: :string?
-	b?: :block?
-	p?: :paren?
-	d?: :decimal?
-	l?: logic?
-	n?: none?
-
-	IF: :if-mu ; use wrap and do [/else e]
-	EI: :either-mu
-	EL: :either-lesser?-mu
-
-	FN: :funct-mu ; use wrap and do [/with w]?
-
-	FE: :foreach
-	LO: :loop
-	WH: :while
-	CN: :continue
-	UT: :until
-	
-	CO: rebmu-wrap 'compose/deep [] ; default to deep composition
-	
-	CY: rebmu-wrap 'copy/part/deep [] ; default to a deep copy
-	CP: rebmu-wrap 'copy/part [] ; default to a deep copy
-	
-	RA: rebmu-wrap 'replace/all []
-	
-	TW: :to-word-mu
-	TS: :to-string-mu
-	
-	SE: :select
-	AL: :also
-	
-	PR: :print
-	RI: :readin-mu
-	
-	DR: :rebmu ; "Do Rebmu"
-	
-	RV: :reverse
-	
-	; Although a caret in isolation means "copy", a letter and a caret means "factory"
-	a^: :array
-	i^: :make-integer-mu
-	m^: :make-matrix-mu
-	s^: :make-string-mu
-]
-
-; Table of single-character length instructions in Rebmu
-; It is more common for user code to redefine these
+; Table of single-character length instructions and values in Rebmu
+; (It is common for user code to redefine these if the defaults are unused)
 rebmu-single-defaults: [
 	~: :inversion-mu
 	|: :reduce
+	.: none ; what should dot be?
 	
 	; ^ is copy because it breaks symbols; a^b becomes a^ b but A^b bcomes a: ^ b
 	; This means that it is verbose to reset the a^ type symbols due to forcing a space
@@ -196,6 +138,77 @@ rebmu-single-defaults: [
 	x: 0.0
 	y: 1.0 
 	z: -1.0
+]
+
+; Table of double-character length commands in Rebmu
+; (It is not recommended to overwrite these definitions in your program, though you can)
+rebmu-double-defaults: [
+	w!: word!
+	i!: integer!
+	s!: string!
+	b!: block!
+	p!: paren!
+	d!: decimal!
+	l!: logic!
+	n!: none!
+	
+	w?: :word?
+	i?: :integer?
+	s?: :string?
+	b?: :block?
+	p?: :paren?
+	d?: :decimal?
+	l?: logic?
+	n?: none?
+
+	IF: :if-mu ; use wrap and do [/else e]
+	EI: :either-mu
+	EL: :either-lesser?-mu
+	IL: :if-lesser?-mu
+	IG: :if-greater?-mu
+
+	FN: :funct-mu ; use wrap and do [/with w]?
+
+	FE: :foreach
+	LO: :loop
+	WH: :while
+	CN: :continue
+	UT: :until
+	RT: :repeat
+	
+	AP: :append
+	AO: rebmu-wrap 'append/only [] ; very useful
+	
+	CO: rebmu-wrap 'compose/deep [] ; default to deep composition
+	
+	CY: rebmu-wrap 'copy/part/deep [] ; default to a deep copy
+	CP: rebmu-wrap 'copy/part [] ; default to a deep copy
+	
+	RA: rebmu-wrap 'replace/all []
+	
+	ML: :mold
+	
+	TW: :to-word-mu
+	TS: :to-string-mu
+	TB: :to-block
+	
+	SE: :select
+	AL: :also
+	
+	PR: :print
+	RI: :readin-mu
+	
+	DR: :rebmu ; "Do Rebmu"
+	
+	RV: :reverse
+	
+	; Although a caret in isolation means "copy", a letter and a caret means "factory"
+	a^: :array
+	i^: :make-integer-mu
+	m^: :make-matrix-mu
+	s^: :make-string-mu
+	
+	SP: :space
 ]
 
 upper: charset [#"A" - #"Z"]
@@ -239,6 +252,7 @@ unmush: funct [value /deep] [
 		pos: str: mold :value
 		thisType: type-of-char first pos
 	
+		mergedSymbol: false
 		thisIsSetWord: 'upper = thisType
 		nextCanSetWord: found? find [apostrophelike symbol exclamationlike] thisType
 		while [not tail? next pos] [
@@ -264,15 +278,23 @@ unmush: funct [value /deep] [
 				]
 				exclamationlike
 				symbol [
-					if ('symbol = thisType) or thisIsSetWord [
-						if thisIsSetWord [
-							pos: insert pos ":"
+					either (first pos) == (first next pos) [
+						mergedSymbol: true
+					] [
+						if ('symbol = thisType) or thisIsSetWord [
+							if thisIsSetWord [
+								pos: insert pos ":"
+							]
+							either mergedSymbol [
+								mergedSymbol: false
+							] [
+								pos: insert pos space
+							]
 						]
-						pos: insert pos space
+						pos: back insert next pos space
+						thisIsSetWord: 'upper = nextType
+						nextCanSetWord: false
 					]
-					pos: back insert next pos space
-					thisIsSetWord: 'upper = nextType
-					nextCanSetWord: false
 				]
 			] [
 				either ('digit = thisType) and found? find [#"x" #"X"] first next pos [
@@ -282,7 +304,6 @@ unmush: funct [value /deep] [
 					nextType: 'digit	
 				] [
 					if (thisType <> nextType) and none? find [slashlike exclamationlike] nextType [
-	
 						if ('digit = thisType) or ('symbol = thisType) [
 							nextCanSetWord: true
 						]
@@ -354,6 +375,11 @@ rebmu-wrap: funct [arg [word! path!] refinemap [block!]] [
 			copy/part [
 				func [value length] [
 					copy/part value length
+				]
+			]
+			append/only [
+				func [series value] [
+					append/only series value
 				]
 			]
 		]

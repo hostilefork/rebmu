@@ -1,5 +1,5 @@
 REBOL [
-	Title: "Rebol Mu Library"
+	Title: "The Mu Rebol Library"
 	Description: {Library of functions used by the Rebmu interpreter, with ordinary long
 	names so they could be called by any Rebol code.}
 ]
@@ -45,6 +45,28 @@ if-mu: func [
 	else-param
 ] [
 	either condition [do-mu then-param] [if else [do-mu else-param]]
+]
+
+if-greater?-mu: func [
+	{If condition is TRUE, runs do-mu on the then parameter.}
+	value1
+	value2
+    then-param
+	/else "If not true, then run do-mu on this parameter"
+	else-param
+] [
+	either greater? value1 value2 [do-mu then-param] [if else [do-mu else-param]]
+]
+
+if-lesser?-mu: func [
+	{If condition is TRUE, runs do-mu on the then parameter.}
+	value1
+	value2
+    then-param
+	/else "If not true, then run do-mu on this parameter"
+	else-param
+] [
+	either lesser? value1 value2 [do-mu then-param] [if else [do-mu else-param]]
 ]
 
 either-mu: func [
