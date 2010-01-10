@@ -154,6 +154,7 @@ rebmu-double-defaults: [
 	
 	; Although a caret in isolation means "copy", a letter and a caret means "factory"
 	a^: :array
+	i^: :make-integer-mu
 	m^: :make-matrix-mu
 	s^: :make-string-mu
 ]
@@ -175,7 +176,7 @@ rebmu-single-defaults: [
 	e: :EI ; "either"
 	f: :FN ; "function"
 	g: copy [] ; "group"
-	h: none ; no ideas yet
+	h: :helpful-mu ; "helpful" constant declaration tool
 	i: :IF ; "if"
 	j: 0
 	k: 0
@@ -239,11 +240,10 @@ unmush: funct [value /deep] [
 		thisType: type-of-char first pos
 	
 		thisIsSetWord: 'upper = thisType
-		nextCanSetWord: found? find [apostrophelike symbol exclamationlike] thisType 
+		nextCanSetWord: found? find [apostrophelike symbol exclamationlike] thisType
 		while [not tail? next pos] [
-			thisType: type-of-char first pos
-			nextType: type-of-char first next pos
-	
+			nextType: if not tail? next pos [type-of-char first next pos]
+			
 			comment [	
 				print [
 					"this:" first pos "next:" first next pos
@@ -275,23 +275,32 @@ unmush: funct [value /deep] [
 					nextCanSetWord: false
 				]
 			] [
-				if (thisType <> nextType) and none? find [slashlike exclamationlike] nextType [
-					if ('digit = thisType) or ('symbol = thisType) [
-						nextCanSetWord: true
+				either ('digit = thisType) and found? find [#"x" #"X"] first next pos [
+					; need special handling if it's an x because of pairs
+					; want to support mushings like a10x20 as [a 10x20] not [a 10 x 20]
+					; for the moment lie and say its a digit
+					nextType: 'digit	
+				] [
+					if (thisType <> nextType) and none? find [slashlike exclamationlike] nextType [
+	
+						if ('digit = thisType) or ('symbol = thisType) [
+							nextCanSetWord: true
+						]
+						if thisIsSetWord [
+							pos: back insert next pos ":"
+							thisIsSetWord: false
+							nextCanSetWord: false
+						]
+						if nextCanSetWord [
+							thisIsSetWord: 'upper = nextType
+							nextCanSetWord: false
+						]
+						pos: back insert next pos space
 					]
-					if thisIsSetWord [
-						pos: back insert next pos ":"
-						thisIsSetWord: false
-						nextCanSetWord: false
-					]
-					if nextCanSetWord [
-						thisIsSetWord: 'upper = nextType
-						nextCanSetWord: false
-					]
-					pos: back insert next pos space
 				]
 			]
 			pos: next pos
+			thisType: nextType
 		]
 		if thisIsSetWord [
 			pos: back insert next pos ":"

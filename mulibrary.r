@@ -78,6 +78,39 @@ make-string-mu: func [length value] [
 	to-string array/initial length value
 ]
 
+; if a pair, then the first digit is the digit
+make-integer-mu: func [value] [
+	switch/default type?/word get value [
+		pair! [to-integer first value * (10 ** second value)]
+		integer! [to-integer 10 ** value]
+	] [
+		throw "Unhandled type to make-integer-mu"
+	]
+]
+
+; helpful is a special routine that quotes its argument and lets you pick from common
+; values.  for instance helpful-mu d gives you a charaset of digits.  Passing an
+; integer into helpful-mu will just call make-integer-mu.  There's potential here for
+; really shortening
+helpful-mu: func ['arg] [
+	switch/default type?/word get arg [
+		word! [
+			switch/default arg [
+				b: [0 1] ; binary digits
+				d: charset [#"0" - #"9"] ; digits charset
+				h: charset [#"0" - #"9" #"A" - "F" #"a" - #"f"] ; hexadecimal charset
+				u: charset [#"A" - #"Z"] ; uppercase
+				l: charset [#"a" - #"z"] ; lowercase
+			]
+		]
+		; Are there better ways to handle this?  h2 for instance is no shorter than 20
+		integer! [make-integer-mu arg]
+		pair! [make-integer-mu arg]
+	] [
+		throw "Unhandled parameter to make-magic-mu"
+	]
+]
+
 readin-mu: funct [
 	{Use data type after getting the quoted argument to determine input coercion}
 	'value
