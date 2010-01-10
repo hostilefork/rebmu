@@ -104,7 +104,7 @@ do %mulibrary.r
 ; (It is common for user code to redefine these if the defaults are unused)
 rebmu-single-defaults: [
 	~: :inversion-mu
-	|: :reduce
+	|: :AF ; an afunc generator by default (not to be confused with a|, which is an afunct)		
 	.: none ; what should dot be?
 	?: none ; not help what should it be
 	
@@ -144,8 +144,9 @@ rebmu-single-defaults: [
 remap-datatype: func [type [word!] shorter [word!]] [
 	bind reduce [
 		to-set-word rejoin [to-string shorter "!"] to-word rejoin [to-string type "!"]
-		to-set-word rejoin [to-string shorter "?"] to-get-word rejoin [to-string type "?"]
-	] 'tag?
+		to-set-word rejoin [to-string shorter "?"] get rejoin ["'" to-string type "?"]
+	] bind? 'system
+	[] ; above isn't working, why not?
 ]
 
 ; Table of double-character length commands in Rebmu
@@ -186,6 +187,7 @@ rebmu-double-defaults: compose [
 	IG: :if-greater?-mu
 
 	FN: :funct-mu ; use wrap and do [/with w]?
+	AF: :afunc-mu
 
 	FE: :foreach
 	LO: :loop
@@ -237,14 +239,20 @@ rebmu-double-defaults: compose [
 	s^: :make-string-mu
 	
 	; SP: :space ; Rebol already defines this...
+	
+	a|: :afunct-mu
+	b|: :bfunct-mu
+	c|: :cfunct-mu
+	d|: :dfunct-mu
 ]
 
 upper: charset [#"A" - #"Z"]
 lower: charset [#"a" - #"z"]
 digit: charset [#"0" - #"9" #"."]
-slashlike: charset [#"/" #":"]
-apostrophelike: charset [#"'"]
-exclamationlike: charset [#"!" #"?" #"^^"]
+separatorsymbol: charset [#"/" #":"]
+headsymbol: charset [#"'"]
+tailsymbol: charset [#"!" #"?" #"^^" #"|"]
+isolatedsymbol: charset [#"+" #"-" #"~"]
 
 type-of-char: func [c [char!]] [
 	if upper/(c) [
@@ -256,20 +264,26 @@ type-of-char: func [c [char!]] [
 	if digit/(c) [
 		return 'digit
 	]
-	if slashlike/(c) [
+	if separatorsymbol/(c) [
 		; no spacing but separates
-		return 'slashlike
+		return 'separatorsymbol
 	]
-	if apostrophelike/(c) [
+	if headsymbol/(c) [
 		; space before if not at start
-		return 'apostrophelike
+		return 'headsymbol
 	]
-	if exclamationlike/(c) [
+	if tailsymbol/(c) [
 		; space afterwards but not before (we use ~ for not)
-		return 'exclamationlike
+		return 'tailsymbol
 	]
-	; space before and after
-	return 'symbol
+	if isolatedsymbol/(c) [
+		; space before and after unless there's a run of identical ones
+		return 'isolatedsymbol
+	]
+	; caseless things are neither upper nor lowercase, they stay stuck
+	; with whatever is going; so most unicode characters fall into this
+	; category.
+	return 'caseless
 ]
 
 ; Simplistic routine, open to improvements.  Use PARSE dialect instead?
@@ -282,7 +296,7 @@ unmush: funct [value /deep] [
 	
 		mergedSymbol: false
 		thisIsSetWord: 'upper = thisType
-		nextCanSetWord: found? find [apostrophelike symbol exclamationlike] thisType
+		nextCanSetWord: found? find [headsymbol symbol tailsymbol] thisType
 		while [not tail? next pos] [
 			nextType: if not tail? next pos [type-of-char first next pos]
 			
@@ -296,23 +310,29 @@ unmush: funct [value /deep] [
 			]
 	
 			switch/default thisType [
-				slashlike [
+				separatorsymbol [
 					thisIsSetWord: 'upper = nextType
 					nextCanSetWord: false
 				]
-				apostrophelike [
+				headsymbol [
 					thisIsSetWord: false
 					nextCanSetWord: 'upper <> nextType
 				]
-				exclamationlike
-				symbol [
+				tailsymbol [
+					either thisIsSetWord [
+						pos: insert pos ": "
+					] [
+						pos: back insert next pos space
+					]
+					thisIsSetWord: 'upper = nextType
+					nextCanSetWord: true
+				]
+				isolatedsymbol [
 					either (first pos) == (first next pos) [
 						mergedSymbol: true
 					] [
-						if ('symbol = thisType) or thisIsSetWord [
-							if thisIsSetWord [
-								pos: insert pos ":"
-							]
+						if thisIsSetWord [
+							pos: insert pos ":"
 							either mergedSymbol [
 								mergedSymbol: false
 							] [
@@ -331,8 +351,8 @@ unmush: funct [value /deep] [
 					; for the moment lie and say its a digit
 					nextType: 'digit	
 				] [
-					if (thisType <> nextType) and none? find [slashlike exclamationlike] nextType [
-						if ('digit = thisType) or ('symbol = thisType) [
+					if (thisType <> nextType) and none? find [separatorsymbol tailsymbol] nextType [
+						if ('digit = thisType) or ('isolatedsymbol = thisType) [
 							nextCanSetWord: true
 						]
 						if thisIsSetWord [
@@ -352,7 +372,11 @@ unmush: funct [value /deep] [
 			thisType: nextType
 		]
 		if thisIsSetWord [
-			pos: back insert next pos ":"
+			either thisType = 'tailsymbol [
+				pos: insert pos ": "
+			] [
+				pos: back insert next pos ":"
+			]
 		]
 		return load lowercase str
 	] 
@@ -532,7 +556,7 @@ rebmu: func [
 		(rebmu-double-defaults) ; Generally, don't overwrite these in your Rebmu code
 		(rebmu-single-defaults) ; Overwriting is okay here
 		(arg) 
-		main: func [] [(unmush/deep code)]
+		main: func [] [(code)]
 		injection: func [] [(injection)]
 	] 
 	either env [

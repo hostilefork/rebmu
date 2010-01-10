@@ -133,6 +133,24 @@ helpful-mu: func ['arg] [
 	]
 ]
 
+; An "afunction" is a function that takes a single parameter called a, you only
+; need to supply the code block.  obvious extensions for other letters
+afunc-mu: func [body [block!]] [
+	func [a] body
+]
+afunct-mu: func [body [block!]] [
+	funct-mu [a] body 
+]
+bfunct-mu: func [body [block!]] [
+	funct-mu [a b] body 
+]
+cfunct-mu: func [body [block!]] [
+	funct-mu [a b c] body 
+]
+dfunct-mu: func [body [block!]] [
+	funct-mu [a b c d] body 
+]
+
 quoth-mu: funct [
 	'arg
 ] [
