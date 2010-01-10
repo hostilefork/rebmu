@@ -106,6 +106,7 @@ rebmu-single-defaults: [
 	~: :inversion-mu
 	|: :reduce
 	.: none ; what should dot be?
+	?: none ; not help what should it be
 	
 	; ^ is copy because it breaks symbols; a^b becomes a^ b but A^b bcomes a: ^ b
 	; This means that it is verbose to reset the a^ type symbols due to forcing a space
@@ -127,7 +128,7 @@ rebmu-single-defaults: [
 	n: 1
 	o: :OR ; "or"
 	p: :PO ; "poke"
-	q: :quoter-mu ; "quoter" e.g. qAB => "AB" and qA => #"A"
+	q: :quoth-mu ; "quoth" e.g. qAB => "AB" and qA => #"A"
 	r: :RI ; "readin"
 	s: copy "" ; "string"
 	t: :TO ; note that to can use example types, e.g. t "foo" 10 is "10"!
@@ -136,31 +137,48 @@ rebmu-single-defaults: [
 	w: :WO ; "writeout"
 	; decimal! values starting at 0.0 (common mathematical variables)
 	x: 0.0
-	y: 1.0 
-	z: -1.0
+	y: 0.0 
+	z: 0.0
+]
+
+remap-datatype: func [type [word!] shorter [word!]] [
+	bind reduce [
+		to-set-word rejoin [to-string shorter "!"] to-word rejoin [to-string type "!"]
+		to-set-word rejoin [to-string shorter "?"] to-get-word rejoin [to-string type "?"]
+	] 'tag?
 ]
 
 ; Table of double-character length commands in Rebmu
 ; (It is not recommended to overwrite these definitions in your program, though you can)
-rebmu-double-defaults: [
-	w!: word!
-	i!: integer!
-	s!: string!
-	b!: block!
-	p!: paren!
-	d!: decimal!
-	l!: logic!
-	n!: none!
+rebmu-double-defaults: compose [
+	; TODO: what about issue?
+	(remap-datatype 'email 'a) ; "address"
+	(remap-datatype 'block 'b)
+	(remap-datatype 'char 'c)
+	(remap-datatype 'decimal 'd)
+	(remap-datatype 'error 'e)
+	(remap-datatype 'function 'f)
+	(remap-datatype 'get-word 'g)
+	(remap-datatype 'paren 'h) ; "parentHeses" :)
+	(remap-datatype 'integer 'i)
+	(remap-datatype 'pair 'j) ; "joined"
+	(remap-datatype 'closure 'k) ; "klosure"
+	(remap-datatype 'logic 'l) 
+	(remap-datatype 'map 'm)
+	(remap-datatype 'none 'n)
+	(remap-datatype 'object 'o)
+	(remap-datatype 'path 'p)
+	(remap-datatype 'lit-word 'q) ; "quoted-word"
+	(remap-datatype 'refinement 'r)
+	(remap-datatype 'string 's)
+	(remap-datatype 'time 't)
+	(remap-datatype 'tuple 'u) ; "tUple"
+	(remap-datatype 'file 'v) ; "vile" (use a thick accent) :)
+	(remap-datatype 'word 'w)
+	(remap-datatype 'tag 'x) ; "Xml" 
+	(remap-datatype 'money 'y) ; "moneY"
+	(remap-datatype 'binary 'z) ; Z for... um... uh...
 	
-	w?: :word?
-	i?: :integer?
-	s?: :string?
-	b?: :block?
-	p?: :paren?
-	d?: :decimal?
-	l?: logic?
-	n?: none?
-
 	IF: :if-mu ; use wrap and do [/else e]
 	EI: :either-mu
 	EL: :either-lesser?-mu
@@ -181,6 +199,9 @@ rebmu-double-defaults: [
 	AO: rebmu-wrap 'append/only [] ; very useful
 	IN: :insert
 	TK: :take
+	MN: :minimum-of
+	MX: :maximum-of
+	RP: :repend
 	
 	CO: rebmu-wrap 'compose/deep [] ; default to deep composition
 	
@@ -190,6 +211,9 @@ rebmu-double-defaults: [
 	RA: rebmu-wrap 'replace/all []
 	
 	ML: :mold
+	
+	MP: :multiply
+	DV: :divide
 	
 	TW: :to-word-mu
 	TS: :to-string-mu
@@ -441,10 +465,9 @@ rebmu-wrap: funct [arg [word! path!] refinemap [block!]] [
 ]
 
 rebmu: func [
-	{"Visit http://hostilefork.com/rebmu/}
+	{Visit http://hostilefork.com/rebmu/}
 	code [any-block! string!] "The Rebmu or Rebol code"
-	/args arg [block! string!] 
-	"named arguments ([a: 10 b: 20], etc) to pass to the script.  Rebmu format ok"
+	/args arg [block! string!] {named Rebmu arguments [X10Y20] or implicit a: block [1"hello"2]}
 	/stats "print out statistical information"
 	/debug "output debug information"
 	/env "return the runnable object plus environment, but don't execute main function"
@@ -496,7 +519,11 @@ rebmu: func [
 		if not block? args [
 			arg: to-block arg
 		]
-		args: unmush/deep arg
+		arg: unmush/deep arg
+		if not set-word? type? first arg [
+			; implicitly assign to a if the block doesn't start with a set-word
+			arg: compose/only [a: (arg)] 
+		]
 	] [
 		arg: copy []
 	]

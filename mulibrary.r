@@ -133,7 +133,7 @@ helpful-mu: func ['arg] [
 	]
 ]
 
-quoter-mu: funct [
+quoth-mu: funct [
 	'arg
 ] [
 	switch/default type?/word :arg [
@@ -146,7 +146,7 @@ quoter-mu: funct [
 			]
 		]
 	] [
-	 	throw "Unhandled type to quotestring-mu"
+	 	throw "Unhandled type to quoth-mu"
 	]
 ]
 
