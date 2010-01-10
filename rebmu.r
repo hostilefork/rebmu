@@ -127,8 +127,10 @@ rebmu-double-defaults: [
 	FN: :funct-mu ; use wrap and do [/with w]?
 
 	FE: :foreach
+	LO: :loop
 	WH: :while
 	CN: :continue
+	UT: :until
 	
 	CO: rebmu-wrap 'compose/deep [] ; default to deep composition
 	
@@ -173,21 +175,21 @@ rebmu-single-defaults: [
 	e: :EI ; "either"
 	f: :FN ; "function"
 	g: copy [] ; "group"
-	h: none ; ?
+	h: none ; no ideas yet
 	i: :IF ; "if"
 	j: 0
 	k: 0
-	l: copy [] ; "list"
+	l: :LO ; "loop"
 	m: copy "" ; "message"
 	n: 1
-	o: none
-	p: :PR
+	o: :OR ; "or"
+	p: :PR ; "printout"
 	q: none ; not quit, but what?
-	r: :RI
+	r: :RI ; "readin"
 	s: copy "" ; "string"
 	t: :TO ; note that to can use example types, e.g. t "foo" 10 is "10"!
-	u: none ; more integer values?
-	v: none
+	u: :UT ; "until"
+	v: copy [] ; "vector"
 	w: :WH
 	; decimal! values starting at 0.0 (common mathematical variables)
 	x: 0.0
