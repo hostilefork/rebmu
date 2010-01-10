@@ -126,14 +126,14 @@ rebmu-single-defaults: [
 	m: copy "" ; "message"
 	n: 1
 	o: :OR ; "or"
-	p: :PR ; "printout"
-	q: none ; not quit, but what?
+	p: :PO ; "poke"
+	q: :quoter-mu ; "quoter" e.g. qAB => "AB" and qA => #"A"
 	r: :RI ; "readin"
 	s: copy "" ; "string"
 	t: :TO ; note that to can use example types, e.g. t "foo" 10 is "10"!
 	u: :UT ; "until"
 	v: copy [] ; "vector"
-	w: :WH
+	w: :WO ; "writeout"
 	; decimal! values starting at 0.0 (common mathematical variables)
 	x: 0.0
 	y: 1.0 
@@ -176,8 +176,11 @@ rebmu-double-defaults: [
 	UT: :until
 	RT: :repeat
 	
+	PO: :poke	
 	AP: :append
 	AO: rebmu-wrap 'append/only [] ; very useful
+	IN: :insert
+	TK: :take
 	
 	CO: rebmu-wrap 'compose/deep [] ; default to deep composition
 	
@@ -197,6 +200,7 @@ rebmu-double-defaults: [
 	
 	PR: :print
 	RI: :readin-mu
+	WO: :print ; will be fancier "writeout-mu"
 	
 	DR: :rebmu ; "Do Rebmu"
 	
@@ -208,7 +212,7 @@ rebmu-double-defaults: [
 	m^: :make-matrix-mu
 	s^: :make-string-mu
 	
-	SP: :space
+	; SP: :space ; Rebol already defines this...
 ]
 
 upper: charset [#"A" - #"Z"]
@@ -344,6 +348,56 @@ unmush: funct [value /deep] [
 	]
 	
 	return :value
+]
+
+; The point of Rebmu is that programmers should be able to read and modify without using
+; a compilation tool.  But for completeness, here is a mushing function.
+; **UNDER CONSTRUCTION**
+mush: funct [value /mixed /deep] [
+	print "WARNING: Mushing is a work in progress, implementation incomplete."
+	if any-block? value [
+		result: make type? :value copy []
+		isUppercase: none
+		current: none
+		foreach elem value [
+			switch/default type?/word :elem [
+				word! [
+					either current [
+						isUppercase: not isUppercase
+						either isUppercase [
+							append current uppercase to-string elem
+						] [
+							append current lowercase to-string elem
+						]
+					] [
+						current: lowercase to-string elem
+						isUppercase: false
+					]
+				]
+				set-word! [
+					either current [
+						append result to-word current
+						current: none
+						append result elem
+					] [
+						current: uppercase to-string-mu elem ; spelling? behavior
+						isUppercase: true
+					]
+				]
+			] [
+				if current [
+					append result to-word current
+					current: none
+				]
+				append/only result :elem
+			]
+		]
+	]
+	if current [
+		append result to-word current
+		current: none
+	]
+	result
 ]
 
 ; A rebmu wrapper lets you wrap a function or a refined version of a function

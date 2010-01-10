@@ -13,9 +13,9 @@ to-string-mu: func [
 		; for words (then this function would then be unnecessary).
 		
 	    case [
-	        word? :word [mold :word]
-	        set-word? :word [head remove back tail mold :word]
-	        true [next mold :word]
+	        word? :value [mold :value]
+	        set-word? :value [head remove back tail mold :value]
+	        true [next mold :value]
 	    ]
 	] [
 		to-string value
@@ -130,6 +130,23 @@ helpful-mu: func ['arg] [
 		pair! [make-integer-mu arg]
 	] [
 		throw "Unhandled parameter to make-magic-mu"
+	]
+]
+
+quoter-mu: funct [
+	'arg
+] [
+	switch/default type?/word :arg [
+		word! [
+			str: to-string arg
+			either 1 == length? str [
+				first str
+			] [
+				str
+			]
+		]
+	] [
+	 	throw "Unhandled type to quotestring-mu"
 	]
 ]
 
