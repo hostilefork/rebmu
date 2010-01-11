@@ -119,58 +119,6 @@ remap-datatype: func [type [word!] shorter [word!]] [
 
 rebmu-context: compose [
 	;-------------------------------------------------------------------------------------
-	; SINGLE CHARACTER DEFINITIONS
-	; For the values (e.g. s the empty string) it is expected that you will overwrite them
-	; during the course of your program.  It's a little less customary to redefine the
-	; functions like I for IF, although you may do so if you feel the need.  They will
-	; still be available in a two-character variation.
-	;-------------------------------------------------------------------------------------
-	
-	~: :inversion-mu
-	|: :z| ; a zfunc generator by default (not to be confused with a|, which is an afunct)		
-	.: none ; what should dot be?
-
-	?: none ; not help what should it be
-	
-	; ^ is copy because it breaks symbols; a^b becomes a^ b but A^b bcomes a: ^ b
-	; This means that it is verbose to reset the a^ type symbols due to forcing a space
-	^: :CY 
-	
-	a: copy [] ; "array"
-	b: to-char 0 ; "byte"
-	c: #"A" ; "char"
-	d: #"0" ; "digit"
-	e: :EI ; "either"
-	f: :FN ; "function"
-	g: copy [] ; "group"
-	h: :helpful-mu ; "helpful" constant declaration tool
-	i: :IF ; "if"
-	j: 0
-	k: 0
-	l: :LO ; "loop"
-	m: copy "" ; "message"
-	n: 1
-	o: :OR ; "or"
-	p: :PO ; "poke"
-	
-	; Q is tricky.  I've tried not to violate the meanings of any existing Rebol functions,
-	; but it seems like a waste to have an interpreter-only function like "quit" be taking
-	; up such a short symbol by default.  I feel the same way about ? being help.  This
-	; is an issue I have with Rebol's default definitions -Fork
-	q: :quoth-mu ; "quoth" e.g. qAB => "AB" and qA => #"A"
-	
-	r: :RI ; "readin"
-	s: copy "" ; "string"
-	t: :TO ; note that to can use example types, e.g. t "foo" 10 is "10"!
-	u: :UT ; "until"
-	v: copy [] ; "vector"
-	w: :WO ; "writeout"
-	; decimal! values starting at 0.0 (common mathematical variables)
-	x: 0.0
-	y: 0.0 
-	z: 0.0
-
-	;-------------------------------------------------------------------------------------
 	; WHAT REBOL DEFINES BY DEFAULT IN THE TWO-CHARACTER SPACE
 	;-------------------------------------------------------------------------------------	
 	
@@ -292,10 +240,10 @@ rebmu-context: compose [
 	c|: :cfunct-mu
 	d|: :dfunct-mu
 	; TODO: Write generator? 
-	w|: :wfunc-mu	
-	x|: :xfunc-mu
-	y|: :yfunc-mu
-	z|: :zfunc-mu
+	|a: :afunc-mu
+	|b: :bfunc-mu
+	|c: :cfunc-mu
+	|d: :dfunc-mu
 	
 	;-------------------------------------------------------------------------------------
 	; SERIES OPERATIONS
@@ -358,6 +306,58 @@ rebmu-context: compose [
 	;-------------------------------------------------------------------------------------	
 	
 	AL: :also
+	
+	;-------------------------------------------------------------------------------------
+	; SINGLE CHARACTER DEFINITIONS
+	; For the values (e.g. s the empty string) it is expected that you will overwrite them
+	; during the course of your program.  It's a little less customary to redefine the
+	; functions like I for IF, although you may do so if you feel the need.  They will
+	; still be available in a two-character variation.
+	;-------------------------------------------------------------------------------------
+	
+	~: :inversion-mu
+	|: :|a ; afunc generator by default (not to be confused with a|, which is an afunct)		
+	.: none ; what should dot be?
+
+	?: none ; not help what should it be
+	
+	; ^ is copy because it breaks symbols; a^b becomes a^ b but A^b bcomes a: ^ b
+	; This means that it is verbose to reset the a^ type symbols due to forcing a space
+	^: :CY 
+	
+	a: copy [] ; "array"
+	b: to-char 0 ; "byte"
+	c: #"A" ; "char"
+	d: #"0" ; "digit"
+	e: :EI ; "either"
+	f: :FN ; "function"
+	g: copy [] ; "group"
+	h: :helpful-mu ; "helpful" constant declaration tool
+	i: :IF ; "if"
+	j: 0
+	k: 0
+	l: :LO ; "loop"
+	m: copy "" ; "message"
+	n: 1
+	o: :OR ; "or"
+	p: :PO ; "poke"
+	
+	; Q is tricky.  I've tried not to violate the meanings of any existing Rebol functions,
+	; but it seems like a waste to have an interpreter-only function like "quit" be taking
+	; up such a short symbol by default.  I feel the same way about ? being help.  This
+	; is an issue I have with Rebol's default definitions -Fork
+	q: :quoth-mu ; "quoth" e.g. qAB => "AB" and qA => #"A"
+	
+	r: :RI ; "readin"
+	s: copy "" ; "string"
+	t: :TO ; note that to can use example types, e.g. t "foo" 10 is "10"!
+	u: :UT ; "until"
+	v: copy [] ; "vector"
+	w: :WO ; "writeout"
+	; decimal! values starting at 0.0 (common mathematical variables)
+	x: 0.0
+	y: 0.0 
+	z: 0.0
 ]
 
 upper: charset [#"A" - #"Z"]
@@ -510,7 +510,7 @@ unmush: funct [value /deep] [
 			result
 		]
 		
-		true: [
+		true [
 			:value
 		]
 	]
@@ -671,8 +671,7 @@ rebmu: func [
 	]
 	
 	obj: object compose/deep [
-		(rebmu-double-defaults) ; Generally, don't overwrite these in your Rebmu code
-		(rebmu-single-defaults) ; Overwriting is okay here
+		(rebmu-context)
 		(arg) 
 		main: func [] [(code)]
 		injection: func [] [(injection)]

@@ -135,33 +135,32 @@ helpful-mu: func ['arg] [
 
 ; An "afunct" is a function that takes a single parameter called a, you only
 ; need to supply the code block.  obvious extensions for other letters.  The
-; "zfunc" is the same for funcs except the parameters go backwards alphabetically
-; Currently we only do up to 4 parameters but a generator could go to the 13
+; "afunc" is the same for funcs
 
-afunct-mu: func [body [block!]] [
+afunct-mu: funct [body [block!]] [
 	funct-mu [a] body 
 ]
-bfunct-mu: func [body [block!]] [
+bfunct-mu: funct [body [block!]] [
 	funct-mu [a b] body 
 ]
-cfunct-mu: func [body [block!]] [
+cfunct-mu: funct [body [block!]] [
 	funct-mu [a b c] body 
 ]
-dfunct-mu: func [body [block!]] [
+dfunct-mu: funct [body [block!]] [
 	funct-mu [a b c d] body 
 ]
 
-zfunc-mu: func [body [block!]] [
-	func [z] body
+afunc-mu: func [body [block!]] [
+	func [a] body
 ]
-yfunc-mu: func [body [block!]] [
-	func [z y] body
+bfunc-mu: func [body [block!]] [
+	func [a b] body
 ]
-xfunc-mu: func [body [block!]] [
-	func [z y x] body
+cfunc-mu: func [body [block!]] [
+	func [a b c] body
 ]
-wfunc-mu: func [body [block!]] [
-	func [z y x w] body
+dfunc-mu: func [body [block!]] [
+	func [a b c d] body
 ]
 
 
@@ -182,7 +181,7 @@ quoth-mu: funct [
 	]
 ]
 
-index-find?-mu: funct [
+index?-find-mu: funct [
 	{Same as index? find, but returns 0 if find returns none}
 	series [series! gob! port! bitset! typeset! object! none!]
 	value [any-type!]
