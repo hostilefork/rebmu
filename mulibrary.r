@@ -133,11 +133,11 @@ helpful-mu: func ['arg] [
 	]
 ]
 
-; An "afunction" is a function that takes a single parameter called a, you only
-; need to supply the code block.  obvious extensions for other letters
-afunc-mu: func [body [block!]] [
-	func [a] body
-]
+; An "afunct" is a function that takes a single parameter called a, you only
+; need to supply the code block.  obvious extensions for other letters.  The
+; "zfunc" is the same for funcs except the parameters go backwards alphabetically
+; Currently we only do up to 4 parameters but a generator could go to the 13
+
 afunct-mu: func [body [block!]] [
 	funct-mu [a] body 
 ]
@@ -150,6 +150,20 @@ cfunct-mu: func [body [block!]] [
 dfunct-mu: func [body [block!]] [
 	funct-mu [a b c d] body 
 ]
+
+zfunc-mu: func [body [block!]] [
+	func [z] body
+]
+yfunc-mu: func [body [block!]] [
+	func [z y] body
+]
+xfunc-mu: func [body [block!]] [
+	func [z y x] body
+]
+wfunc-mu: func [body [block!]] [
+	func [z y x w] body
+]
+
 
 quoth-mu: funct [
 	'arg
@@ -168,7 +182,8 @@ quoth-mu: funct [
 	]
 ]
 
-findindex-mu: funct [
+index-find?-mu: funct [
+	{Same as index? find, but returns 0 if find returns none}
 	series [series! gob! port! bitset! typeset! object! none!]
 	value [any-type!]
 ] [
@@ -194,6 +209,14 @@ readin-mu: funct [
 	]
 ]
 
+writeout-mu: funct [
+	{Analogue to Rebol's print except tailored to Code Golf scenarios}
+	value
+] [
+	; better implementation coming...
+	print value
+]
+
 ; Don't think want to call it not-mu because we probably want a more powerful operator
 ; defined as ~ in order to compete with GolfScript/etc.
 inversion-mu: func [
@@ -210,11 +233,14 @@ inversion-mu: func [
 	]
 ]
 
-funct-mu: func [
-    "Defines a function with all set-words as locals."
-    spec [block! word!] {Help string (opt) followed by arg words (and opt type and string)
-    but may be a word in which case the word is just wrapped in a block}
-    body [block!] "The body block of the function"
-] [
-	funct to-block spec body
+; Obsoleted as a notational shortcut by zfunc and afunc, probably going to get rid of it
+comment [
+	funct-mu: func [
+   		"Defines a function with all set-words as locals."
+    	spec [block! word!] {Help string (opt) followed by arg words (and opt type and string)
+    	but may be a word in which case the word is just wrapped in a block}
+    	body [block!] "The body block of the function"
+	] [
+		funct to-block spec body
+	]
 ]

@@ -87,12 +87,12 @@ REBOL [
 	For instance, the following example uses a shorthand format for defining a function that 
 	triples a number and saving it in t:
 	
-		>> rebmu [T|[a*3]]
+		>> rebmu [T|[z*3]]
 	
 	But defining the function isn't enough to call it, so if you had wanted to do that you
 	could have said:
 	
-		>> rebmu/inject [T|[a*3]] [wT10]
+		>> rebmu/inject [T|[z*3]] [wT10]
 		30
 		
 	The injected code is just shorthand for [w t 10], where w is writeout-mu, a variation of
@@ -109,11 +109,25 @@ REBOL [
 ; Load the library of xxx-mu functions
 do %mulibrary.r
 
-; Table of single-character length instructions and values in Rebmu
-; (It is common for user code to redefine these if the defaults are unused)
-rebmu-single-defaults: [
+remap-datatype: func [type [word!] shorter [word!]] [
+	bind reduce [
+		to-set-word rejoin [to-string shorter "!"] to-word rejoin [to-string type "!"]
+		to-set-word rejoin [to-string shorter "?"] get rejoin ["'" to-string type "?"]
+	] bind? 'system
+	[] ; above isn't working, why not?
+]
+
+rebmu-context: compose [
+	;-------------------------------------------------------------------------------------
+	; SINGLE CHARACTER DEFINITIONS
+	; For the values (e.g. s the empty string) it is expected that you will overwrite them
+	; during the course of your program.  It's a little less customary to redefine the
+	; functions like I for IF, although you may do so if you feel the need.  They will
+	; still be available in a two-character variation.
+	;-------------------------------------------------------------------------------------
+	
 	~: :inversion-mu
-	|: :AF ; an afunc generator by default (not to be confused with a|, which is an afunct)		
+	|: :z| ; a zfunc generator by default (not to be confused with a|, which is an afunct)		
 	.: none ; what should dot be?
 
 	?: none ; not help what should it be
@@ -155,20 +169,61 @@ rebmu-single-defaults: [
 	x: 0.0
 	y: 0.0 
 	z: 0.0
-]
 
-remap-datatype: func [type [word!] shorter [word!]] [
-	bind reduce [
-		to-set-word rejoin [to-string shorter "!"] to-word rejoin [to-string type "!"]
-		to-set-word rejoin [to-string shorter "?"] get rejoin ["'" to-string type "?"]
-	] bind? 'system
-	[] ; above isn't working, why not?
-]
+	;-------------------------------------------------------------------------------------
+	; WHAT REBOL DEFINES BY DEFAULT IN THE TWO-CHARACTER SPACE
+	;-------------------------------------------------------------------------------------	
+	
+	; Very Reasonable Use of English Words
+	
+	; TO 	to conversion
+	; OR	or operator
+	; IN	word or block in the object's context
+	; IF	conditional if
+	; DO	evaluates a block, file, url, function word
+	; AT	returns the series at the specified index
 
-; Table of double-character length commands in Rebmu
-; (It is not recommended to overwrite these definitions in your program, though you can)
-rebmu-double-defaults: compose [
-	; TODO: what about issue?
+	; Reasonable use of Symbolic Operators
+
+	; ++ 	increment and return previous value
+	; -- 	decrement and return previous value
+	; ??	Debug print a word, path, block or such
+	; >=	true if the first value is greater than the second
+	; <>	true if the values are not equal
+	; <=	true if the first value is less than the second
+	; =?	true if the values are identical
+	; //	remainder of first value divided by second
+	; **	first number raised to the power of the second
+	; !=	true if the values are not equal
+
+	; Questionable shorthands for terms defined elsewhere. Considering how many things do
+	; not have shorthands by default...what metric proved that *these four* were the
+	; ideal things to abbreviate? 
+	
+	; SP 	alias for SPACE
+	; RM	alias for DELETE
+	; DP	alias for DELTA-PROFILE
+	; DT	alias for DELTA-TIME
+
+	; These are shell commands and it seems like there would be many more.  Could there
+	; be a shell dialect, in which for instance issue values (#foo) could be environment
+	; variables, or something like that?  It seems many other things would be nice, like
+	; pushing directories or popping them, moving files from one place to another, etc.	
+	
+	; LS	print contents of a directory
+	; CD	change directory
+
+	; Another abbreviation that seems better to leave out
+	; DS	temporary stack debug
+	
+	;-------------------------------------------------------------------------------------
+	; DATATYPE SHORTHANDS (2-3 CHARS)
+	; I've tried to give the 26 most popular data types a two-character name with an
+	; exclamation point.  This is up for debate.  We may say that if two types have the 
+	; same starting letter then the less popular one in code golf gets a three-character
+	; code, as these will probably occur infrequently in Code Golf.
+	;-------------------------------------------------------------------------------------	
+
 	(remap-datatype 'email 'a) ; "address"
 	(remap-datatype 'block 'b)
 	(remap-datatype 'char 'c)
@@ -195,15 +250,29 @@ rebmu-double-defaults: compose [
 	(remap-datatype 'tag 'x) ; "Xml" 
 	(remap-datatype 'money 'y) ; "moneY"
 	(remap-datatype 'binary 'z) ; Z for... um... uh...
+
+	;-------------------------------------------------------------------------------------	
+	; TYPE CONVERSION
+	;-------------------------------------------------------------------------------------	
+	; TODO: make these automatically along with the datatype shorthands
 	
-	IF: :if-mu ; use wrap and do [/else e]
+	TW: :to-word-mu
+	TS: :to-string-mu
+	TB: :to-block
+
+	;-------------------------------------------------------------------------------------
+	; CONDITIONALS
+	;-------------------------------------------------------------------------------------	
+	
+	IF: :if-mu
 	EI: :either-mu
 	EL: :either-lesser?-mu
 	IL: :if-lesser?-mu
 	IG: :if-greater?-mu
 
-	FN: :funct-mu ; use wrap and do [/with w]?
-	AF: :afunc-mu
+	;-------------------------------------------------------------------------------------	
+	; LOOPING CONSTRUCTS
+	;-------------------------------------------------------------------------------------	
 
 	FE: :foreach
 	LO: :loop
@@ -211,8 +280,28 @@ rebmu-double-defaults: compose [
 	CN: :continue
 	UT: :until
 	RT: :repeat
+
+	;-------------------------------------------------------------------------------------	
+	; DEFINING FUNCTIONS
+	;-------------------------------------------------------------------------------------	
+
+	FN: :funct
+	FC: :func
+	a|: :afunct-mu
+	b|: :bfunct-mu
+	c|: :cfunct-mu
+	d|: :dfunct-mu
+	; TODO: Write generator? 
+	w|: :wfunc-mu	
+	x|: :xfunc-mu
+	y|: :yfunc-mu
+	z|: :zfunc-mu
 	
-	PO: :poke	
+	;-------------------------------------------------------------------------------------
+	; SERIES OPERATIONS
+	;-------------------------------------------------------------------------------------	
+
+	PO: :poke
 	AP: :append
 	AO: rebmu-wrap 'append/only [] ; very useful
 	IN: :insert
@@ -220,47 +309,55 @@ rebmu-double-defaults: compose [
 	MN: :minimum-of
 	MX: :maximum-of
 	RP: :repend
-	
-	CO: rebmu-wrap 'compose/deep [] ; default to deep composition
-	
-	CY: rebmu-wrap 'copy/part/deep [] ; default to a deep copy
-	CP: rebmu-wrap 'copy/part [] ; default to a deep copy
-	
+	SE: :select
+	FX: :index?-find-mu
+	OX: :offset?
+	IX: :index?
+	RV: :reverse
 	RA: rebmu-wrap 'replace/all []
 	
+	;-------------------------------------------------------------------------------------	
+	; METAPROGRAMMING
+	;-------------------------------------------------------------------------------------	
+
+	CO: rebmu-wrap 'compose/deep [] ; default to deep composition	
 	ML: :mold
-	
+	DR: :rebmu ; "Do Rebmu"
+
+	;-------------------------------------------------------------------------------------	
+	; MATH OPERATIONS
+	;-------------------------------------------------------------------------------------	
+
 	MP: :multiply
 	DV: :divide
+
+	;-------------------------------------------------------------------------------------	
+	; INPUT/OUTPUT
+	;-------------------------------------------------------------------------------------	
 	
-	TW: :to-word-mu
-	TS: :to-string-mu
-	TB: :to-block
-	
-	SE: :select
-	AL: :also
-	FX: :findindex-mu
-	
+	RD: :read
+	WR: :write
 	PR: :print
 	RI: :readin-mu
-	WO: :print ; will be fancier "writeout-mu"
+	WO: :writeout-mu
 	
-	DR: :rebmu ; "Do Rebmu"
-	
-	RV: :reverse
-	
+	;-------------------------------------------------------------------------------------	
+	; CONSTRUCTION FUNCTIONS
 	; Although a caret in isolation means "copy", a letter and a caret means "factory"
+	;-------------------------------------------------------------------------------------	
+
+	CY: rebmu-wrap 'copy/part/deep [] ; default to a deep copy
+	CP: rebmu-wrap 'copy/part [] 
 	a^: :array
 	i^: :make-integer-mu
 	m^: :make-matrix-mu
 	s^: :make-string-mu
+
+	;-------------------------------------------------------------------------------------		
+	; MISC
+	;-------------------------------------------------------------------------------------	
 	
-	; SP: :space ; Rebol already defines this...
-	
-	a|: :afunct-mu
-	b|: :bfunct-mu
-	c|: :cfunct-mu
-	d|: :dfunct-mu
+	AL: :also
 ]
 
 upper: charset [#"A" - #"Z"]
@@ -307,112 +404,116 @@ type-of-char: func [c [char!]] [
 ; IF unmush returns a block! (and you didn't pass in a block!) then it is a sequence
 ; There may be a better convention
 unmush: funct [value /deep] [
-	if (any-word? :value) or (any-path? :value) [
-		pos: str: mold :value
-		thisType: type-of-char first pos
-	
-		mergedSymbol: false
-		thisIsSetWord: 'upper = thisType
-		nextCanSetWord: found? find [headsymbol symbol tailsymbol] thisType
-		while [not tail? next pos] [
-			nextType: if not tail? next pos [type-of-char first next pos]
-			
-			comment [	
-				print [
-					"this:" first pos "next:" first next pos
-					"thisType:" to-string thisType "nextType:" to-string nextType 
-					"thisIsSetWord:" thisIsSetWord "nextCanSetWord:" nextCanSetWord
-					"str:" str
-				]
-			]
-	
-			switch/default thisType [
-				separatorsymbol [
-					thisIsSetWord: 'upper = nextType
-					nextCanSetWord: false
-				]
-				headsymbol [
-					thisIsSetWord: false
-					nextCanSetWord: 'upper <> nextType
-				]
-				tailsymbol [
-					either thisIsSetWord [
-						pos: insert pos ": "
-					] [
-						pos: back insert next pos space
+	case [
+		(any-word? :value) or (any-path? :value) [
+			pos: str: mold :value
+			thisType: type-of-char first pos
+		
+			mergedSymbol: false
+			thisIsSetWord: 'upper = thisType
+			nextCanSetWord: found? find [headsymbol symbol tailsymbol] thisType
+			while [not tail? next pos] [
+				nextType: if not tail? next pos [type-of-char first next pos]
+				
+				comment [	
+					print [
+						"this:" first pos "next:" first next pos
+						"thisType:" to-string thisType "nextType:" to-string nextType 
+						"thisIsSetWord:" thisIsSetWord "nextCanSetWord:" nextCanSetWord
+						"str:" str
 					]
-					thisIsSetWord: 'upper = nextType
-					nextCanSetWord: true
 				]
-				isolatedsymbol [
-					either (first pos) == (first next pos) [
-						mergedSymbol: true
-					] [
-						if thisIsSetWord [
-							pos: insert pos ":"
-							either mergedSymbol [
-								mergedSymbol: false
-							] [
-								pos: insert pos space
-							]
-						]
-						pos: back insert next pos space
+		
+				switch/default thisType [
+					separatorsymbol [
 						thisIsSetWord: 'upper = nextType
 						nextCanSetWord: false
 					]
-				]
-			] [
-				either ('digit = thisType) and found? find [#"x" #"X"] first next pos [
-					; need special handling if it's an x because of pairs
-					; want to support mushings like a10x20 as [a 10x20] not [a 10 x 20]
-					; for the moment lie and say its a digit
-					nextType: 'digit	
-				] [
-					if (thisType <> nextType) and none? find [separatorsymbol tailsymbol] nextType [
-						if ('digit = thisType) or ('isolatedsymbol = thisType) [
-							nextCanSetWord: true
+					headsymbol [
+						thisIsSetWord: false
+						nextCanSetWord: 'upper <> nextType
+					]
+					tailsymbol [
+						either thisIsSetWord [
+							pos: insert pos ": "
+						] [
+							pos: back insert next pos space
 						]
-						if thisIsSetWord [
-							pos: back insert next pos ":"
-							thisIsSetWord: false
-							nextCanSetWord: false
-						]
-						if nextCanSetWord [
+						thisIsSetWord: 'upper = nextType
+						nextCanSetWord: true
+					]
+					isolatedsymbol [
+						either (first pos) == (first next pos) [
+							mergedSymbol: true
+						] [
+							if thisIsSetWord [
+								pos: insert pos ":"
+								either mergedSymbol [
+									mergedSymbol: false
+								] [
+									pos: insert pos space
+								]
+							]
+							pos: back insert next pos space
 							thisIsSetWord: 'upper = nextType
 							nextCanSetWord: false
 						]
-						pos: back insert next pos space
+					]
+				] [
+					either ('digit = thisType) and found? find [#"x" #"X"] first next pos [
+						; need special handling if it's an x because of pairs
+						; want to support mushings like a10x20 as [a 10x20] not [a 10 x 20]
+						; for the moment lie and say its a digit
+						nextType: 'digit	
+					] [
+						if (thisType <> nextType) and none? find [separatorsymbol tailsymbol] nextType [
+							if ('digit = thisType) or ('isolatedsymbol = thisType) [
+								nextCanSetWord: true
+							]
+							if thisIsSetWord [
+								pos: back insert next pos ":"
+								thisIsSetWord: false
+								nextCanSetWord: false
+							]
+							if nextCanSetWord [
+								thisIsSetWord: 'upper = nextType
+								nextCanSetWord: false
+							]
+							pos: back insert next pos space
+						]
 					]
 				]
+				pos: next pos
+				thisType: nextType
 			]
-			pos: next pos
-			thisType: nextType
-		]
-		if thisIsSetWord [
-			either thisType = 'tailsymbol [
-				pos: insert pos ": "
-			] [
-				pos: back insert next pos ":"
+			if thisIsSetWord [
+				either thisType = 'tailsymbol [
+					pos: insert pos ": "
+				] [
+					pos: back insert next pos ":"
+				]
 			]
-		]
-		return load lowercase str
-	] 
+			load lowercase str
+		] 
 	
-	if any-block? :value [
-		result: make type? :value copy []
-		while [not tail? :value] [
-			elem: first+ value
-			unmushed: either deep [unmush/deep :elem] [unmush :elem]
-			either (block? :unmushed) and (not block? :elem) [
-				append result :unmushed
-			] [
-				append/only result :unmushed
+		any-block? :value [
+			result: make type? :value copy []
+			while [not tail? :value] [
+				elem: first+ value
+				unmushed: either deep [unmush/deep :elem] [unmush :elem]
+				either (block? :unmushed) and (not block? :elem) [
+					append result :unmushed
+				] [
+					append/only result :unmushed
+				]
 			]
+			result
 		]
-		return result
+		
+		true: [
+			:value
+		]
 	]
-	
-	return :value
 ]
 
 ; The point of Rebmu is that programmers should be able to read and modify without using
