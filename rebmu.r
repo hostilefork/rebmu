@@ -54,11 +54,13 @@ REBOL [
 		
 	Despite being a little bit "silly" (as Code Golf is sort of silly), there is
 	a serious side to the design.  Rebmu is a genuine dialect... meaning that it
-	uses the Rebol parser and does not a custom string format.  Also, despite several
-	shorthands defined for common Rebol operations (even as far as I for IF) the
-	functions are true to their Rebol bretheren for all inputs that Rebol accepts.
-	Hence one does not have to re-learn the meaning of such constructs to use
-	Rebol in its unadulterated form!
+	uses the Rebol data format and thus relegates most parsing--such as parentheses
+	and block matches.  
+	
+	Also, Rebmu is a superset of Rebol, so any Rebol code should be able to be used
+	safely.  That's because despite several shorthands defined for common Rebol operations 
+	(even as far as I for IF) the functions are true to their Rebol bretheren across 
+	all inputs that Rebol accepts.  [Current exceptions to this are q and ?]
 	
 	Rebmu programs get their own execution context.  They will unmush their input,
 	set up the environment of abbreviated routines, and run the code:
@@ -72,22 +74,29 @@ REBOL [
 		Hello
 		World
 		
-	If you want to run your Rebmu program and let it set some values in its environment, such
-	as defining functions you might want to call, you can also use the /inject refinement to
-	run some code after the program has run but before the environment is disposed.
+	Or you can pass in a block which does not begin with a set-word and that block will
+	appear in the execution context as the variable a:
+	
+		>> rebmu/args [wA] [1 2 3]
+		1 2 3
+	
+	You can run your Rebmu program and let it set some values in its environment, such
+	as defining functions you might want to call.  Using the /inject refinement you can
+	run some code after the program has executed but before the environment is disposed.
 	
 	For instance, the following example uses a shorthand format for defining a function that 
-	triples a number:
+	triples a number and saving it in t:
 	
-		>> rebmu [Tf'x[x*3]]
+		>> rebmu [T|[a*3]]
 	
 	But defining the function isn't enough to call it, so if you had wanted to do that you
 	could have said:
 	
-		>> rebmu/inject [Tf'x[x*3]] [pT10]
+		>> rebmu/inject [T|[a*3]] [wT10]
 		30
 		
-	The injected code is just shorthand for [p t 10], where p is equal to print.
+	The injected code is just shorthand for [w t 10], where w is writeout-mu, a variation of
+	Rebol's print.
 	}
 	
     History: [
