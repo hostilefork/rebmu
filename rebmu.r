@@ -63,12 +63,12 @@ REBOL [
 	Rebmu programs get their own execution context.  They will unmush their input,
 	set up the environment of abbreviated routines, and run the code:
 	
-		>> rebmu [p"Hello World"]
+		>> rebmu [w"Hello World"]
 		Hello World
 	    
 	You can also pass in named arguments via a block:
 	
-		>> rebmu/args [pMpN] [m: "Hello" n: "World"]
+		>> rebmu/args [wSwM] [s: "Hello" m: "World"]
 		Hello
 		World
 		
@@ -106,6 +106,7 @@ rebmu-single-defaults: [
 	~: :inversion-mu
 	|: :AF ; an afunc generator by default (not to be confused with a|, which is an afunct)		
 	.: none ; what should dot be?
+
 	?: none ; not help what should it be
 	
 	; ^ is copy because it breaks symbols; a^b becomes a^ b but A^b bcomes a: ^ b
@@ -128,7 +129,13 @@ rebmu-single-defaults: [
 	n: 1
 	o: :OR ; "or"
 	p: :PO ; "poke"
+	
+	; Q is tricky.  I've tried not to violate the meanings of any existing Rebol functions,
+	; but it seems like a waste to have an interpreter-only function like "quit" be taking
+	; up such a short symbol by default.  I feel the same way about ? being help.  This
+	; is an issue I have with Rebol's default definitions -Fork
 	q: :quoth-mu ; "quoth" e.g. qAB => "AB" and qA => #"A"
+	
 	r: :RI ; "readin"
 	s: copy "" ; "string"
 	t: :TO ; note that to can use example types, e.g. t "foo" 10 is "10"!
@@ -223,6 +230,7 @@ rebmu-double-defaults: compose [
 	
 	SE: :select
 	AL: :also
+	FX: :findindex-mu
 	
 	PR: :print
 	RI: :readin-mu
@@ -386,10 +394,10 @@ unmush: funct [value /deep] [
 		while [not tail? :value] [
 			elem: first+ value
 			unmushed: either deep [unmush/deep :elem] [unmush :elem]
-			either (block? unmushed) and (not block? :elem) [
-				append result unmushed
+			either (block? :unmushed) and (not block? :elem) [
+				append result :unmushed
 			] [
-				append/only result unmushed
+				append/only result :unmushed
 			]
 		]
 		return result

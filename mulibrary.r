@@ -168,6 +168,18 @@ quoth-mu: funct [
 	]
 ]
 
+findindex-mu: funct [
+	series [series! gob! port! bitset! typeset! object! none!]
+	value [any-type!]
+] [
+	pos: find series value
+	either none? pos [
+		0
+	] [
+		index? pos
+	]
+]
+
 readin-mu: funct [
 	{Use data type after getting the quoted argument to determine input coercion}
 	'value
