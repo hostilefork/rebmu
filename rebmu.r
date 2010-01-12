@@ -55,7 +55,8 @@ REBOL [
 	Despite being a little bit "silly" (as Code Golf is sort of silly), there is
 	a serious side to the design.  Rebmu is a genuine dialect... meaning that it
 	uses the Rebol data format and thus relegates most parsing--such as parentheses
-	and block matches.  
+	and block matches.  This means that there's no string-oriented trickery taking
+	advantage of illegal source token sequences in Rebol (like 1FOO, A:B, A$B...)
 	
 	Also, Rebmu is a superset of Rebol, so any Rebol code should be able to be used
 	safely.  That's because despite several shorthands defined for common Rebol operations 
@@ -87,12 +88,12 @@ REBOL [
 	For instance, the following example uses a shorthand format for defining a function that 
 	triples a number and saving it in t:
 	
-		>> rebmu [T|[z*3]]
+		>> rebmu [T|[a*3]]
 	
 	But defining the function isn't enough to call it, so if you had wanted to do that you
 	could have said:
 	
-		>> rebmu/inject [T|[z*3]] [wT10]
+		>> rebmu/inject [T|[a*3]] [wT10]
 		30
 		
 	The injected code is just shorthand for [w t 10], where w is writeout-mu, a variation of
@@ -112,15 +113,7 @@ do %mulibrary.r
 ; Load the library implementing mush/unmush
 do %mushing.r
 
-remap-datatype: func [type [word!] shorter [word!]] [
-	bind reduce [
-		to-set-word rejoin [to-string shorter "!"] to-word rejoin [to-string type "!"]
-		to-set-word rejoin [to-string shorter "?"] get rejoin ["'" to-string type "?"]
-	] bind? 'system
-	[] ; above isn't working, why not?
-]
-
-rebmu-context: compose [
+rebmu-context: [
 	;-------------------------------------------------------------------------------------
 	; WHAT REBOL DEFINES BY DEFAULT IN THE TWO-CHARACTER SPACE
 	;-------------------------------------------------------------------------------------	
@@ -398,6 +391,14 @@ rebmu-context: compose [
 	z: 0.0
 ]
 
+remap-datatype: func [type [word!] shorter [word!]] [
+	bind reduce [
+		to-set-word rejoin [to-string shorter "!"] to-word rejoin [to-string type "!"]
+		to-set-word rejoin [to-string shorter "?"] get rejoin ["'" to-string type "?"]
+	] bind? 'system
+	[] ; above isn't working, why not?
+]
+
 ; A rebmu wrapper lets you wrap a function or a refined version of a function
 rebmu-wrap: funct [arg [word! path!] refinemap [block!]] [
 	either word? arg [
@@ -508,7 +509,7 @@ rebmu: func [
 	]
 	
 	obj: object compose/deep [
-		(rebmu-context)
+		(compose rebmu-context)
 		(arg) 
 		main: func [] [(code)]
 		injection: func [] [(injection)]
