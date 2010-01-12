@@ -1,7 +1,9 @@
 REBOL [
 	Title: "The Mu Rebol Library"
-	Description: {Library of functions used by the Rebmu interpreter, with ordinary long
-	names so they could be called by any Rebol code.}
+	Description: {These functions are intended to help write Rebol programs that use fewer
+	lexical symbols in their source code.  This is a part of the Rebmu interpreter project
+	for code golf, but you can program to these routines even if you are not using the
+	abbreviated namaes of the routines or the "mushing" protocol of the Rebmu dialect.}
 ]
 
 to-string-mu: func [
@@ -221,13 +223,13 @@ writeout-mu: funct [
 inversion-mu: func [
 	value
 ] [
-	either not value [
-		true
-	] [
-		either zero? value [
-			true
-		] [
-			false
+	switch/default type?/word get value [
+		string! [empty? value]
+		decimal!
+		integer! [
+			zero? value
 		]
+	] [
+		not value
 	]
 ]

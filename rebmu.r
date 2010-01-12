@@ -109,6 +109,9 @@ REBOL [
 ; Load the library of xxx-mu functions
 do %mulibrary.r
 
+; Load the library implementing mush/unmush
+do %mushing.r
+
 remap-datatype: func [type [word!] shorter [word!]] [
 	bind reduce [
 		to-set-word rejoin [to-string shorter "!"] to-word rejoin [to-string type "!"]
@@ -167,48 +170,53 @@ rebmu-context: compose [
 	; DS	temporary stack debug
 	
 	;-------------------------------------------------------------------------------------
-	; DATATYPE SHORTHANDS (2-3 CHARS)
-	; I've tried to give the 26 most popular data types a two-character name with an
-	; exclamation point.  This is up for debate.  We may say that if two types have the 
-	; same starting letter then the less popular one in code golf gets a three-character
-	; code, as these will probably occur infrequently in Code Golf.
+	; DATATYPE SHORTHANDS (3 CHARS)
+	; Though I considered giving the datatypes 2-character names, I decided on 3 and saving
+	; the one-characters for things like index? and offset? and length?  Literal words
+	; for types will probably not be showing up too often in Code Golf.
 	;-------------------------------------------------------------------------------------	
 
-	(remap-datatype 'email 'a) ; "address"
-	(remap-datatype 'block 'b)
-	(remap-datatype 'char 'c)
-	(remap-datatype 'decimal 'd)
-	(remap-datatype 'error 'e)
-	(remap-datatype 'function 'f)
-	(remap-datatype 'get-word 'g)
-	(remap-datatype 'paren 'h) ; "parentHeses" :)
-	(remap-datatype 'integer 'i)
-	(remap-datatype 'pair 'j) ; "joined"
-	(remap-datatype 'closure 'k) ; "klosure"
-	(remap-datatype 'logic 'l) 
-	(remap-datatype 'map 'm)
-	(remap-datatype 'none 'n)
-	(remap-datatype 'object 'o)
-	(remap-datatype 'path 'p)
-	(remap-datatype 'lit-word 'q) ; "quoted-word"
-	(remap-datatype 'refinement 'r)
-	(remap-datatype 'string 's)
-	(remap-datatype 'time 't)
-	(remap-datatype 'tuple 'u) ; "tUple"
-	(remap-datatype 'file 'v) ; "vile" (use a thick accent) :)
-	(remap-datatype 'word 'w)
-	(remap-datatype 'tag 'x) ; "Xml" 
-	(remap-datatype 'money 'y) ; "moneY"
-	(remap-datatype 'binary 'z) ; Z for... um... uh...
-
-	;-------------------------------------------------------------------------------------	
-	; TYPE CONVERSION
-	;-------------------------------------------------------------------------------------	
-	; TODO: make these automatically along with the datatype shorthands
+	(remap-datatype 'email 'em)
+	(remap-datatype 'block 'bl)
+	(remap-datatype 'char 'ch)
+	(remap-datatype 'decimal 'dc)
+	(remap-datatype 'error 'er)
+	(remap-datatype 'function 'fn)
+	(remap-datatype 'get-word 'gw)
+	(remap-datatype 'paren 'pn)
+	(remap-datatype 'integer 'in)
+	(remap-datatype 'pair 'pr)
+	(remap-datatype 'closure 'cl)
+	(remap-datatype 'logic 'lg) 
+	(remap-datatype 'map 'mp)
+	(remap-datatype 'none 'nn)
+	(remap-datatype 'object 'ob)
+	(remap-datatype 'path 'pa)
+	(remap-datatype 'lit-word 'lw)
+	(remap-datatype 'refinement 'rf)
+	(remap-datatype 'string 'st)
+	(remap-datatype 'time 'tm)
+	(remap-datatype 'tuple 'tu)
+	(remap-datatype 'file 'fi) 
+	(remap-datatype 'word 'wd)
+	(remap-datatype 'tag 'tg) 
+	(remap-datatype 'money 'mn)
+	(remap-datatype 'binary 'bi)
 	
-	TW: :to-word-mu
-	TS: :to-string-mu
-	TB: :to-block
+	; TODO: make these automatically along with the datatype shorthands
+	TWD: :to-word-mu
+	TST: :to-string-mu
+	TBL: :to-block
+
+	;-------------------------------------------------------------------------------------	
+	; TYPE CONVERSION SHORTHANDS
+	; These are particularly common and there aren't many commands starting with T
+	; So aliasing them is useful.  May reconsider this later.
+	;-------------------------------------------------------------------------------------	
+	
+	TW: :TWD
+	TS: :TST
+	TB: :TBL
 
 	;-------------------------------------------------------------------------------------
 	; CONDITIONALS
@@ -264,18 +272,18 @@ rebmu-context: compose [
 	SE: :select
 	RV: :reverse
 	RA: rebmu-wrap 'replace/all []
-	LN: :length?
 	HD: :head
 	TL: :tail
 	BK: :back
 	NT: :next
-	
-	FX?: :index?-find-mu
-	OF?: :offset?
-	IX?: :index?
-	TL?: :tail?
-	HD?: :head?
-	EM?: :empty?
+
+	L?: :length?	
+	F?: :index?-find-mu
+	O?: :offset?
+	I?: :index?
+	T?: :tail?
+	H?: :head?
+	E?: :empty?
 
 	; Mushing always breaks a + into its own token (unless next to another +, e.g. ++)
 	; Hence we can't have F+.  FP is close...
@@ -388,212 +396,6 @@ rebmu-context: compose [
 	x: 0.0
 	y: 0.0 
 	z: 0.0
-]
-
-upper: charset [#"A" - #"Z"]
-lower: charset [#"a" - #"z"]
-digit: charset [#"0" - #"9" #"."]
-separatorsymbol: charset [#"/" #":"]
-headsymbol: charset [#"'"]
-tailsymbol: charset [#"!" #"?" #"^^" #"|"]
-isolatedsymbol: charset [#"+" #"-" #"~" #"&"]
-
-type-of-char: func [c [char!]] [
-	if upper/(c) [
-		return 'upper
-	]
-	if lower/(c) [
-		return 'lower
-	]
-	if digit/(c) [
-		return 'digit
-	]
-	if separatorsymbol/(c) [
-		; no spacing but separates
-		return 'separatorsymbol
-	]
-	if headsymbol/(c) [
-		; space before if not at start
-		return 'headsymbol
-	]
-	if tailsymbol/(c) [
-		; space afterwards but not before (we use ~ for not)
-		return 'tailsymbol
-	]
-	if isolatedsymbol/(c) [
-		; space before and after unless there's a run of identical ones
-		return 'isolatedsymbol
-	]
-	; caseless things are neither upper nor lowercase, they stay stuck
-	; with whatever is going; so most unicode characters fall into this
-	; category.
-	return 'caseless
-]
-
-; Simplistic routine, open to improvements.  Use PARSE dialect instead?
-; IF unmush returns a block! (and you didn't pass in a block!) then it is a sequence
-; There may be a better convention
-unmush: funct [value /deep] [
-	case [
-		(any-word? :value) or (any-path? :value) [
-			pos: str: mold :value
-			thisType: type-of-char first pos
-		
-			mergedSymbol: false
-			thisIsSetWord: 'upper = thisType
-			nextCanSetWord: found? find [headsymbol symbol tailsymbol] thisType
-			while [not tail? next pos] [
-				nextType: if not tail? next pos [type-of-char first next pos]
-				
-				comment [	
-					print [
-						"this:" first pos "next:" first next pos
-						"thisType:" to-string thisType "nextType:" to-string nextType 
-						"thisIsSetWord:" thisIsSetWord "nextCanSetWord:" nextCanSetWord
-						"str:" str
-					]
-				]
-		
-				switch/default thisType [
-					separatorsymbol [
-						thisIsSetWord: 'upper = nextType
-						nextCanSetWord: false
-					]
-					headsymbol [
-						thisIsSetWord: false
-						nextCanSetWord: 'upper <> nextType
-					]
-					tailsymbol [
-						either thisIsSetWord [
-							pos: insert pos ": "
-						] [
-							pos: back insert next pos space
-						]
-						thisIsSetWord: 'upper = nextType
-						nextCanSetWord: true
-					]
-					isolatedsymbol [
-						either (first pos) == (first next pos) [
-							mergedSymbol: true
-						] [
-							if thisIsSetWord [
-								pos: insert pos ":"
-								either mergedSymbol [
-									mergedSymbol: false
-								] [
-									pos: insert pos space
-								]
-							]
-							pos: back insert next pos space
-							thisIsSetWord: 'upper = nextType
-							nextCanSetWord: false
-						]
-					]
-				] [
-					either ('digit = thisType) and found? find [#"x" #"X"] first next pos [
-						; need special handling if it's an x because of pairs
-						; want to support mushings like a10x20 as [a 10x20] not [a 10 x 20]
-						; for the moment lie and say its a digit
-						nextType: 'digit	
-					] [
-						if (thisType <> nextType) and none? find [separatorsymbol tailsymbol] nextType [
-							if ('digit = thisType) or ('isolatedsymbol = thisType) [
-								nextCanSetWord: true
-							]
-							if thisIsSetWord [
-								pos: back insert next pos ":"
-								thisIsSetWord: false
-								nextCanSetWord: false
-							]
-							if nextCanSetWord [
-								thisIsSetWord: 'upper = nextType
-								nextCanSetWord: false
-							]
-							pos: back insert next pos space
-						]
-					]
-				]
-				pos: next pos
-				thisType: nextType
-			]
-			if thisIsSetWord [
-				either thisType = 'tailsymbol [
-					pos: insert pos ": "
-				] [
-					pos: back insert next pos ":"
-				]
-			]
-			load lowercase str
-		] 
-	
-		any-block? :value [
-			result: make type? :value copy []
-			while [not tail? :value] [
-				elem: first+ value
-				unmushed: either deep [unmush/deep :elem] [unmush :elem]
-				either (block? :unmushed) and (not block? :elem) [
-					append result :unmushed
-				] [
-					append/only result :unmushed
-				]
-			]
-			result
-		]
-		
-		true [
-			:value
-		]
-	]
-]
-
-; The point of Rebmu is that programmers should be able to read and modify without using
-; a compilation tool.  But for completeness, here is a mushing function.
-; **UNDER CONSTRUCTION**
-mush: funct [value /mixed /deep] [
-	print "WARNING: Mushing is a work in progress, implementation incomplete."
-	if any-block? value [
-		result: make type? :value copy []
-		isUppercase: none
-		current: none
-		foreach elem value [
-			switch/default type?/word :elem [
-				word! [
-					either current [
-						isUppercase: not isUppercase
-						either isUppercase [
-							append current uppercase to-string elem
-						] [
-							append current lowercase to-string elem
-						]
-					] [
-						current: lowercase to-string elem
-						isUppercase: false
-					]
-				]
-				set-word! [
-					either current [
-						append result to-word current
-						current: none
-						append result elem
-					] [
-						current: uppercase to-string-mu elem ; spelling? behavior
-						isUppercase: true
-					]
-				]
-			] [
-				if current [
-					append result to-word current
-					current: none
-				]
-				append/only result :elem
-			]
-		]
-	]
-	if current [
-		append result to-word current
-		current: none
-	]
-	result
 ]
 
 ; A rebmu wrapper lets you wrap a function or a refined version of a function
