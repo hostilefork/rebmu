@@ -201,7 +201,7 @@ readin-mu: funct [
 	'value
 ] [
 	switch/default type?/word get value [
-		string! [prin "Input String: " input]
+		string! [prin "Input String: " set value input]
 		integer! [set value to-integer ask "Input Integer: "]
 		decimal! [set value to-integer ask "Input Float: "]
 		block! [set value to-block ask "Input Series of Items: "]
