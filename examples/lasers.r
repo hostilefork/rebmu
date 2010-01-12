@@ -4,4 +4,4 @@
 ; into J with rows in K
 ; not a bad start...
 
-rSu[raRs"#"mI~sbr JlnSapAsNO]KlnA
+rSu[raRs"#"mI~sBR Jl?sAPaSno]Kl?a
