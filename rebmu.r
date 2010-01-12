@@ -130,6 +130,8 @@ rebmu-context: compose [
 	; IF	conditional if
 	; DO	evaluates a block, file, url, function word
 	; AT	returns the series at the specified index
+	; NO	logic true
+	; ON	logic false
 
 	; Reasonable use of Symbolic Operators
 
@@ -226,6 +228,7 @@ rebmu-context: compose [
 	LO: :loop
 	WH: :while
 	CN: :continue
+	BR: :break
 	UT: :until
 	RT: :repeat
 
@@ -235,15 +238,16 @@ rebmu-context: compose [
 
 	FN: :funct
 	FC: :func
-	a|: :afunct-mu
-	b|: :bfunct-mu
-	c|: :cfunct-mu
-	d|: :dfunct-mu
+	a|: :a|funct-mu
+	b|: :b|funct-mu
+	c|: :c|funct-mu
+	d|: :d|funct-mu
 	; TODO: Write generator? 
-	|a: :afunc-mu
-	|b: :bfunc-mu
-	|c: :cfunc-mu
-	|d: :dfunc-mu
+	|a: :func|a-mu
+	|b: :func|b-mu
+	|c: :func|c-mu
+	|d: :func|d-mu
+	RN: :return
 	
 	;-------------------------------------------------------------------------------------
 	; SERIES OPERATIONS
@@ -258,26 +262,42 @@ rebmu-context: compose [
 	MX: :maximum-of
 	RP: :repend
 	SE: :select
-	FX: :index?-find-mu
-	OX: :offset?
-	IX: :index?
 	RV: :reverse
 	RA: rebmu-wrap 'replace/all []
+	LN: :length?
+	HD: :head
+	TL: :tail
+	BK: :back
+	NT: :next
+	
+	FX?: :index?-find-mu
+	OF?: :offset?
+	IX?: :index?
+	TL?: :tail?
+	HD?: :head?
+	EM?: :empty?
+
+	; Mushing always breaks a + into its own token (unless next to another +, e.g. ++)
+	; Hence we can't have F+.  FP is close...
+	FP: :first+
 	
 	;-------------------------------------------------------------------------------------	
 	; METAPROGRAMMING
 	;-------------------------------------------------------------------------------------	
 
-	CO: rebmu-wrap 'compose/deep [] ; default to deep composition	
+	CO: :compose
+	COD: rebmu-wrap 'compose/deep []
 	ML: :mold
 	DR: :rebmu ; "Do Rebmu"
+	RE: :reduce
 
 	;-------------------------------------------------------------------------------------	
-	; MATH OPERATIONS
+	; MATH AND LOGIC OPERATIONS
 	;-------------------------------------------------------------------------------------	
 
 	MP: :multiply
 	DV: :divide
+	IM: :inversion-mu
 
 	;-------------------------------------------------------------------------------------	
 	; INPUT/OUTPUT
@@ -294,18 +314,27 @@ rebmu-context: compose [
 	; Although a caret in isolation means "copy", a letter and a caret means "factory"
 	;-------------------------------------------------------------------------------------	
 
-	CY: rebmu-wrap 'copy/part/deep [] ; default to a deep copy
+	CY: :copy
+	CYD: rebmu-wrap 'copy/deep []
 	CP: rebmu-wrap 'copy/part [] 
+	CPD: rebmu-wrap 'copy/part/deep [] 
 	a^: :array
 	i^: :make-integer-mu
 	m^: :make-matrix-mu
 	s^: :make-string-mu
 
+	;-------------------------------------------------------------------------------------	
+	; LOGIC
+	;-------------------------------------------------------------------------------------	
+	AN: :AND ; mapped to & as well
+	
 	;-------------------------------------------------------------------------------------		
 	; MISC
 	;-------------------------------------------------------------------------------------	
 	
 	AL: :also
+	NN: :none
+	HM: :helpful-mu
 	
 	;-------------------------------------------------------------------------------------
 	; SINGLE CHARACTER DEFINITIONS
@@ -315,11 +344,12 @@ rebmu-context: compose [
 	; still be available in a two-character variation.
 	;-------------------------------------------------------------------------------------
 	
-	~: :inversion-mu
+	~: :IM
 	|: :|a ; afunc generator by default (not to be confused with a|, which is an afunct)		
-	.: none ; what should dot be?
+	&: :AN
 
-	?: none ; not help what should it be
+	.: none ; what should dot be?
+	?: none ; not help , but what should it be
 	
 	; ^ is copy because it breaks symbols; a^b becomes a^ b but A^b bcomes a: ^ b
 	; This means that it is verbose to reset the a^ type symbols due to forcing a space
@@ -332,7 +362,7 @@ rebmu-context: compose [
 	e: :EI ; "either"
 	f: :FN ; "function"
 	g: copy [] ; "group"
-	h: :helpful-mu ; "helpful" constant declaration tool
+	h: :HM ; "helpful" constant declaration tool
 	i: :IF ; "if"
 	j: 0
 	k: 0
@@ -366,7 +396,7 @@ digit: charset [#"0" - #"9" #"."]
 separatorsymbol: charset [#"/" #":"]
 headsymbol: charset [#"'"]
 tailsymbol: charset [#"!" #"?" #"^^" #"|"]
-isolatedsymbol: charset [#"+" #"-" #"~"]
+isolatedsymbol: charset [#"+" #"-" #"~" #"&"]
 
 type-of-char: func [c [char!]] [
 	if upper/(c) [
@@ -587,14 +617,19 @@ rebmu-wrap: funct [arg [word! path!] refinemap [block!]] [
 					compose/deep value
 				]
 			] 
-			copy/part/deep [
+			copy/deep [
 				func [value length] [
-					copy/part/deep value length
+					copy/deep value length
 				]
 			]
 			copy/part [
 				func [value length] [
 					copy/part value length
+				]
+			]
+			copy/part/deep [
+				func [value length] [
+					copy/part/deep value length
 				]
 			]
 			append/only [

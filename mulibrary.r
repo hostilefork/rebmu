@@ -133,33 +133,33 @@ helpful-mu: func ['arg] [
 	]
 ]
 
-; An "afunct" is a function that takes a single parameter called a, you only
+; An "a|funct" is a function that takes a single parameter called a, you only
 ; need to supply the code block.  obvious extensions for other letters.  The
-; "afunc" is the same for funcs
+; "func|a" is the same for funcs
 
-afunct-mu: funct [body [block!]] [
+a|funct-mu: funct [body [block!]] [
 	funct-mu [a] body 
 ]
-bfunct-mu: funct [body [block!]] [
+b|funct-mu: funct [body [block!]] [
 	funct-mu [a b] body 
 ]
-cfunct-mu: funct [body [block!]] [
+c|funct-mu: funct [body [block!]] [
 	funct-mu [a b c] body 
 ]
-dfunct-mu: funct [body [block!]] [
+d|funct-mu: funct [body [block!]] [
 	funct-mu [a b c d] body 
 ]
 
-afunc-mu: func [body [block!]] [
+func|a-mu: func [body [block!]] [
 	func [a] body
 ]
-bfunc-mu: func [body [block!]] [
+func|b-mu: func [body [block!]] [
 	func [a b] body
 ]
-cfunc-mu: func [body [block!]] [
+func|c-mu: func [body [block!]] [
 	func [a b c] body
 ]
-dfunc-mu: func [body [block!]] [
+func|d-mu: func [body [block!]] [
 	func [a b c d] body
 ]
 
@@ -229,17 +229,5 @@ inversion-mu: func [
 		] [
 			false
 		]
-	]
-]
-
-; Obsoleted as a notational shortcut by zfunc and afunc, probably going to get rid of it
-comment [
-	funct-mu: func [
-   		"Defines a function with all set-words as locals."
-    	spec [block! word!] {Help string (opt) followed by arg words (and opt type and string)
-    	but may be a word in which case the word is just wrapped in a block}
-    	body [block!] "The body block of the function"
-	] [
-		funct to-block spec body
 	]
 ]
