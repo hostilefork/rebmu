@@ -127,6 +127,46 @@ either-equal?-mu: func [
 	either equal? value1 value2 true-param false-param
 ]
 
+while-greater?-mu: func [
+    'value
+	'cond-param
+	'body-param
+] [
+	while [greater? do-mu value do-mu cond-param] [do-mu body-param]
+]
+
+while-lesser-or-equal?-mu: func [
+    'value
+	'cond-param
+	'body-param
+] [
+	while [lesser-or-equal? do-mu value do-mu cond-param] [do-mu body-param]
+]
+
+while-greater-or-equal?-mu: func [
+    'value
+	'cond-param
+	'body-param
+] [
+	while [greater-or-equal? do-mu value do-mu cond-param] [do-mu body-param]
+]
+
+while-lesser?-mu: func [
+    'value
+	'cond-param
+	'body-param
+] [
+	while [lesser? do-mu value do-mu cond-param] [do-mu body-param]
+]
+
+
+while-equal?-mu: func [
+    'value
+	'cond-param
+	'body-param
+] [
+	while [equal? do-mu value do-mu cond-param] [do-mu body-param]
+]
 
 make-matrix-mu: funct [columns value rows] [
 	result: copy []
@@ -310,4 +350,8 @@ back-mu: funct [arg] [
 	] [
 		back arg
 	]
+]
+
+div-mu: func [value1 value2] [
+	to-integer divide value1 value2
 ]

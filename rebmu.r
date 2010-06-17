@@ -287,6 +287,11 @@ rebmu-context: [
 	FE: :foreach
 	LO: :loop
 	WH: :while
+	WG: :while-greater?-mu
+	WL: :while-lesser?-mu
+	WGE: :while-greater-or-equal?-mu
+	WLE: :while-lesser-or-equal?-mu
+	WE: :while-equal?-mu
 	CN: :continue
 	BR: :break
 	UT: :until
@@ -369,7 +374,8 @@ rebmu-context: [
     AD: :add
     SB: :subtract
 	MP: :multiply
-	DV: :divide
+	DV: :div-mu
+	DD: :divide
 	IM: :inversion-mu
 	Z?: :zero?
 	MO: :mod
@@ -380,7 +386,9 @@ rebmu-context: [
 	++: :increment-mu
 	--: :decrement-mu
 	GT?: :greater?
+	GE?: :greater-or-equal?
 	LT?: :lesser?
+	LE?: :lesser-or-equal?
 	
 	;-------------------------------------------------------------------------------------	
 	; INPUT/OUTPUT
@@ -583,7 +591,7 @@ rebmu: func [
 			arg: to-block arg
 		]
 		arg: unmush/deep arg
-		if not set-word? type? first arg [
+		if not set-word? first arg [
 			; implicitly assign to a if the block doesn't start with a set-word
 			arg: compose/only [a: (arg)] 
 		]
