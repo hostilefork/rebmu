@@ -126,8 +126,8 @@ rebmu-context: [
 	; IF	conditional if
 	; DO	evaluates a block, file, url, function word
 	; AT	returns the series at the specified index
-	; NO	logic true
-	; ON	logic false
+	; NO	logic false
+	; ON	logic true
 
 	; Reasonable use of Symbolic Operators
 
@@ -169,32 +169,88 @@ rebmu-context: [
 	; for types will probably not be showing up too often in Code Golf.
 	;-------------------------------------------------------------------------------------	
 
-	(remap-datatype 'email 'em)
-	(remap-datatype 'block 'bl)
-	(remap-datatype 'char 'ch)
-	(remap-datatype 'decimal 'dc)
-	(remap-datatype 'error 'er)
-	(remap-datatype 'function 'fn)
-	(remap-datatype 'get-word 'gw)
-	(remap-datatype 'paren 'pn)
-	(remap-datatype 'integer 'in)
-	(remap-datatype 'pair 'pr)
-	(remap-datatype 'closure 'cl)
-	(remap-datatype 'logic 'lg) 
-	(remap-datatype 'map 'mp)
-	(remap-datatype 'none 'nn)
-	(remap-datatype 'object 'ob)
-	(remap-datatype 'path 'pa)
-	(remap-datatype 'lit-word 'lw)
-	(remap-datatype 'refinement 'rf)
-	(remap-datatype 'string 'st)
-	(remap-datatype 'time 'tm)
-	(remap-datatype 'tuple 'tu)
-	(remap-datatype 'file 'fi) 
-	(remap-datatype 'word 'wd)
-	(remap-datatype 'tag 'tg) 
-	(remap-datatype 'money 'mn)
-	(remap-datatype 'binary 'bi)
+; Having trouble getting this to work programmatically.  Doing this the lame
+; way until someone who knows more about context binding can fix it.
+
+	em!: :email!
+	em?: :email?
+	bl!: :block!
+	bl?: :block?
+	ch!: :char!
+	ch?: :char?
+	dc!: :decimal!
+	dc?: :decimal?
+	er!: :error!
+	er?: :error?
+	fn!: :function!
+	fn?: :function?
+	gw!: :get-word!
+	gw?: :get-word?
+	pn!: :paren!
+	pn?: :paren?
+	in!: :integer!
+	in?: :integer?
+	pr!: :pair!
+	pr?: :pair?
+	cl!: :closure!
+	cl?: :closure?
+	lg!: :logic!
+	lg?: :logic?
+	mp!: :map!
+	mp?: :map?
+	nn!: :none!
+	nn?: :none?
+	ob!: :object!
+	ob?: :object?
+	pa!: :path!
+	pa?: :path?
+	lw!: :lit-word!
+	lw?: :lit-word?
+	rf!: :refinement!
+	rf?: :refinement?
+	st!: :string!
+	st?: :string?
+	tm!: :time!
+	tm?: :time?
+	tu!: :tuple!
+	tu?: :tuple?
+	fi!: :file!
+	fi?: :file?
+	wd!: :word!
+	wd?: :word?
+	tg!: :tag!
+	tg?: :tag?
+	mn!: :money!
+	mn?: :money?
+	bi!: :binary!
+	bi?: :binary?
+
+;	(remap-datatype 'email 'em)
+;	(remap-datatype 'block 'bl)
+;	(remap-datatype 'char 'ch)
+;	(remap-datatype 'decimal 'dc)
+;	(remap-datatype 'error 'er)
+;	(remap-datatype 'function 'fn)
+;	(remap-datatype 'get-word 'gw)
+;	(remap-datatype 'paren 'pn)
+;	(remap-datatype 'integer 'in)
+;	(remap-datatype 'pair 'pr)
+;	(remap-datatype 'closure 'cl)
+;	(remap-datatype 'logic 'lg) 
+;	(remap-datatype 'map 'mp)
+;	(remap-datatype 'none 'nn)
+;	(remap-datatype 'object 'ob)
+;	(remap-datatype 'path 'pa)
+;	(remap-datatype 'lit-word 'lw)
+;	(remap-datatype 'refinement 'rf)
+;	(remap-datatype 'string 'st)
+;	(remap-datatype 'time 'tm)
+;	(remap-datatype 'tuple 'tu)
+;	(remap-datatype 'file 'fi) 
+;	(remap-datatype 'word 'wd)
+;	(remap-datatype 'tag 'tg) 
+;	(remap-datatype 'money 'mn)
+;	(remap-datatype 'binary 'bi)
 	
 	; TODO: make these automatically along with the datatype shorthands
 	TWD: :to-word-mu
@@ -218,8 +274,11 @@ rebmu-context: [
 	IF: :if-mu
 	EI: :either-mu
 	EL: :either-lesser?-mu
+	EE: :either-equal?-mu
 	IL: :if-lesser?-mu
 	IG: :if-greater?-mu
+	IE: :if-equal?-mu
+	SW: :switch
 
 	;-------------------------------------------------------------------------------------	
 	; LOOPING CONSTRUCTS
@@ -232,6 +291,7 @@ rebmu-context: [
 	BR: :break
 	UT: :until
 	RT: :repeat
+	FV: :forever
 
 	;-------------------------------------------------------------------------------------	
 	; DEFINING FUNCTIONS
@@ -239,6 +299,8 @@ rebmu-context: [
 
 	FN: :funct
 	FC: :func
+	DZ: :does
+	DF: :does-funct-mu
 	a|: :a|funct-mu
 	b|: :b|funct-mu
 	c|: :c|funct-mu
@@ -255,6 +317,7 @@ rebmu-context: [
 	;-------------------------------------------------------------------------------------	
 
 	PO: :poke
+	PC: :pick
 	AP: :append
 	AO: rebmu-wrap 'append/only [] ; very useful
 	IN: :insert
@@ -267,8 +330,10 @@ rebmu-context: [
 	RA: rebmu-wrap 'replace/all []
 	HD: :head
 	TL: :tail
-	BK: :back
-	NT: :next
+	BK: :back-mu
+	NT: :next-mu
+	CH: :change
+	SK: :skip
 
 	L?: :length?	
 	F?: :index?-find-mu
@@ -276,8 +341,13 @@ rebmu-context: [
 	I?: :index?
 	T?: :tail?
 	H?: :head?
-	E?: :empty?
-
+	M?: :empty?
+	
+	FR: :first
+	SC: :second
+	TH: :third
+	FH: :fourth
+	
 	; Mushing always breaks a + into its own token (unless next to another +, e.g. ++)
 	; Hence we can't have F+.  FP is close...
 	FP: :first+
@@ -296,10 +366,22 @@ rebmu-context: [
 	; MATH AND LOGIC OPERATIONS
 	;-------------------------------------------------------------------------------------	
 
+    AD: :add
+    SB: :subtract
 	MP: :multiply
 	DV: :divide
 	IM: :inversion-mu
-
+	Z?: :zero?
+	MO: :mod
+	E?: :equal?
+	AN: :AND ; mapped to & as well
+	EV?: :even?
+	OD?: :odd?
+	++: :increment-mu
+	--: :decrement-mu
+	GT?: :greater?
+	LT?: :lesser?
+	
 	;-------------------------------------------------------------------------------------	
 	; INPUT/OUTPUT
 	;-------------------------------------------------------------------------------------	
@@ -307,8 +389,11 @@ rebmu-context: [
 	RD: :read
 	WR: :write
 	PR: :print
+	PN: :prin
 	RI: :readin-mu
 	WO: :writeout-mu
+	RL: rebmu-wrap 'read/lines []
+	NL: :newline
 	
 	;-------------------------------------------------------------------------------------	
 	; CONSTRUCTION FUNCTIONS
@@ -323,11 +408,6 @@ rebmu-context: [
 	i^: :make-integer-mu
 	m^: :make-matrix-mu
 	s^: :make-string-mu
-
-	;-------------------------------------------------------------------------------------	
-	; LOGIC
-	;-------------------------------------------------------------------------------------	
-	AN: :AND ; mapped to & as well
 	
 	;-------------------------------------------------------------------------------------		
 	; MISC
@@ -336,6 +416,10 @@ rebmu-context: [
 	AL: :also
 	NN: :none
 	HM: :helpful-mu
+	NN: :none
+	ST: :set
+	GT: :get
+	RF: :redefine-mu
 	
 	;-------------------------------------------------------------------------------------
 	; SINGLE CHARACTER DEFINITIONS
@@ -346,10 +430,10 @@ rebmu-context: [
 	;-------------------------------------------------------------------------------------
 	
 	~: :IM
-	|: :|a ; afunc generator by default (not to be confused with a|, which is an afunct)		
+	|: :DF  ; funct generator w/no parameters		
 	&: :AN
 
-	.: none ; what should dot be?
+	.: :RF
 	?: none ; not help , but what should it be
 	
 	; ^ is copy because it breaks symbols; a^b becomes a^ b but A^b bcomes a: ^ b
@@ -392,11 +476,10 @@ rebmu-context: [
 ]
 
 remap-datatype: func [type [word!] shorter [word!]] [
-	bind reduce [
-		to-set-word rejoin [to-string shorter "!"] to-word rejoin [to-string type "!"]
-		to-set-word rejoin [to-string shorter "?"] get rejoin ["'" to-string type "?"]
-	] bind? 'system
-	[] ; above isn't working, why not?
+	bind/set reduce [
+		to-set-word rejoin [to-string shorter "!"] to-get-word rejoin [to-string type "!"]
+		to-set-word rejoin [to-string shorter "?"] to-get-word rejoin [to-string type "?"]
+	] bind? 'rebmu-context
 ]
 
 ; A rebmu wrapper lets you wrap a function or a refined version of a function

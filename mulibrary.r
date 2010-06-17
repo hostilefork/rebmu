@@ -32,19 +32,35 @@ to-word-mu: func [value] [
 	]
 ]
 
+redefine-mu: func ['dest 'source] [
+	set :dest get :source 
+]
+
 do-mu: func [
     {Is like Rebol's do except does not interpret string literals as loadable code.}
     value
-] [    
-    either string? :value [value] [do value]
+] [
+	switch/default type?/word :value [
+		block! [return do value]
+		word! [
+		    temp: get value
+			either (function? temp) or (native? temp) [
+				return do temp
+			] [
+				return temp
+			]
+		]
+	] [
+		return :value
+	]
 ]
 
 if-mu: func [
 	{If condition is TRUE, runs do-mu on the then parameter.}
     condition
-    then-param
+    'then-param
 	/else "If not true, then run do-mu on this parameter"
-	else-param
+	'else-param
 ] [
 	either condition [do-mu then-param] [if else [do-mu else-param]]
 ]
@@ -53,20 +69,31 @@ if-greater?-mu: func [
 	{If condition is TRUE, runs do-mu on the then parameter.}
 	value1
 	value2
-    then-param
+    'then-param
 	/else "If not true, then run do-mu on this parameter"
-	else-param
+	'else-param
 ] [
 	either greater? value1 value2 [do-mu then-param] [if else [do-mu else-param]]
+]
+
+if-equal?-mu: func [
+	{If condition is TRUE, runs do-mu on the then parameter.}
+	value1
+	value2
+    'then-param
+	/else "If not true, then run do-mu on this parameter"
+	'else-param
+] [
+	either equal? value1 value2 [do-mu then-param] [if else [do-mu else-param]]
 ]
 
 if-lesser?-mu: func [
 	{If condition is TRUE, runs do-mu on the then parameter.}
 	value1
 	value2
-    then-param
+    'then-param
 	/else "If not true, then run do-mu on this parameter"
-	else-param
+	'else-param
 ] [
 	either lesser? value1 value2 [do-mu then-param] [if else [do-mu else-param]]
 ]
@@ -74,8 +101,8 @@ if-lesser?-mu: func [
 either-mu: func [
     {If condition is TRUE, evaluates the first block, else evaluates the second.}
     condition
-    true-param
-    false-param
+    'true-param
+    'false-param
 ] [
 	either condition [do-mu true-param] [do-mu false-param]
 ]
@@ -84,11 +111,22 @@ either-lesser?-mu: func [
     {If condition is TRUE, evaluates the first block, else evaluates the second.}
 	value1
 	value2
-    true-param
-    false-param
+    'true-param
+    'false-param
 ] [
 	either-mu lesser? value1 value2 true-param false-param
 ]
+
+either-equal?-mu: func [
+	{If values are equal runs do-mu on the then parameter.}
+	value1
+	value2
+    'true-param
+	'false-param
+] [
+	either equal? value1 value2 true-param false-param
+]
+
 
 make-matrix-mu: funct [columns value rows] [
 	result: copy []
@@ -140,16 +178,16 @@ helpful-mu: func ['arg] [
 ; "func|a" is the same for funcs
 
 a|funct-mu: funct [body [block!]] [
-	funct-mu [a] body 
+	funct [a] body 
 ]
 b|funct-mu: funct [body [block!]] [
-	funct-mu [a b] body 
+	funct [a b] body 
 ]
 c|funct-mu: funct [body [block!]] [
-	funct-mu [a b c] body 
+	funct [a b c] body 
 ]
 d|funct-mu: funct [body [block!]] [
-	funct-mu [a b c d] body 
+	funct [a b c d] body 
 ]
 
 func|a-mu: func [body [block!]] [
@@ -163,6 +201,10 @@ func|c-mu: func [body [block!]] [
 ]
 func|d-mu: func [body [block!]] [
 	func [a b c d] body
+]
+
+does-funct-mu: func [body [block!]] [
+    funct [] body
 ]
 
 
@@ -194,6 +236,26 @@ index?-find-mu: funct [
 	] [
 		index? pos
 	]
+]
+
+increment-mu: func ['word-or-path] [
+    either path? word-or-path [
+    	old: get word-or-path
+    	set word-or-path 1 + old
+    	old
+    ] [
+    	++ word-or-path
+    ]
+]
+
+decrement-mu: func ['word-or-path] [
+    either path? word-or-path [
+        old: get word-or-path
+    	set word-or-path 1 - old
+    	old
+    ] [
+    	-- word-or-path
+    ]
 ]
 
 readin-mu: funct [
@@ -231,5 +293,21 @@ inversion-mu: func [
 		]
 	] [
 		not value
+	]
+]
+
+next-mu: funct [arg] [
+	switch/default type?/word get arg [
+	    integer! [arg + 1] 
+	] [
+		next arg
+	]
+]
+
+back-mu: funct [arg] [
+	switch/default type?/word get arg [
+	    integer! [arg - 1] 
+	] [
+		back arg
 	]
 ]
