@@ -190,6 +190,8 @@ rebmu-context: [
 	pn?: :paren?
 	in!: :integer!
 	in?: :integer?
+	im!: :image!
+	im?: :image?
 	pr!: :pair!
 	pr?: :pair?
 	cl!: :closure!
@@ -409,6 +411,7 @@ rebmu-context: [
 	;-------------------------------------------------------------------------------------	
 
 	CY: :copy
+	MK: :make
 	CYD: rebmu-wrap 'copy/deep []
 	CP: rebmu-wrap 'copy/part [] 
 	CPD: rebmu-wrap 'copy/part/deep [] 
@@ -428,6 +431,7 @@ rebmu-context: [
 	ST: :set
 	GT: :get
 	RF: :redefine-mu
+	EN: :encode
 	
 	;-------------------------------------------------------------------------------------
 	; SINGLE CHARACTER DEFINITIONS
@@ -538,7 +542,7 @@ rebmu-wrap: funct [arg [word! path!] refinemap [block!]] [
 rebmu: func [
 	{Visit http://hostilefork.com/rebmu/}
 	code [any-block! string!] "The Rebmu or Rebol code"
-	/args arg [block! string!] {named Rebmu arguments [X10Y20] or implicit a: block [1"hello"2]}
+	/args arg {named Rebmu arguments [X10Y20] or implicit a: block [1"hello"2]}
 	/stats "print out statistical information"
 	/debug "output debug information"
 	/env "return the runnable object plus environment, but don't execute main function"
@@ -586,10 +590,9 @@ rebmu: func [
 	]
 	
 	either args [
-		if string? arg [args: load args]
-		if not block? args [
-			arg: to-block arg
-		]
+		;if not block? args [
+		;	arg: to-block arg
+		;]
 		arg: unmush/deep arg
 		if not set-word? first arg [
 			; implicitly assign to a if the block doesn't start with a set-word
