@@ -87,6 +87,16 @@ if-equal?-mu: func [
 	either equal? value1 value2 [do-mu then-param] [if else [do-mu else-param]]
 ]
 
+if-zero?-mu: func [
+	{If condition is TRUE, runs do-mu on the then parameter.}
+	value
+    'then-param
+	/else "If not true, then run do-mu on this parameter"
+	'else-param
+] [
+	either zero? value [do-mu then-param] [if else [do-mu else-param]]
+]
+
 if-lesser?-mu: func [
 	{If condition is TRUE, runs do-mu on the then parameter.}
 	value1
@@ -107,6 +117,25 @@ either-mu: func [
 	either condition [do-mu true-param] [do-mu false-param]
 ]
 
+either-zero?-mu: func [
+    {If condition is ZERO, evaluates the first block, else evaluates the second.}
+	value
+    'true-param
+    'false-param
+] [
+	either zero? value [do-mu true-param] [do-mu false-param]
+]
+
+either-greater?-mu: func [
+    {If condition is TRUE, evaluates the first block, else evaluates the second.}
+	value1
+	value2
+    'true-param
+    'false-param
+] [
+	either greater? value1 value2 [do-mu true-param] [do-mu false-param]
+]
+
 either-lesser?-mu: func [
     {If condition is TRUE, evaluates the first block, else evaluates the second.}
 	value1
@@ -114,7 +143,7 @@ either-lesser?-mu: func [
     'true-param
     'false-param
 ] [
-	either-mu lesser? value1 value2 true-param false-param
+	either lesser? value1 value2 [do-mu true-param] [do-mu false-param]
 ]
 
 either-equal?-mu: func [
@@ -124,7 +153,14 @@ either-equal?-mu: func [
     'true-param
 	'false-param
 ] [
-	either equal? value1 value2 true-param false-param
+	either equal? value1 value2 [do-mu true-param] [do-mu false-param]
+]
+
+while-mu: func [
+	'cond-param
+	'body-param
+] [
+	while [do-mu cond-param] [do-mu body-param]
 ]
 
 while-greater?-mu: func [
@@ -136,36 +172,36 @@ while-greater?-mu: func [
 ]
 
 while-lesser-or-equal?-mu: func [
-    'value
+    value
 	'cond-param
 	'body-param
 ] [
-	while [lesser-or-equal? do-mu value do-mu cond-param] [do-mu body-param]
+	while-mu [lesser-or-equal? value do-mu cond-param] [do-mu body-param]
 ]
 
 while-greater-or-equal?-mu: func [
-    'value
+    value
 	'cond-param
 	'body-param
 ] [
-	while [greater-or-equal? do-mu value do-mu cond-param] [do-mu body-param]
+	while [greater-or-equal? value do-mu cond-param] [do-mu body-param]
 ]
 
 while-lesser?-mu: func [
-    'value
+    value
 	'cond-param
 	'body-param
 ] [
-	while [lesser? do-mu value do-mu cond-param] [do-mu body-param]
+	while-mu [lesser? value do-mu cond-param] [do-mu body-param]
 ]
 
 
 while-equal?-mu: func [
-    'value
+    value
 	'cond-param
 	'body-param
 ] [
-	while [equal? do-mu value do-mu cond-param] [do-mu body-param]
+	while [equal? value do-mu cond-param] [do-mu body-param]
 ]
 
 make-matrix-mu: funct [columns value rows] [
@@ -284,7 +320,7 @@ increment-mu: func ['word-or-path] [
     	set word-or-path 1 + old
     	old
     ] [
-    	++ word-or-path
+    	++ :word-or-path
     ]
 ]
 
@@ -294,7 +330,7 @@ decrement-mu: func ['word-or-path] [
     	set word-or-path 1 - old
     	old
     ] [
-    	-- word-or-path
+    	-- :word-or-path
     ]
 ]
 
@@ -317,7 +353,15 @@ writeout-mu: funct [
 	value
 ] [
 	; better implementation coming...
-	print value
+	switch/default type?/word get value [
+		block! [
+			foreach element value [
+			    print element
+			]
+		]
+	] [
+		print value
+	]
 ]
 
 ; Don't think want to call it not-mu because we probably want a more powerful operator
@@ -352,6 +396,38 @@ back-mu: funct [arg] [
 	]
 ]
 
-div-mu: func [value1 value2] [
+swap-mu: funct [
+	"Swap contents of variables."
+	a [word! series! gob!] b [word! series! gob!]
+][
+    if not equal? type? a type? b [
+        throw "swap-mu must be used with common types"
+    ]
+    either word? a [
+		x: get a  
+		set a get b  
+		set b x
+	] [
+		swap a b
+	]
+]
+
+div-mu: funct [value1 value2] [
 	to-integer divide value1 value2
+]
+
+add-mu: funct [value1 value2] [
+	switch/default type?/word get value1 [
+	    block! [
+	        result: copy value1
+	        while [(not tail? value1) and (not tail? value2)] [
+	        	change result add first result first value2
+	        	++ result
+	        	++ value2
+	        ]
+	        head result
+	    ] 
+	] [
+		add value1 value2
+	]
 ]

@@ -276,10 +276,13 @@ rebmu-context: [
 	IF: :if-mu
 	EI: :either-mu
 	EL: :either-lesser?-mu
+	EG: :either-greater?-mu
 	EE: :either-equal?-mu
+	EZ: :either-zero?-mu
 	IL: :if-lesser?-mu
 	IG: :if-greater?-mu
 	IE: :if-equal?-mu
+	IZ: :if-zero?-mu
 	SW: :switch
 
 	;-------------------------------------------------------------------------------------	
@@ -288,7 +291,7 @@ rebmu-context: [
 
 	FE: :foreach
 	LO: :loop
-	WH: :while
+	WH: :while-mu
 	WG: :while-greater?-mu
 	WL: :while-lesser?-mu
 	WGE: :while-greater-or-equal?-mu
@@ -341,6 +344,7 @@ rebmu-context: [
 	NT: :next-mu
 	CH: :change
 	SK: :skip
+	FI: :find
 
 	L?: :length?	
 	F?: :index?-find-mu
@@ -368,12 +372,14 @@ rebmu-context: [
 	ML: :mold
 	DR: :rebmu ; "Do Rebmu"
 	RE: :reduce
+	RJ: :rejoin
+	RO: rebmu-wrap 'repend/only []
 
 	;-------------------------------------------------------------------------------------	
 	; MATH AND LOGIC OPERATIONS
 	;-------------------------------------------------------------------------------------	
 
-    AD: :add
+    AD: :add-mu
     SB: :subtract
 	MP: :multiply
 	DV: :div-mu
@@ -391,6 +397,8 @@ rebmu-context: [
 	GE?: :greater-or-equal?
 	LT?: :lesser?
 	LE?: :lesser-or-equal?
+	NG?: :negative?
+	SG?: :sign?
 	
 	;-------------------------------------------------------------------------------------	
 	; INPUT/OUTPUT
@@ -432,6 +440,7 @@ rebmu-context: [
 	GT: :get
 	RF: :redefine-mu
 	EN: :encode
+	SX: :swap-mu
 	
 	;-------------------------------------------------------------------------------------
 	; SINGLE CHARACTER DEFINITIONS
@@ -452,6 +461,9 @@ rebmu-context: [
 	; This means that it is verbose to reset the a^ type symbols due to forcing a space
 	^: :CY 
 	
+	; TODO: there is an issue where if an argument a is put into the block you can't
+	; overwrite its context if you're inside something like a while block.  How
+	; to resolve this?
 	a: copy [] ; "array"
 	b: to-char 0 ; "byte"
 	c: #"A" ; "char"
@@ -516,8 +528,8 @@ rebmu-wrap: funct [arg [word! path!] refinemap [block!]] [
 				]
 			] 
 			copy/deep [
-				func [value length] [
-					copy/deep value length
+				func [value] [
+					copy/deep value
 				]
 			]
 			copy/part [
@@ -533,6 +545,11 @@ rebmu-wrap: funct [arg [word! path!] refinemap [block!]] [
 			append/only [
 				func [series value] [
 					append/only series value
+				]
+			]
+			repend/only [
+				func [series value] [
+					repend/only series value
 				]
 			]
 		]
@@ -590,9 +607,6 @@ rebmu: func [
 	]
 	
 	either args [
-		;if not block? args [
-		;	arg: to-block arg
-		;]
 		arg: unmush/deep arg
 		if not set-word? first arg [
 			; implicitly assign to a if the block doesn't start with a set-word
