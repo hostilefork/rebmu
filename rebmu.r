@@ -169,32 +169,36 @@ rebmu-context: [
 	; for types will probably not be showing up too often in Code Golf.
 	;-------------------------------------------------------------------------------------	
 
-	(remap-datatype 'email 'em)
-	(remap-datatype 'block 'bl)
-	(remap-datatype 'char 'ch)
-	(remap-datatype 'decimal 'dc)
-	(remap-datatype 'error 'er)
-	(remap-datatype 'function 'fn)
-	(remap-datatype 'get-word 'gw)
-	(remap-datatype 'paren 'pn)
-	(remap-datatype 'integer 'in)
-	(remap-datatype 'pair 'pr)
-	(remap-datatype 'closure 'cl)
-	(remap-datatype 'logic 'lg) 
-	(remap-datatype 'map 'mp)
-	(remap-datatype 'none 'nn)
-	(remap-datatype 'object 'ob)
-	(remap-datatype 'path 'pa)
-	(remap-datatype 'lit-word 'lw)
-	(remap-datatype 'refinement 'rf)
-	(remap-datatype 'string 'st)
-	(remap-datatype 'time 'tm)
-	(remap-datatype 'tuple 'tu)
-	(remap-datatype 'file 'fi) 
-	(remap-datatype 'word 'wd)
-	(remap-datatype 'tag 'tg) 
-	(remap-datatype 'money 'mn)
-	(remap-datatype 'binary 'bi)
+; Having trouble getting this to work programmatically in a way that doesn't require
+; passing in the query function but uses the stem, e.g. "email" => "em" and do the
+; binding.  Think it's due to bugs in R3A99.  Workaround I pass the query in
+
+	(remap-datatype email! email? "em")
+	(remap-datatype block! block? "bl")
+	(remap-datatype char! char? "ch")
+	(remap-datatype decimal! decimal? "dc")
+	(remap-datatype error! error? "er")
+	(remap-datatype function! error? "fn")
+	(remap-datatype get-word! error? "gw")
+	(remap-datatype paren! paren? "pn")
+	(remap-datatype integer! integer? "in")
+	(remap-datatype pair! pair? "pr")
+	(remap-datatype closure! closure? "cl")
+	(remap-datatype logic! logic? "lg") 
+	(remap-datatype map! map? "mp")
+	(remap-datatype none! none? "nn")
+	(remap-datatype object! object? "ob")
+	(remap-datatype path! path? "pa")
+	(remap-datatype lit-word! lit-word? "lw")
+	(remap-datatype refinement! refinement? "rf")
+	(remap-datatype string! string? "st")
+	(remap-datatype time! time? "tm")
+	(remap-datatype tuple! tuple? "tu")
+	(remap-datatype file! file? "fi") 
+	(remap-datatype word! word? "wd")
+	(remap-datatype tag! tag? "tg") 
+	(remap-datatype money! money? "mn")
+	(remap-datatype binary! binary? "bi")
 	
 	; TODO: make these automatically along with the datatype shorthands
 	TWD: :to-word-mu
@@ -441,13 +445,13 @@ rebmu-context: [
 	z: 0.0
 ]
 
-remap-datatype: func [type [word!] shorter [word!]] [
-    ; we really should be binding these into the rebmu context, lazy and putting
-    ; them global for expedience.
-	do bind/set/new reduce [
-		to-set-word rejoin [to-string shorter "!"] to-get-word rejoin [to-string type "!"]
-		to-set-word rejoin [to-string shorter "?"] to-get-word rejoin [to-string type "?"]
-	] bind? 'system
+remap-datatype: func [type [datatype!] 'query [word!] shorter [string!]] [
+    typename: head remove back tail to-string to-word type
+;    query: bind to-word rejoin [typename "?"] bind? 'system
+    shorter-type: bind/new to-word rejoin [shorter "!"] bind? 'system
+    shorter-query: bind/new to-word rejoin [shorter "?"] bind? 'system
+    set shorter-type type
+    set shorter-query :query
 ]
 
 ; A rebmu wrapper lets you wrap a function or a refined version of a function
@@ -509,7 +513,7 @@ rebmu: func [
 	/env "return the runnable object plus environment, but don't execute main function"
 	/inject injection [block! string!] "run some test code in the environment after main function"
 	/local result elem obj
-] [
+] [   
 	either string? code [
 		if stats [
 			print ["Original Rebmu string was:" length? code "characters."]
