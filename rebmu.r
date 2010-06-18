@@ -169,90 +169,32 @@ rebmu-context: [
 	; for types will probably not be showing up too often in Code Golf.
 	;-------------------------------------------------------------------------------------	
 
-; Having trouble getting this to work programmatically.  Doing this the lame
-; way until someone who knows more about context binding can fix it.
-
-	em!: :email!
-	em?: :email?
-	bl!: :block!
-	bl?: :block?
-	ch!: :char!
-	ch?: :char?
-	dc!: :decimal!
-	dc?: :decimal?
-	er!: :error!
-	er?: :error?
-	fn!: :function!
-	fn?: :function?
-	gw!: :get-word!
-	gw?: :get-word?
-	pn!: :paren!
-	pn?: :paren?
-	in!: :integer!
-	in?: :integer?
-	im!: :image!
-	im?: :image?
-	pr!: :pair!
-	pr?: :pair?
-	cl!: :closure!
-	cl?: :closure?
-	lg!: :logic!
-	lg?: :logic?
-	mp!: :map!
-	mp?: :map?
-	nn!: :none!
-	nn?: :none?
-	ob!: :object!
-	ob?: :object?
-	pa!: :path!
-	pa?: :path?
-	lw!: :lit-word!
-	lw?: :lit-word?
-	rf!: :refinement!
-	rf?: :refinement?
-	st!: :string!
-	st?: :string?
-	tm!: :time!
-	tm?: :time?
-	tu!: :tuple!
-	tu?: :tuple?
-	fi!: :file!
-	fi?: :file?
-	wd!: :word!
-	wd?: :word?
-	tg!: :tag!
-	tg?: :tag?
-	mn!: :money!
-	mn?: :money?
-	bi!: :binary!
-	bi?: :binary?
-
-;	(remap-datatype 'email 'em)
-;	(remap-datatype 'block 'bl)
-;	(remap-datatype 'char 'ch)
-;	(remap-datatype 'decimal 'dc)
-;	(remap-datatype 'error 'er)
-;	(remap-datatype 'function 'fn)
-;	(remap-datatype 'get-word 'gw)
-;	(remap-datatype 'paren 'pn)
-;	(remap-datatype 'integer 'in)
-;	(remap-datatype 'pair 'pr)
-;	(remap-datatype 'closure 'cl)
-;	(remap-datatype 'logic 'lg) 
-;	(remap-datatype 'map 'mp)
-;	(remap-datatype 'none 'nn)
-;	(remap-datatype 'object 'ob)
-;	(remap-datatype 'path 'pa)
-;	(remap-datatype 'lit-word 'lw)
-;	(remap-datatype 'refinement 'rf)
-;	(remap-datatype 'string 'st)
-;	(remap-datatype 'time 'tm)
-;	(remap-datatype 'tuple 'tu)
-;	(remap-datatype 'file 'fi) 
-;	(remap-datatype 'word 'wd)
-;	(remap-datatype 'tag 'tg) 
-;	(remap-datatype 'money 'mn)
-;	(remap-datatype 'binary 'bi)
+	(remap-datatype 'email 'em)
+	(remap-datatype 'block 'bl)
+	(remap-datatype 'char 'ch)
+	(remap-datatype 'decimal 'dc)
+	(remap-datatype 'error 'er)
+	(remap-datatype 'function 'fn)
+	(remap-datatype 'get-word 'gw)
+	(remap-datatype 'paren 'pn)
+	(remap-datatype 'integer 'in)
+	(remap-datatype 'pair 'pr)
+	(remap-datatype 'closure 'cl)
+	(remap-datatype 'logic 'lg) 
+	(remap-datatype 'map 'mp)
+	(remap-datatype 'none 'nn)
+	(remap-datatype 'object 'ob)
+	(remap-datatype 'path 'pa)
+	(remap-datatype 'lit-word 'lw)
+	(remap-datatype 'refinement 'rf)
+	(remap-datatype 'string 'st)
+	(remap-datatype 'time 'tm)
+	(remap-datatype 'tuple 'tu)
+	(remap-datatype 'file 'fi) 
+	(remap-datatype 'word 'wd)
+	(remap-datatype 'tag 'tg) 
+	(remap-datatype 'money 'mn)
+	(remap-datatype 'binary 'bi)
 	
 	; TODO: make these automatically along with the datatype shorthands
 	TWD: :to-word-mu
@@ -500,10 +442,12 @@ rebmu-context: [
 ]
 
 remap-datatype: func [type [word!] shorter [word!]] [
-	bind/set reduce [
+    ; we really should be binding these into the rebmu context, lazy and putting
+    ; them global for expedience.
+	do bind/set/new reduce [
 		to-set-word rejoin [to-string shorter "!"] to-get-word rejoin [to-string type "!"]
 		to-set-word rejoin [to-string shorter "?"] to-get-word rejoin [to-string type "?"]
-	] bind? 'rebmu-context
+	] bind? 'system
 ]
 
 ; A rebmu wrapper lets you wrap a function or a refined version of a function
