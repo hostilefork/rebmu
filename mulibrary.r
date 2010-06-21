@@ -32,6 +32,15 @@ to-word-mu: func [value] [
 	]
 ]
 
+caret-mu: func ['value] [
+	switch/default type?/word :value [
+		string! [return to-string debase value]
+	] [
+		throw "caret mu needs to be thought out for non-strings, see rebmu.r"
+	]
+
+]
+
 redefine-mu: func ['dest 'source] [
 	set :dest get :source 
 ]
@@ -74,6 +83,17 @@ if-greater?-mu: func [
 	'else-param
 ] [
 	either greater? value1 value2 [do-mu then-param] [if else [do-mu else-param]]
+]
+
+if-not-equal?-mu: func [
+	{If condition is TRUE, runs do-mu on the then parameter.}
+	value1
+	value2
+    'then-param
+	/else "If not true, then run do-mu on this parameter"
+	'else-param
+] [
+	either not-equal? value1 value2 [do-mu then-param] [if else [do-mu else-param]]
 ]
 
 if-equal?-mu: func [
@@ -421,7 +441,7 @@ add-mu: funct [value1 value2] [
 	    block! [
 	        result: copy value1
 	        while [(not tail? value1) and (not tail? value2)] [
-	        	change result add first result first value2
+	        	change result add-mu first result first value2
 	        	++ result
 	        	++ value2
 	        ]
@@ -429,5 +449,37 @@ add-mu: funct [value1 value2] [
 	    ] 
 	] [
 		add value1 value2
+	]
+]
+
+subtract-mu: funct [value1 value2] [
+	switch/default type?/word get value1 [
+	    block! [
+	        result: copy value1
+	        while [(not tail? value1) and (not tail? value2)] [
+	        	change result subtract-mu first result first value2
+	        	++ result
+	        	++ value2
+	        ]
+	        head result
+	    ] 
+	] [
+		subtract value1 value2
+	]
+]
+
+negate-mu: funct [value] [
+	switch/default type?/word get value [
+	    block! [
+	        result: copy value
+	        while [not tail? value] [
+	        	change result negate-mu first value
+	        	++ result
+	        	++ value
+	        ]
+	        head result
+	    ] 
+	] [
+		negate value
 	]
 ]

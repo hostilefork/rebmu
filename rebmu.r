@@ -104,6 +104,7 @@ REBOL [
         0.1.0 [10-Jan-2010 {Sketchy prototype written to cover only the
         Roman Numeral example I worked through when coming up with the
         idea.  So very incomplete, more a proof of concept.} "Fork"]
+        0.2.0 [18-Jan-2010 {Language now includes
     ]
 ]
 
@@ -171,7 +172,7 @@ rebmu-context: [
 
 ; Having trouble getting this to work programmatically in a way that doesn't require
 ; passing in the query function but uses the stem, e.g. "email" => "em" and do the
-; binding.  Think it's due to bugs in R3A99.  Workaround I pass the query in
+; binding.  Think it's due to bugs in R3A99.  Workaround I pass the query function in.
 
 	(remap-datatype email! email? "em")
 	(remap-datatype block! block? "bl")
@@ -228,6 +229,7 @@ rebmu-context: [
 	IL: :if-lesser?-mu
 	IG: :if-greater?-mu
 	IE: :if-equal?-mu
+	INE: :if-not-equal?-mu
 	IZ: :if-zero?-mu
 	SW: :switch
 
@@ -275,15 +277,18 @@ rebmu-context: [
 	PO: :poke
 	PC: :pick
 	AP: :append
-	AO: rebmu-wrap 'append/only [] ; very useful
-	IN: :insert
+	AO: rebmu-wrap 'append/only [series value] ; very useful
+	IS: :insert ; IN is a keyword
+	IO: rebmu-wrap 'insert/only [series value]
+	IP: rebmu-wrap 'insert/part [series value length]
+	IPO: rebmu-wrap 'insert/part/only [series value length]
 	TK: :take
-	MN: :minimum-of
-	MX: :maximum-of
+	MNO: :minimum-of
+	MXO: :maximum-of
 	RP: :repend
 	SE: :select
 	RV: :reverse
-	RA: rebmu-wrap 'replace/all []
+	RA: rebmu-wrap 'replace/all [target search replace]
 	HD: :head
 	TL: :tail
 	BK: :back-mu
@@ -314,27 +319,29 @@ rebmu-context: [
 	;-------------------------------------------------------------------------------------	
 
 	CO: :compose
-	COD: rebmu-wrap 'compose/deep []
+	COD: rebmu-wrap 'compose/deep [value]
 	ML: :mold
 	DR: :rebmu ; "Do Rebmu"
 	RE: :reduce
 	RJ: :rejoin
-	RO: rebmu-wrap 'repend/only []
+	RO: rebmu-wrap 'repend/only [series value]
 
 	;-------------------------------------------------------------------------------------	
 	; MATH AND LOGIC OPERATIONS
 	;-------------------------------------------------------------------------------------	
 
     AD: :add-mu
-    SB: :subtract
+    SB: :subtract-mu
 	MP: :multiply
 	DV: :div-mu
 	DD: :divide
 	IM: :inversion-mu
+	NG: :negate-mu
 	Z?: :zero?
 	MO: :mod
 	E?: :equal?
-	AN: :AND ; mapped to & as well
+	AN: :AND~ ; mapped to & as well but maybe we should use that for something else
+	OO: :OR~ ; don't want to change infix default, consider this short for "ooooor...." :)
 	EV?: :even?
 	OD?: :odd?
 	++: :increment-mu
@@ -345,6 +352,10 @@ rebmu-context: [
 	LE?: :lesser-or-equal?
 	NG?: :negative?
 	SG?: :sign?
+	Y?: :true?
+	N?: func [val] [not true? val] ; can be useful
+	MN: :min
+	MX: :max
 	
 	;-------------------------------------------------------------------------------------	
 	; INPUT/OUTPUT
@@ -356,8 +367,16 @@ rebmu-context: [
 	PN: :prin
 	RI: :readin-mu
 	WO: :writeout-mu
-	RL: rebmu-wrap 'read/lines []
+	RL: rebmu-wrap 'read/lines [source]
 	NL: :newline
+
+	;-------------------------------------------------------------------------------------	
+	; STRINGS
+	;-------------------------------------------------------------------------------------	
+	TRM: :trim
+	TRT: rebmu-wrap 'trim/tail [series]
+	TRH: rebmu-wrap 'trim/head [series]
+	TRA: rebmu-wrap 'trim/all [series]
 	
 	;-------------------------------------------------------------------------------------	
 	; CONSTRUCTION FUNCTIONS
@@ -366,10 +385,11 @@ rebmu-context: [
 
 	CY: :copy
 	MK: :make
-	CYD: rebmu-wrap 'copy/deep []
-	CP: rebmu-wrap 'copy/part [] 
-	CPD: rebmu-wrap 'copy/part/deep [] 
+	CYD: rebmu-wrap 'copy/deep [value]
+	CP: rebmu-wrap 'copy/part [value] 
+	CPD: rebmu-wrap 'copy/part/deep [value] 
 	a^: :array
+	ai^: rebmu-wrap 'array/initial [size value]
 	i^: :make-integer-mu
 	m^: :make-matrix-mu
 	s^: :make-string-mu
@@ -403,9 +423,15 @@ rebmu-context: [
 	.: :RF
 	?: none ; not help , but what should it be
 	
-	; ^ is copy because it breaks symbols; a^b becomes a^ b but A^b bcomes a: ^ b
-	; This means that it is verbose to reset the a^ type symbols due to forcing a space
-	^: :CY 
+	; ^ is something that needs to have thought given to it
+	; because it breaks symbols; a^b becomes a^ b but A^b bcomes a: ^b
+	; ^foo is therefore good for construction functions which are going
+	; to target an assignment but little else.  getting a ^ in isolation
+	; requires situations like coming in front of a block or a string
+	; literal so it might make sense to define it as something that is 
+	; frequently applied to series literals.  decoding base-64 strings
+	; might be an option as they are used a lot in code golf.
+	^: :caret-mu
 	
 	; TODO: there is an issue where if an argument a is put into the block you can't
 	; overwrite its context if you're inside something like a while block.  How
@@ -454,53 +480,12 @@ remap-datatype: func [type [datatype!] 'query [word!] shorter [string!]] [
     set shorter-query :query
 ]
 
-; A rebmu wrapper lets you wrap a function or a refined version of a function
-rebmu-wrap: funct [arg [word! path!] refinemap [block!]] [
-	either word? arg [
-		; need to use refinemap!
-		:arg
-	] [
-		; need to write generalization of spec capture with reflect, e.g.
-		; spec: reflect :arg 'spec 
-		; just testing concept for the moment with a couple of cases though
-		; so writing by hand
-		switch arg [
-			replace/all [
-				func [target search value] [
-					replace/all target search value
-				]
-			]
-			compose/deep [
-				func [value] [
-					compose/deep value
-				]
-			] 
-			copy/deep [
-				func [value] [
-					copy/deep value
-				]
-			]
-			copy/part [
-				func [value length] [
-					copy/part value length
-				]
-			]
-			copy/part/deep [
-				func [value length] [
-					copy/part/deep value length
-				]
-			]
-			append/only [
-				func [series value] [
-					append/only series value
-				]
-			]
-			repend/only [
-				func [series value] [
-					repend/only series value
-				]
-			]
-		]
+; A rebmu wrapper lets you wrap a refinement
+; need to write generalization of spec capture with reflect, e.g.
+; spec: reflect :arg 'spec 
+rebmu-wrap: funct [refined [path!] args [block!]] [
+	func args compose [
+		(refined) (args)
 	]
 ]
 
