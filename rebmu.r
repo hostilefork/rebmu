@@ -356,6 +356,7 @@ rebmu-context: [
 	N?: func [val] [not true? val] ; can be useful
 	MN: :min
 	MX: :max
+	AY: :any
 	
 	;-------------------------------------------------------------------------------------	
 	; INPUT/OUTPUT
@@ -491,17 +492,19 @@ rebmu-wrap: funct [refined [path!] args [block!]] [
 
 rebmu: func [
 	{Visit http://hostilefork.com/rebmu/}
-	code [any-block! string!] "The Rebmu or Rebol code"
+	code [file! any-block! string!] "The Rebmu or Rebol code"
 	/args arg {named Rebmu arguments [X10Y20] or implicit a: block [1"hello"2]}
 	/stats "print out statistical information"
 	/debug "output debug information"
 	/env "return the runnable object plus environment, but don't execute main function"
 	/inject injection [block! string!] "run some test code in the environment after main function"
 	/local result elem obj
-] [   
-	either string? code [
+] [
+	either (file? code) or (string? code) [
 		if stats [
-			print ["Original Rebmu string was:" length? code "characters."]
+			if string? code [
+				print ["Original Rebmu string was:" length? code "characters."]
+			]
 		]
 
 		code: load code
