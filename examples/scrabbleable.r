@@ -13,18 +13,18 @@ L0feZa[LmxLl?z]
 ; expression is V(1 + (l - 1) * (ad eOD?n1[0] dv n 2)])
 ; we add one because our loop doesn't do the theoretical minimum ++ v
 Vad2mpBKlADeOD?n1[0]dvN2
-    
+	
 ; M is our board matrix, initially set to spaces
 Mai^vTSai^vS
-    
+	
 ; G is a func (not a funct) thus can write to the global variable M 
 ; it takes a matrix to replace the matrix with and returns the old one 
 G|a[ZcydM MaZ]
-    
+	
 ; F is the now common iterator finder for coordinates in a matrix
 ; modified so if you ask about out of range it always returns space
 Fa|[ZpcMscA XfrA ZigX0[iZ[skZbkX]] iZ[iT?z[Zno]]eZz{ }]
-    
+	
 ; T is a "c|function", meaning it takes parameters A B C
 ; it tries to put the string A into the matrix at coordinates B with step offset C
 ; returns true if successful false if not
@@ -42,7 +42,7 @@ Tc|[
 	Qdz[Z1br]
 	ieSfrFsbBc[wh[ZfpA][JfB KfrJeeSk[OrvCYcEEsFRfADbO[eeSfrFadBngO[chJz]q]q][X1ineKzQ]BadBc]ieSfrFb[anY?xN?z]]
 ]
-    
+	
 ; R recursively applies itself for placing the words in A
 ; returns true if it succeeds
 Ra|[
@@ -63,7 +63,7 @@ Ra|[
 		]
 		q
 	]
-    u
+	u
 ]
 ]
 

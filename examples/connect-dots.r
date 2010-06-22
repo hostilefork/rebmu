@@ -24,7 +24,7 @@ Ya|[i?fiMhdA]
 ; of that cell
 Ca|[skPCmSCaBKfrA]
 
-; n defaults to 1 in Rebmu.  we loop through all the numbers up front and
+; n defaults to 1 in Rebmu.	 we loop through all the numbers up front and
 ; gather their coordinate pairs into a list called g
 wh[Jd++n][roG[xJyJ]]
 
@@ -46,23 +46,23 @@ whB[
 		
 		; the (h)orizontal and (v)ertical offsets we'll step by (-1,0,1)
 		HqXkXj
-        VqYkYj
-        
+		VqYkYj
+		
 		; change the character at iterator location for b (now our
 		; current location) based on an index into the letters list
 		; that we figure out based on whether v is zero, h is zero,
 		; v equals h, or v doesn't equal h.
 		u[
 			; if we update the coordinate pair by the offset and it 
-            ; equals finish, then we're done with the stroke
+			; equals finish, then we're done with the stroke
 			chCbPClEZv1[ezH2[eeHv3 4]]
 			e?BadBre[hV]f
-    	]
+		]
 	]
 	
 	; whether we overwrite the number with a + or a plus and space
-    ; depends on whether we detect one of our wall "letters" already
-    ; one step to the right of the iterator position
+	; depends on whether we detect one of our wall "letters" already
+	; one step to the right of the iterator position
 	chJeFIlSCj{+}{+ }
 	
 	; update from finish pair to be new begin pair for next loop iteration

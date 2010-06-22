@@ -7,18 +7,18 @@ REBOL [
 ]
 
 to-string-mu: func [
-    value
+	value
 ] [
 	either any-word? value [
 		; This code comes from spelling? from an old version of Bindology
 		; Ladislav and Fork are hoping for this to be the functionality of to-string in Rebol 3.0
 		; for words (then this function would then be unnecessary).
 		
-	    case [
-	        word? :value [mold :value]
-	        set-word? :value [head remove back tail mold :value]
-	        true [next mold :value]
-	    ]
+		case [
+			word? :value [mold :value]
+			set-word? :value [head remove back tail mold :value]
+			true [next mold :value]
+		]
 	] [
 		to-string value
 	]
@@ -46,13 +46,13 @@ redefine-mu: func ['dest 'source] [
 ]
 
 do-mu: func [
-    {Is like Rebol's do except does not interpret string literals as loadable code.}
-    value
+	{Is like Rebol's do except does not interpret string literals as loadable code.}
+	value
 ] [
 	switch/default type?/word :value [
 		block! [return do value]
 		word! [
-		    temp: get value
+			temp: get value
 			either (function? temp) or (native? temp) [
 				return do temp
 			] [
@@ -66,8 +66,8 @@ do-mu: func [
 
 if-mu: func [
 	{If condition is TRUE, runs do-mu on the then parameter.}
-    condition
-    'then-param
+	condition
+	'then-param
 	/else "If not true, then run do-mu on this parameter"
 	'else-param
 ] [
@@ -78,7 +78,7 @@ if-greater?-mu: func [
 	{If condition is TRUE, runs do-mu on the then parameter.}
 	value1
 	value2
-    'then-param
+	'then-param
 	/else "If not true, then run do-mu on this parameter"
 	'else-param
 ] [
@@ -89,7 +89,7 @@ if-not-equal?-mu: func [
 	{If condition is TRUE, runs do-mu on the then parameter.}
 	value1
 	value2
-    'then-param
+	'then-param
 	/else "If not true, then run do-mu on this parameter"
 	'else-param
 ] [
@@ -100,7 +100,7 @@ if-equal?-mu: func [
 	{If condition is TRUE, runs do-mu on the then parameter.}
 	value1
 	value2
-    'then-param
+	'then-param
 	/else "If not true, then run do-mu on this parameter"
 	'else-param
 ] [
@@ -110,7 +110,7 @@ if-equal?-mu: func [
 if-zero?-mu: func [
 	{If condition is TRUE, runs do-mu on the then parameter.}
 	value
-    'then-param
+	'then-param
 	/else "If not true, then run do-mu on this parameter"
 	'else-param
 ] [
@@ -121,7 +121,7 @@ if-lesser?-mu: func [
 	{If condition is TRUE, runs do-mu on the then parameter.}
 	value1
 	value2
-    'then-param
+	'then-param
 	/else "If not true, then run do-mu on this parameter"
 	'else-param
 ] [
@@ -129,39 +129,39 @@ if-lesser?-mu: func [
 ]
 
 either-mu: func [
-    {If condition is TRUE, evaluates the first block, else evaluates the second.}
-    condition
-    'true-param
-    'false-param
+	{If condition is TRUE, evaluates the first block, else evaluates the second.}
+	condition
+	'true-param
+	'false-param
 ] [
 	either condition [do-mu true-param] [do-mu false-param]
 ]
 
 either-zero?-mu: func [
-    {If condition is ZERO, evaluates the first block, else evaluates the second.}
+	{If condition is ZERO, evaluates the first block, else evaluates the second.}
 	value
-    'true-param
-    'false-param
+	'true-param
+	'false-param
 ] [
 	either zero? value [do-mu true-param] [do-mu false-param]
 ]
 
 either-greater?-mu: func [
-    {If condition is TRUE, evaluates the first block, else evaluates the second.}
+	{If condition is TRUE, evaluates the first block, else evaluates the second.}
 	value1
 	value2
-    'true-param
-    'false-param
+	'true-param
+	'false-param
 ] [
 	either greater? value1 value2 [do-mu true-param] [do-mu false-param]
 ]
 
 either-lesser?-mu: func [
-    {If condition is TRUE, evaluates the first block, else evaluates the second.}
+	{If condition is TRUE, evaluates the first block, else evaluates the second.}
 	value1
 	value2
-    'true-param
-    'false-param
+	'true-param
+	'false-param
 ] [
 	either lesser? value1 value2 [do-mu true-param] [do-mu false-param]
 ]
@@ -170,7 +170,7 @@ either-equal?-mu: func [
 	{If values are equal runs do-mu on the then parameter.}
 	value1
 	value2
-    'true-param
+	'true-param
 	'false-param
 ] [
 	either equal? value1 value2 [do-mu true-param] [do-mu false-param]
@@ -184,7 +184,7 @@ while-mu: func [
 ]
 
 while-greater?-mu: func [
-    'value
+	'value
 	'cond-param
 	'body-param
 ] [
@@ -192,7 +192,7 @@ while-greater?-mu: func [
 ]
 
 while-lesser-or-equal?-mu: func [
-    value
+	value
 	'cond-param
 	'body-param
 ] [
@@ -200,7 +200,7 @@ while-lesser-or-equal?-mu: func [
 ]
 
 while-greater-or-equal?-mu: func [
-    value
+	value
 	'cond-param
 	'body-param
 ] [
@@ -208,7 +208,7 @@ while-greater-or-equal?-mu: func [
 ]
 
 while-lesser?-mu: func [
-    value
+	value
 	'cond-param
 	'body-param
 ] [
@@ -217,7 +217,7 @@ while-lesser?-mu: func [
 
 
 while-equal?-mu: func [
-    value
+	value
 	'cond-param
 	'body-param
 ] [
@@ -261,7 +261,7 @@ helpful-mu: func ['arg] [
 				l: charset [#"a" - #"z"] ; lowercase
 			]
 		]
-		; Are there better ways to handle this?  h2 for instance is no shorter than 20
+		; Are there better ways to handle this?	 h2 for instance is no shorter than 20
 		integer! [make-integer-mu arg]
 		pair! [make-integer-mu arg]
 	] [
@@ -270,7 +270,7 @@ helpful-mu: func ['arg] [
 ]
 
 ; An "a|funct" is a function that takes a single parameter called a, you only
-; need to supply the code block.  obvious extensions for other letters.  The
+; need to supply the code block.  obvious extensions for other letters.	 The
 ; "func|a" is the same for funcs
 
 a|funct-mu: funct [body [block!]] [
@@ -300,7 +300,7 @@ func|d-mu: func [body [block!]] [
 ]
 
 does-funct-mu: func [body [block!]] [
-    funct [] body
+	funct [] body
 ]
 
 
@@ -317,7 +317,7 @@ quoth-mu: funct [
 			]
 		]
 	] [
-	 	throw "Unhandled type to quoth-mu"
+		throw "Unhandled type to quoth-mu"
 	]
 ]
 
@@ -335,23 +335,23 @@ index?-find-mu: funct [
 ]
 
 increment-mu: func ['word-or-path] [
-    either path? word-or-path [
-    	old: get word-or-path
-    	set word-or-path 1 + old
-    	old
-    ] [
-    	++ :word-or-path
-    ]
+	either path? word-or-path [
+		old: get word-or-path
+		set word-or-path 1 + old
+		old
+	] [
+		++ :word-or-path
+	]
 ]
 
 decrement-mu: func ['word-or-path] [
-    either path? word-or-path [
-        old: get word-or-path
-    	set word-or-path 1 - old
-    	old
-    ] [
-    	-- :word-or-path
-    ]
+	either path? word-or-path [
+		old: get word-or-path
+		set word-or-path 1 - old
+		old
+	] [
+		-- :word-or-path
+	]
 ]
 
 readin-mu: funct [
@@ -376,7 +376,7 @@ writeout-mu: funct [
 	switch/default type?/word get value [
 		block! [
 			foreach element value [
-			    print element
+				print element
 			]
 		]
 	] [
@@ -402,7 +402,7 @@ inversion-mu: func [
 
 next-mu: funct [arg] [
 	switch/default type?/word get arg [
-	    integer! [arg + 1] 
+		integer! [arg + 1] 
 	] [
 		next arg
 	]
@@ -410,7 +410,7 @@ next-mu: funct [arg] [
 
 back-mu: funct [arg] [
 	switch/default type?/word get arg [
-	    integer! [arg - 1] 
+		integer! [arg - 1] 
 	] [
 		back arg
 	]
@@ -420,12 +420,12 @@ swap-mu: funct [
 	"Swap contents of variables."
 	a [word! series! gob!] b [word! series! gob!]
 ][
-    if not equal? type? a type? b [
-        throw "swap-mu must be used with common types"
-    ]
-    either word? a [
+	if not equal? type? a type? b [
+		throw "swap-mu must be used with common types"
+	]
+	either word? a [
 		x: get a  
-		set a get b  
+		set a get b	 
 		set b x
 	] [
 		swap a b
@@ -438,15 +438,15 @@ div-mu: funct [value1 value2] [
 
 add-mu: funct [value1 value2] [
 	switch/default type?/word get value1 [
-	    block! [
-	        result: copy value1
-	        while [(not tail? value1) and (not tail? value2)] [
-	        	change result add-mu first result first value2
-	        	++ result
-	        	++ value2
-	        ]
-	        head result
-	    ] 
+		block! [
+			result: copy value1
+			while [(not tail? value1) and (not tail? value2)] [
+				change result add-mu first result first value2
+				++ result
+				++ value2
+			]
+			head result
+		] 
 	] [
 		add value1 value2
 	]
@@ -454,15 +454,15 @@ add-mu: funct [value1 value2] [
 
 subtract-mu: funct [value1 value2] [
 	switch/default type?/word get value1 [
-	    block! [
-	        result: copy value1
-	        while [(not tail? value1) and (not tail? value2)] [
-	        	change result subtract-mu first result first value2
-	        	++ result
-	        	++ value2
-	        ]
-	        head result
-	    ] 
+		block! [
+			result: copy value1
+			while [(not tail? value1) and (not tail? value2)] [
+				change result subtract-mu first result first value2
+				++ result
+				++ value2
+			]
+			head result
+		] 
 	] [
 		subtract value1 value2
 	]
@@ -470,15 +470,15 @@ subtract-mu: funct [value1 value2] [
 
 negate-mu: funct [value] [
 	switch/default type?/word get value [
-	    block! [
-	        result: copy value
-	        while [not tail? value] [
-	        	change result negate-mu first value
-	        	++ result
-	        	++ value
-	        ]
-	        head result
-	    ] 
+		block! [
+			result: copy value
+			while [not tail? value] [
+				change result negate-mu first value
+				++ result
+				++ value
+			]
+			head result
+		] 
 	] [
 		negate value
 	]

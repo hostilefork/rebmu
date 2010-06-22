@@ -32,10 +32,10 @@ REBOL [
 		>> unmush [ABCdefGHI]
 		== [abc: def ghi]
 	
-	This applies to elements of paths as well.  Each path break presents an opportunity for
+	This applies to elements of paths as well.	Each path break presents an opportunity for
 	a new alternation sequence, hence a set-word split:
 	
-		>> unmush [ABCdef/GHI]    
+		>> unmush [ABCdef/GHI]	  
 		== [abc: def/ghi:]
 
 		>> unmush [ABCdef/ghi]
@@ -55,20 +55,20 @@ REBOL [
 	Despite being a little bit "silly" (as Code Golf is sort of silly), there is
 	a serious side to the design.  Rebmu is a genuine dialect... meaning that it
 	uses the Rebol data format and thus relegates most parsing--such as parentheses
-	and block matches.  This means that there's no string-oriented trickery taking
+	and block matches.	This means that there's no string-oriented trickery taking
 	advantage of illegal source token sequences in Rebol (like 1FOO, A:B, A$B...)
 	
 	Also, Rebmu is a superset of Rebol, so any Rebol code should be able to be used
-	safely.  That's because despite several shorthands defined for common Rebol operations 
+	safely.	 That's because despite several shorthands defined for common Rebol operations 
 	(even as far as I for IF) the functions are true to their Rebol bretheren across 
-	all inputs that Rebol accepts.  [Current exceptions to this are q and ?]
+	all inputs that Rebol accepts.	[Current exceptions to this are q and ?]
 	
-	Rebmu programs get their own execution context.  They will unmush their input,
+	Rebmu programs get their own execution context.	 They will unmush their input,
 	set up the environment of abbreviated routines, and run the code:
 	
 		>> rebmu [w"Hello World"]
 		Hello World
-	    
+		
 	You can also pass in named arguments via a block:
 	
 		>> rebmu/args [wSwM] [s: "Hello" m: "World"]
@@ -100,12 +100,12 @@ REBOL [
 	Rebol's print.
 	}
 	
-    History: [
-        0.1.0 [10-Jan-2010 {Sketchy prototype written to cover only the
-        Roman Numeral example I worked through when coming up with the
-        idea.  So very incomplete, more a proof of concept.} "Fork"]
-        0.2.0 [18-Jan-2010 {Language now includes
-    ]
+	History: [
+		0.1.0 [10-Jan-2010 {Sketchy prototype written to cover only the
+		Roman Numeral example I worked through when coming up with the
+		idea.  So very incomplete, more a proof of concept.} "Fork"]
+		0.2.0 [18-Jan-2010 {Language now includes
+	]
 ]
 
 ; Load the library of xxx-mu functions
@@ -121,7 +121,7 @@ rebmu-context: [
 	
 	; Very Reasonable Use of English Words
 	
-	; TO 	to conversion
+	; TO	to conversion
 	; OR	or operator
 	; IN	word or block in the object's context
 	; IF	conditional if
@@ -132,8 +132,8 @@ rebmu-context: [
 
 	; Reasonable use of Symbolic Operators
 
-	; ++ 	increment and return previous value
-	; -- 	decrement and return previous value
+	; ++	increment and return previous value
+	; --	decrement and return previous value
 	; ??	Debug print a word, path, block or such
 	; >=	true if the first value is greater than the second
 	; <>	true if the values are not equal
@@ -147,15 +147,15 @@ rebmu-context: [
 	; not have shorthands by default...what metric proved that *these four* were the
 	; ideal things to abbreviate? 
 	
-	; SP 	alias for SPACE
+	; SP	alias for SPACE
 	; RM	alias for DELETE
 	; DP	alias for DELTA-PROFILE
 	; DT	alias for DELTA-TIME
 
-	; These are shell commands and it seems like there would be many more.  Could there
+	; These are shell commands and it seems like there would be many more.	Could there
 	; be a shell dialect, in which for instance issue values (#foo) could be environment
 	; variables, or something like that?  It seems many other things would be nice, like
-	; pushing directories or popping them, moving files from one place to another, etc.	
+	; pushing directories or popping them, moving files from one place to another, etc. 
 	
 	; LS	print contents of a directory
 	; CD	change directory
@@ -166,13 +166,13 @@ rebmu-context: [
 	;-------------------------------------------------------------------------------------
 	; DATATYPE SHORTHANDS (3 CHARS)
 	; Though I considered giving the datatypes 2-character names, I decided on 3 and saving
-	; the one-characters for things like index? and offset? and length?  Literal words
+	; the one-characters for things like index? and offset? and length?	 Literal words
 	; for types will probably not be showing up too often in Code Golf.
 	;-------------------------------------------------------------------------------------	
 
 ; Having trouble getting this to work programmatically in a way that doesn't require
 ; passing in the query function but uses the stem, e.g. "email" => "em" and do the
-; binding.  Think it's due to bugs in R3A99.  Workaround I pass the query function in.
+; binding.	Think it's due to bugs in R3A99.  Workaround I pass the query function in.
 
 	(remap-datatype email! email? "em")
 	(remap-datatype block! block? "bl")
@@ -330,8 +330,8 @@ rebmu-context: [
 	; MATH AND LOGIC OPERATIONS
 	;-------------------------------------------------------------------------------------	
 
-    AD: :add-mu
-    SB: :subtract-mu
+	AD: :add-mu
+	SB: :subtract-mu
 	MP: :multiply
 	DV: :div-mu
 	DD: :divide
@@ -413,12 +413,12 @@ rebmu-context: [
 	; SINGLE CHARACTER DEFINITIONS
 	; For the values (e.g. s the empty string) it is expected that you will overwrite them
 	; during the course of your program.  It's a little less customary to redefine the
-	; functions like I for IF, although you may do so if you feel the need.  They will
+	; functions like I for IF, although you may do so if you feel the need.	 They will
 	; still be available in a two-character variation.
 	;-------------------------------------------------------------------------------------
 	
 	~: :IM
-	|: :DF  ; funct generator w/no parameters		
+	|: :DF	; funct generator w/no parameters		
 	&: :AN
 
 	.: :RF
@@ -427,7 +427,7 @@ rebmu-context: [
 	; ^ is something that needs to have thought given to it
 	; because it breaks symbols; a^b becomes a^ b but A^b bcomes a: ^b
 	; ^foo is therefore good for construction functions which are going
-	; to target an assignment but little else.  getting a ^ in isolation
+	; to target an assignment but little else.	getting a ^ in isolation
 	; requires situations like coming in front of a block or a string
 	; literal so it might make sense to define it as something that is 
 	; frequently applied to series literals.  decoding base-64 strings
@@ -435,7 +435,7 @@ rebmu-context: [
 	^: :caret-mu
 	
 	; TODO: there is an issue where if an argument a is put into the block you can't
-	; overwrite its context if you're inside something like a while block.  How
+	; overwrite its context if you're inside something like a while block.	How
 	; to resolve this?
 	a: copy [] ; "array"
 	b: to-char 0 ; "byte"
@@ -454,7 +454,7 @@ rebmu-context: [
 	o: :OR ; "or"
 	p: :PO ; "poke"
 	
-	; Q is tricky.  I've tried not to violate the meanings of any existing Rebol functions,
+	; Q is tricky.	I've tried not to violate the meanings of any existing Rebol functions,
 	; but it seems like a waste to have an interpreter-only function like "quit" be taking
 	; up such a short symbol by default.  I feel the same way about ? being help.  This
 	; is an issue I have with Rebol's default definitions -Fork
@@ -473,12 +473,12 @@ rebmu-context: [
 ]
 
 remap-datatype: func [type [datatype!] 'query [word!] shorter [string!]] [
-    typename: head remove back tail to-string to-word type
-;    query: bind to-word rejoin [typename "?"] bind? 'system
-    shorter-type: bind/new to-word rejoin [shorter "!"] bind? 'system
-    shorter-query: bind/new to-word rejoin [shorter "?"] bind? 'system
-    set shorter-type type
-    set shorter-query :query
+	typename: head remove back tail to-string to-word type
+;	 query: bind to-word rejoin [typename "?"] bind? 'system
+	shorter-type: bind/new to-word rejoin [shorter "!"] bind? 'system
+	shorter-query: bind/new to-word rejoin [shorter "?"] bind? 'system
+	set shorter-type type
+	set shorter-query :query
 ]
 
 ; A rebmu wrapper lets you wrap a refinement

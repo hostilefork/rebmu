@@ -1,6 +1,6 @@
 REBOL [
 	Title: "Mushing Routines"
-	Description: {Routines implementing the Rebmu concept of "mushing".  Mushed Rebol still
+	Description: {Routines implementing the Rebmu concept of "mushing".	 Mushed Rebol still
 	passes the parser but uses particular sequences of upper and lower case terms and
 	symbol processing within words to achieve an approximately 40% reduction in whitespace.
 
@@ -53,7 +53,7 @@ type-of-char: func [c [char!]] [
 	return 'caseless
 ]
 
-; Simplistic routine, open to improvements.  Use PARSE dialect instead?
+; Simplistic routine, open to improvements.	 Use PARSE dialect instead?
 ; IF unmush returns a block! (and you didn't pass in a block!) then it is a sequence
 ; There may be a better convention
 unmush: funct [value /deep] [
