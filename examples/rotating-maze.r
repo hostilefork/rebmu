@@ -1,7 +1,7 @@
 ; http://stackoverflow.com/questions/3034331/code-golf-rotating-maze
 
 ; We use "first" and "second" a lot, worth it to define f and s
-.fFR.sSC
+.fFS.sSC
 
 ; character set
 L{#o@}

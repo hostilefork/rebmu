@@ -442,7 +442,7 @@ back-mu: funct [arg] [
 	]
 ]
 
-swap-mu: funct [
+swap-exchange-mu: funct [
 	"Swap contents of variables."
 	a [word! series! gob!] b [word! series! gob!]
 ][

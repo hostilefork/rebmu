@@ -22,7 +22,7 @@ Ya|[i?FImHDa]
 
 ; pass in a coordinate pair to c and it will give you the iterator position
 ; of that cell
-Ca|[skPCmSCaBKfrA]
+Ca|[skPCmSCaBKfsA]
 
 ; n defaults to 1 in Rebmu.	 we loop through all the numbers up front and
 ; gather their coordinate pairs into a list called g

@@ -16,12 +16,14 @@ REBOL [
 	
 	Usage: { The Rebmu language is a dialect of Rebol which uses some unusual tricks to
 	achieve smaller character counts in source code.  The goal is to make it easier to
-	participate in programming challenges which attempt to achieve a given task in as few
+	participate in programming challenges where the goal is to achieve a given task in as few
 	characters as possible.
 	
-	One of the main ways this is achieved is to use alternations of uppercase and lowercase
-	letters to compress words in the source.  This is central to the Rebmu concept of
-	"mushing" and "unmushing":
+	There is the obvious need to come up with abbreviations for long words like WH instead of 
+	WHILE.  Rebol is particularly good at allowing one to do this kind of thing within the
+	language and without a preprocessor.  But a more novel piece of trickery that Rebmu uses
+	is the alternations of uppercase and lowercase letters to compress words in the source.  
+	This central to the Rebmu concept of "mushing" and "unmushing":
 
 		>> unmush [abcDEFghi]
 		== [abc def ghi]
@@ -51,7 +53,25 @@ REBOL [
 
 		>> unmush [abc'defGHI] 
 		== [abc 'def ghi:]
+	
+	Because symbols do not have a "case" they are handled specially.  Since Rebmu tries
+	to be compatible with Rebol code (as long as it's all lowercase!) they generally
+	act like lowercase letters, with a few caveats:
+	
+		[a+b] => [a+b] 		; lowercase run to another lowercase, will act lowercase
+		[+b] => [+b] 		; implied lowercase
+		[A+B] => [a+b:] 	; uppercase run to another uppercase, will act uppercase!
+		[a+B] => [a+ b] 	; switching lower to upper, plus binds to the tail of first
+		[A+b] => [a: + b] 	; switching upper to lower, plus lives on its own!
 		
+		[a++b] => [a++b] 	; all one token
+		[A++B] => [a++b:] 	; as expected
+		[a++B] => [a ++ b] 	; surprise!  multiple symbols bind into their own token
+		[A++b] => [A: ++ b] ; as above
+	
+	The number of spaces and colons this can save on in Rebol code is significant, and
+	it is easy to read and write once the rules are understood.  If you know Rebol, that is :)
+	
 	Despite being a little bit "silly" (as Code Golf is sort of silly), there is
 	a serious side to the design.  Rebmu is a genuine dialect... meaning that it
 	uses the Rebol data format and thus relegates most parsing--such as parentheses
@@ -88,12 +108,12 @@ REBOL [
 	For instance, the following example uses a shorthand format for defining a function that 
 	triples a number and saving it in t:
 	
-		>> rebmu [T|[a*3]]
+		>> rebmu [Ta|[a*3]]
 	
 	But defining the function isn't enough to call it, so if you had wanted to do that you
 	could have said:
 	
-		>> rebmu/inject [T|[a*3]] [wT10]
+		>> rebmu/inject [Ta|[a*3]] [wT10]
 		30
 		
 	The injected code is just shorthand for [w t 10], where w is writeout-mu, a variation of
@@ -243,7 +263,9 @@ rebmu-context: [
 	; LOOPING CONSTRUCTS
 	;-------------------------------------------------------------------------------------	
 
+	FO: :for
 	FE: :foreach
+	FA: :forall
 	LO: :loop
 	WH: :while-mu
 	WG: :while-greater?-mu
@@ -319,13 +341,14 @@ rebmu-context: [
 	H?: :head?
 	M?: :empty?
 	
-	FR: :first ; should change to FS or something to avoid confusion with fourth
+	FS: :first ; FR might be confused with fourth
 	SC: :second
 	TH: :third
-	FH: :fourth
+	FH: :fourth ; FR might be confused with first
 	
-	; Mushing always breaks a + into its own token (unless next to another +, e.g. ++)
-	; Hence we can't have F+.  FP is close...
+	; Code changes in 0.2.0 mean that F+ and FS+ are available, but the single-character
+	; followed-by-a-plus space may be useful for some related-group of functionality.
+	; Sticking with FP for now, but revisit...
 	FP: :first+
 	
 	;-------------------------------------------------------------------------------------	
@@ -420,7 +443,8 @@ rebmu-context: [
 	GT: :get
 	RF: :redefine-mu
 	EN: :encode
-	SX: :swap-mu
+	SX: :swap-exchange-mu
+	FR: :format
 	
 	;-------------------------------------------------------------------------------------
 	; SINGLE CHARACTER DEFINITIONS

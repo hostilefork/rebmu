@@ -23,7 +23,7 @@ Ga~[ZcydM MaZ]
 	
 ; F is the now common iterator finder for coordinates in a matrix
 ; modified so if you ask about out of range it always returns space
-Fa|[ZpcMscA XfrA ZigX0[iZ[skZbkX]] iZ[iT?z[Zno]]eZz{ }]
+Fa|[ZpcMscA XfsA ZigX0[iZ[skZbkX]] iZ[iT?z[Zno]]eZz{ }]
 	
 ; T is a "c|function", meaning it takes parameters A B C
 ; it tries to put the string A into the matrix at coordinates B with step offset C
@@ -40,7 +40,7 @@ Fa|[ZpcMscA XfrA ZigX0[iZ[skZbkX]] iZ[iT?z[Zno]]eZz{ }]
 Tc|[
 	Xno
 	Q~[Z1br]
-	ieSfrFsbBc[wh[ZfpA][JfB KfrJeeSk[OrvCYcEEsFRfADbO[eeSfrFadBngO[chJz]q]q][X1ineKzQ]BadBc]ieSfrFb[anY?xN?z]]
+	ieSfsFsbBc[wh[ZfpA][JfB KfsJeeSk[OrvCYcEEsFSfADbO[eeSfsFadBngO[chJz]q]q][X1ineKzQ]BadBc]ieSfsFb[anY?xN?z]]
 ]
 	
 ; R recursively applies itself for placing the words in A
@@ -54,7 +54,7 @@ Ra|[
 				O[0 1]
 				lo2[
 					JgM ; save matrix copy
-					UeTfrAre[xY]o[rNTa][eH?a[rNTa]no]
+					UeTfsAre[xY]o[rNTa][eH?a[rNTa]no]
 					eU0[gJ]
 					rvO
 					q
