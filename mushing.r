@@ -18,10 +18,15 @@ lower: charset [#"a" - #"z"]
 digit: charset [#"0" - #"9" #"."]
 separatorsymbol: charset [#"/" #":"]
 headsymbol: charset [#"'"]
-tailsymbol: charset [#"!" #"?" #"^^" #"|"]
-isolatedsymbol: charset [#"+" #"-" #"~" #"&"]
+tailsymbol: charset [#"!" #"?" #"^^" #"|" #"+" #"-" #"~" #"&" #"="]
+isolatedsymbol: charset [] ; used to use for +, -, etc but were wasteful of symbols A+, B-, etc.
+; (so use AD, SB instead!)
+; are - and + too foundational in functions like to-char that it should be a letter?
 
-type-of-char: func [c [char!]] [
+type-of-char: func [c [none! char!]] [
+	if none? c [
+		return none
+	]
 	if upper/(c) [
 		return 'upper
 	]
@@ -65,10 +70,9 @@ unmush: funct [value /deep] [
 			mergedSymbol: false
 			thisIsSetWord: 'upper = thisType
 			nextCanSetWord: found? find [headsymbol symbol tailsymbol] thisType
-			while [not tail? next pos] [
-				nextType: if not tail? next pos [type-of-char first next pos]
-				
-				comment [	
+			lowerCaseRun: 'upper <> thisType
+			while [nextType: type-of-char first next pos] [
+				comment [
 					print [
 						"this:" first pos "next:" first next pos
 						"thisType:" to-string thisType "nextType:" to-string nextType 
@@ -87,13 +91,39 @@ unmush: funct [value /deep] [
 						nextCanSetWord: 'upper <> nextType
 					]
 					tailsymbol [
-						either thisIsSetWord [
-							pos: insert pos ": "
-						] [
-							pos: back insert next pos space
+						nextPos: pos
+						while ['tailsymbol == nextType: type-of-char first nextPos] [
+							nextPos: next nextPos
 						]
-						thisIsSetWord: 'upper = nextType
-						nextCanSetWord: false
+
+						either (lowerCaseRun and equal? nextType 'lower) or 
+							((not lowerCaseRun) and equal? nextType 'upper) [
+							; if there's no case change, it's one token [a+b], that's
+							; important because Rebol has functions with + and - in their
+							; names and it would cause incompatibilities to break those
+							; symbols if there were no case changes
+							; CONTINUE AND LET THE LETTER DECIDE
+						] [
+							either thisIsSetWord [
+								pos: insert pos ": "
+							] [
+								; sequences like a+B turn into [a+ b]
+								; but if there's more than one tailsymbol (i.e. a++B, a+-+B)
+								; you instead get [a ++ b], [a +-+ b]
+								either nextPos = next pos [
+									; Break symbol on the right only
+									pos: back insert nextPos space
+									thisIsSetWord: false
+								] [
+									; Break symbol on the left and on the right
+									insert pos space
+									; We have to advance nextPos to compensate for the insertion
+									pos: back insert next nextPos space
+								]
+							] 
+							thisIsSetWord: false
+							nextCanSetWord: false
+						]
 					]
 					isolatedsymbol [
 						either (first pos) == (first next pos) [
@@ -113,6 +143,7 @@ unmush: funct [value /deep] [
 						]
 					]
 				] [
+					lowerCaseRun: 'upper <> thisType
 					either ('digit = thisType) and found? find [#"x" #"X"] first next pos [
 						; need special handling if it's an x because of pairs
 						; want to support mushings like a10x20 as [a 10x20] not [a 10 x 20]

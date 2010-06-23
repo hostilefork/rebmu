@@ -1,20 +1,23 @@
 ; http://stackoverflow.com/questions/3034331/code-golf-rotating-maze
 
+; We use "first" and "second" a lot, worth it to define f and s
+.fFR.sSC
+
 ; character set
-L{#o@}.fFR.sSC
+L{#o@}
 	
 ; copy input to matrix, or read file if it's a filename
 MeFI?a[rlA]a
 	
 ; define data width and height functions
-W|[l?fM]
-H|[l?m]
+W|[l?Fm]
+H|[l?M]
 	
 ; size function (accounts for applied rotations)
 Z|[Tre[wH]iOD?j[rvT]t]
 	
 ; cell retrieval function (accounts for applied rotations)
-Ca|[
+C|a[
 	st[xY]a
 	KrePC[[yBKx][ntSBhXbkY][ntSBhYsbWx][xSBwY]]ntJ
 	skPCmFkSk
@@ -24,31 +27,31 @@ Ca|[
 ; the grid (accounts for rotation).  Every cell will be visited
 ; unless a logically true result is given from the callback
 ; which will short circuit
-Ga|[rtYsZ[rtXfZ[TaRE[xY]iTbr]iTbr]rnT]
+G|a[rtYsZ[rtXfZ[TaRE[xY]iTbr]iTbr]rnT]
 	
 ; find the ball, or none (uses the each method above)
-B|[gA|[ieSClFcA[rnA]]]
-	
+B|[g |a[ieSClFcA[rnA]]]
+
+; forever...
 fv[
-	NbIbl?n[
-		ut[
-		    ++n/2
+	NbIn[
+		ut[		
+		    ++N/2
 		    TfCn
 			ieFlTbr
 			chCbSP
 			ieTHlTbr
 			chCnSl
-			e?sNsZ
+			e?SnSz
 		]
 	]
 	
 	; print the maze
-	gA|[TfCaEEfZfA[prT][pnT]nn]
-		
+	g |a[TfCaEEfZfA[prT][pnT]nn]
+	
 	; if ball has vanished, we're done
 	iNN?bBR
 	
 	; Update the rotation value based on the input
 	JmoADjPC[3 1]rK4   
-	]
 ]

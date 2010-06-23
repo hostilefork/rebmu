@@ -8,25 +8,25 @@ L{-|\/}
 
 ; q is a "b|function" (function that takes two parameters, a and b)
 ; it gives you the sign of subtracting b from a (+1, -1, or 0)
-Qb|[sg?sbAb]
+Q|b[sg?SBaB]
 
 ; d finds you the iterator position of the first digit of a two digit
 ; number in the matrix
-Da|[feSm[TfiSrj[spAsp]iT[++tBR]]t]
+D~a[feSm[TfiSrj[spAsp]iT[++Tbr]]t]
 
 ; given an iterator position, this tells you the x coordinate of the cell
-Xa|[i?a]
+X|a[i?A]
 
 ; given an iterator position, this tells you the y coordinate of the cell
-Ya|[i?fiMhdA]
+Y|a[i?FImHDa]
 
 ; pass in a coordinate pair to c and it will give you the iterator position
 ; of that cell
-Ca|[skPCmSCaBKfrA]
+C|a[skPCmSCaBKfrA]
 
 ; n defaults to 1 in Rebmu.	 we loop through all the numbers up front and
 ; gather their coordinate pairs into a list called g
-wh[Jd++n][roG[xJyJ]]
+wh[Jd++N][roG[xJyJ]]
 
 ; b is the (b)eginning coordinate pair for our stroke, we get it from g and
 ; advance g's iteration position (fp="first+")
@@ -56,7 +56,7 @@ whB[
 			; if we update the coordinate pair by the offset and it 
 			; equals finish, then we're done with the stroke
 			chCbPClEZv1[ezH2[eeHv3 4]]
-			e?BadBre[hV]f
+			e? BadBre[hV]f
 		]
 	]
 	

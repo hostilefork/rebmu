@@ -4,10 +4,10 @@
 Ssp
 
 ; N is the number of input strings
-Nl?a
+Nl?A
    
 ; L is our longest string length
-L0feZa[LmxLl?z]
+L0feZa[LmxLl?Z]
 
 ; V is our board size
 ; expression is V(1 + (l - 1) * (ad eOD?n1[0] dv n 2)])
@@ -15,15 +15,15 @@ L0feZa[LmxLl?z]
 Vad2mpBKlADeOD?n1[0]dvN2
 	
 ; M is our board matrix, initially set to spaces
-Mai^vTSai^vS
+Mai^VtsAI^vS
 	
 ; G is a func (not a funct) thus can write to the global variable M 
 ; it takes a matrix to replace the matrix with and returns the old one 
-G|a[ZcydM MaZ]
+G~a[ZcydM MaZ]
 	
 ; F is the now common iterator finder for coordinates in a matrix
 ; modified so if you ask about out of range it always returns space
-Fa|[ZpcMscA XfrA ZigX0[iZ[skZbkX]] iZ[iT?z[Zno]]eZz{ }]
+F|a[ZpcMscA XfrA ZigX0[iZ[skZbkX]] iZ[iT?z[Zno]]eZz{ }]
 	
 ; T is a "c|function", meaning it takes parameters A B C
 ; it tries to put the string A into the matrix at coordinates B with step offset C
@@ -37,34 +37,34 @@ Fa|[ZpcMscA XfrA ZigX0[iZ[skZbkX]] iZ[iT?z[Zno]]eZz{ }]
 ; (before first letter and after last must be space or board edge)
 ; points opposite a collision may be occupied on the other axis, but if there's
 ; not a collision then those points must be spaces
-Tc|[
+T|c[
 	Xno
-	Qdz[Z1br]
+	Q~[Z1br]
 	ieSfrFsbBc[wh[ZfpA][JfB KfrJeeSk[OrvCYcEEsFRfADbO[eeSfrFadBngO[chJz]q]q][X1ineKzQ]BadBc]ieSfrFb[anY?xN?z]]
 ]
 	
 ; R recursively applies itself for placing the words in A
 ; returns true if it succeeds
-Ra|[
-	Qdz[iUbr]
+R|a[
+	Q~[iUbr]
 	eT?aON[
-	ZntSBvL
-	rtXz[
-		rtYz[
-			O[0 1]
-			lo2[
-				JgM ; save matrix copy
-				UeTfrAre[xY]o[rNTa][eH?a[rNTa]no]
-				eU0[gJ]
-				rvO
+		ZntSBvL
+		rtXz[
+			rtYz[
+				O[0 1]
+				lo2[
+					JgM ; save matrix copy
+					UeTfrAre[xY]o[rNTa][eH?a[rNTa]no]
+					eU0[gJ]
+					rvO
+					q
+				]
 				q
 			]
 			q
 		]
-		q
+		u
 	]
-	u
-]
 ]
 
 ; Print the result

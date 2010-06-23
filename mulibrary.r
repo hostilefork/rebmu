@@ -273,30 +273,56 @@ helpful-mu: func ['arg] [
 ; need to supply the code block.  obvious extensions for other letters.	 The
 ; "func|a" is the same for funcs
 
-a|funct-mu: funct [body [block!]] [
+funct-a-mu: funct [body [block!]] [
 	funct [a] body 
 ]
-b|funct-mu: funct [body [block!]] [
+funct-ab-mu: funct [body [block!]] [
 	funct [a b] body 
 ]
-c|funct-mu: funct [body [block!]] [
+funct-abc-mu: funct [body [block!]] [
 	funct [a b c] body 
 ]
-d|funct-mu: funct [body [block!]] [
+funct-abcd-mu: funct [body [block!]] [
 	funct [a b c d] body 
 ]
 
-func|a-mu: func [body [block!]] [
+funct-z-mu: funct [body [block!]] [
+	funct [z] body 
+]
+funct-zy-mu: funct [body [block!]] [
+	funct [z y] body 
+]
+funct-zyx-mu: funct [body [block!]] [
+	funct [z y x] body 
+]
+funct-zyxw-mu: funct [body [block!]] [
+	funct [z y x w] body 
+]
+
+func-a-mu: func [body [block!]] [
 	func [a] body
 ]
-func|b-mu: func [body [block!]] [
+func-ab-mu: func [body [block!]] [
 	func [a b] body
 ]
-func|c-mu: func [body [block!]] [
+func-abc-mu: func [body [block!]] [
 	func [a b c] body
 ]
-func|d-mu: func [body [block!]] [
+func-abcd-mu: func [body [block!]] [
 	func [a b c d] body
+]
+
+func-z-mu: func [body [block!]] [
+	func [z] body
+]
+func-zy-mu: func [body [block!]] [
+	func [z y] body
+]
+func-zyx-mu: func [body [block!]] [
+	func [z y x] body
+]
+func-zyxw-mu: func [body [block!]] [
+	func [z y x w] body
 ]
 
 does-funct-mu: func [body [block!]] [
@@ -385,7 +411,7 @@ writeout-mu: funct [
 ]
 
 ; Don't think want to call it not-mu because we probably want a more powerful operator
-; defined as ~ in order to compete with GolfScript/etc.
+; defined as ~ in order to compete with GolfScript/etc, rethink this.
 inversion-mu: func [
 	value
 ] [

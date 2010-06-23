@@ -7,7 +7,7 @@ REBOL [
 	License: mit
 	
 	Date: 10-Jan-2010
-	Version: 0.1.0
+	Version: 0.2.0
 	
 	; Header conventions: http://www.rebol.org/one-click-submission-help.r
 	File: %rebmu.r
@@ -104,7 +104,12 @@ REBOL [
 		0.1.0 [10-Jan-2010 {Sketchy prototype written to cover only the
 		Roman Numeral example I worked through when coming up with the
 		idea.  So very incomplete, more a proof of concept.} "Fork"]
-		0.2.0 [18-Jan-2010 {Language now includes
+		
+		0.2.0 [22-Jun-2010 {Language more complete, includes examples.
+		Ditched concept of mushing symbols like + and - into single
+		character operators is removed due to realization that A+
+		B+ C+ etc. are more valuable in the symbol space than one
+		character for AD.}]
 	]
 ]
 
@@ -220,17 +225,18 @@ rebmu-context: [
 	; CONDITIONALS
 	;-------------------------------------------------------------------------------------	
 	
-	IF: :if-mu
-	EI: :either-mu
-	EL: :either-lesser?-mu
-	EG: :either-greater?-mu
-	EE: :either-equal?-mu
-	EZ: :either-zero?-mu
+	II: :if-mu  ;short for "iiiiiiif...", since Rebol uses IF already! :)
 	IL: :if-lesser?-mu
 	IG: :if-greater?-mu
 	IE: :if-equal?-mu
 	INE: :if-not-equal?-mu
 	IZ: :if-zero?-mu
+
+	EI: :either-mu
+	EL: :either-lesser?-mu
+	EG: :either-greater?-mu
+	EE: :either-equal?-mu
+	EZ: :either-zero?-mu
 	SW: :switch
 
 	;-------------------------------------------------------------------------------------	
@@ -259,15 +265,23 @@ rebmu-context: [
 	FC: :func
 	DZ: :does
 	DF: :does-funct-mu
-	a|: :a|funct-mu
-	b|: :b|funct-mu
-	c|: :c|funct-mu
-	d|: :d|funct-mu
+	|a: :funct-a-mu
+	|b: :funct-ab-mu
+	|c: :funct-abc-mu
+	|d: :funct-abcd-mu
+	z|: :funct-z-mu
+	y|: :funct-zy-mu
+	x|: :funct-zyx-mu
+	w|: :funct-zyxw-mu
 	; TODO: Write generator? 
-	|a: :func|a-mu
-	|b: :func|b-mu
-	|c: :func|c-mu
-	|d: :func|d-mu
+	~a: :func-a-mu
+	~b: :func-ab-mu
+	~c: :func-abc-mu
+	~d: :func-abcd-mu
+	z~: :func-z-mu
+	y~: :func-zy-mu
+	x~: :func-zyx-mu
+	w~: :func-zyxw-mu
 	RN: :return
 	
 	;-------------------------------------------------------------------------------------
@@ -305,7 +319,7 @@ rebmu-context: [
 	H?: :head?
 	M?: :empty?
 	
-	FR: :first
+	FR: :first ; should change to FS or something to avoid confusion with fourth
 	SC: :second
 	TH: :third
 	FH: :fourth
@@ -335,7 +349,6 @@ rebmu-context: [
 	MP: :multiply
 	DV: :div-mu
 	DD: :divide
-	IM: :inversion-mu
 	NG: :negate-mu
 	Z?: :zero?
 	MO: :mod
@@ -416,16 +429,14 @@ rebmu-context: [
 	; functions like I for IF, although you may do so if you feel the need.	 They will
 	; still be available in a two-character variation.
 	;-------------------------------------------------------------------------------------
-	
-	~: :IM
-	|: :DF	; funct generator w/no parameters		
-	&: :AN
 
+	; The dot operator is helpful for quickly redefining symbols used repeatedly
+	; .aBC.dEF will unmush into [. a bc . d ef] so you can always use it without the
+	; dot sticking to another symbol that isn't a digit
 	.: :RF
-	?: none ; not help , but what should it be
 	
-	; ^ is something that needs to have thought given to it
-	; because it breaks symbols; a^b becomes a^ b but A^b bcomes a: ^b
+	; This set needs to have thought given to them.
+	; they breaks symbols; a^b becomes a^ b but A^b bcomes a: ^b
 	; ^foo is therefore good for construction functions which are going
 	; to target an assignment but little else.	getting a ^ in isolation
 	; requires situations like coming in front of a block or a string
@@ -433,6 +444,9 @@ rebmu-context: [
 	; frequently applied to series literals.  decoding base-64 strings
 	; might be an option as they are used a lot in code golf.
 	^: :caret-mu
+	~: :DZ  ; "does" generator, can write context variables
+	|: :DF	; funct generator w/no parameters, block always follows		
+	&: :AN
 	
 	; TODO: there is an issue where if an argument a is put into the block you can't
 	; overwrite its context if you're inside something like a while block.	How
@@ -441,11 +455,11 @@ rebmu-context: [
 	b: to-char 0 ; "byte"
 	c: #"A" ; "char"
 	d: #"0" ; "digit"
-	e: :EI ; "either"
-	f: :FN ; "function"
+	e: :EI ; "either-mu"
+	f: :FR ; "first"
 	g: copy [] ; "group"
 	h: :HM ; "helpful" constant declaration tool
-	i: :IF ; "if"
+	i: :II ; "if-mu"
 	j: 0
 	k: 0
 	l: :LO ; "loop"
@@ -458,7 +472,8 @@ rebmu-context: [
 	; but it seems like a waste to have an interpreter-only function like "quit" be taking
 	; up such a short symbol by default.  I feel the same way about ? being help.  This
 	; is an issue I have with Rebol's default definitions -Fork
-	q: :quoth-mu ; "quoth" e.g. qAB => "AB" and qA => #"A"
+	q: :quoth-mu ; "quoth" e.g. qABC => "ABC" and qA => #"A"
+	?: none 
 	
 	r: :RI ; "readin"
 	s: copy "" ; "string"
@@ -478,7 +493,7 @@ remap-datatype: func [type [datatype!] 'query [word!] shorter [string!]] [
 	shorter-type: bind/new to-word rejoin [shorter "!"] bind? 'system
 	shorter-query: bind/new to-word rejoin [shorter "?"] bind? 'system
 	set shorter-type type
-	set shorter-query :query
+	set shorter-query get :query
 ]
 
 ; A rebmu wrapper lets you wrap a refinement
@@ -494,6 +509,7 @@ rebmu: func [
 	{Visit http://hostilefork.com/rebmu/}
 	code [file! any-block! string!] "The Rebmu or Rebol code"
 	/args arg {named Rebmu arguments [X10Y20] or implicit a: block [1"hello"2]}
+	/nocopy "Default is to copy/deep the arguments for safety but you can not do that"
 	/stats "print out statistical information"
 	/debug "output debug information"
 	/env "return the runnable object plus environment, but don't execute main function"
@@ -543,7 +559,7 @@ rebmu: func [
 	]
 	
 	either args [
-		arg: unmush/deep arg
+		arg: unmush/deep either nocopy [arg] [copy/deep arg]
 		if not set-word? first arg [
 			; implicitly assign to a if the block doesn't start with a set-word
 			arg: compose/only [a: (arg)] 
