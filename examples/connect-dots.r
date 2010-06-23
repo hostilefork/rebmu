@@ -8,21 +8,21 @@ L{-|\/}
 
 ; q is a "b|function" (function that takes two parameters, a and b)
 ; it gives you the sign of subtracting b from a (+1, -1, or 0)
-Q|b[sg?SBaB]
+Qb|[sg?SBaB]
 
 ; d finds you the iterator position of the first digit of a two digit
 ; number in the matrix
-D~a[feSm[TfiSrj[spAsp]iT[++Tbr]]t]
+Da~[feSm[TfiSrj[spAsp]iT[++Tbr]]t]
 
 ; given an iterator position, this tells you the x coordinate of the cell
-X|a[i?A]
+Xa|[i?A]
 
 ; given an iterator position, this tells you the y coordinate of the cell
-Y|a[i?FImHDa]
+Ya|[i?FImHDa]
 
 ; pass in a coordinate pair to c and it will give you the iterator position
 ; of that cell
-C|a[skPCmSCaBKfrA]
+Ca|[skPCmSCaBKfrA]
 
 ; n defaults to 1 in Rebmu.	 we loop through all the numbers up front and
 ; gather their coordinate pairs into a list called g

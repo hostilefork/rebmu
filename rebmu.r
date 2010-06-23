@@ -265,19 +265,19 @@ rebmu-context: [
 	FC: :func
 	DZ: :does
 	DF: :does-funct-mu
-	|a: :funct-a-mu
-	|b: :funct-ab-mu
-	|c: :funct-abc-mu
-	|d: :funct-abcd-mu
+	a|: :funct-a-mu
+	b|: :funct-ab-mu
+	c|: :funct-abc-mu
+	d|: :funct-abcd-mu
 	z|: :funct-z-mu
 	y|: :funct-zy-mu
 	x|: :funct-zyx-mu
 	w|: :funct-zyxw-mu
 	; TODO: Write generator? 
-	~a: :func-a-mu
-	~b: :func-ab-mu
-	~c: :func-abc-mu
-	~d: :func-abcd-mu
+	a~: :func-a-mu
+	b~: :func-ab-mu
+	c~: :func-abc-mu
+	d~: :func-abcd-mu
 	z~: :func-z-mu
 	y~: :func-zy-mu
 	x~: :func-zyx-mu

@@ -104,23 +104,26 @@ unmush: funct [value /deep] [
 							; symbols if there were no case changes
 							; CONTINUE AND LET THE LETTER DECIDE
 						] [
-							either thisIsSetWord [
+							if thisIsSetWord [
 								pos: insert pos ": "
-							] [
-								; sequences like a+B turn into [a+ b]
-								; but if there's more than one tailsymbol (i.e. a++B, a+-+B)
-								; you instead get [a ++ b], [a +-+ b]
-								either nextPos = next pos [
-									; Break symbol on the right only
-									pos: back insert nextPos space
-									thisIsSetWord: false
-								] [
-									; Break symbol on the left and on the right
-									insert pos space
-									; We have to advance nextPos to compensate for the insertion
-									pos: back insert next nextPos space
-								]
+								nextPos: next next nextPos ; compensate for two-char insertion
+								lowerCaseRun: true
 							] 
+							
+							; sequences like a+B turn into [a+ b]
+							; but if there's more than one tailsymbol (i.e. a++B, a+-+B)
+							; you instead get [a ++ b], [a +-+ b]
+							either nextPos = next pos [
+								; Break symbol on the right only
+								pos: back insert nextPos space
+								thisIsSetWord: false
+							] [
+								; Break symbol on the left and on the right
+								insert pos space
+								; We have to advance nextPos to compensate for the insertion
+								pos: back insert next nextPos space
+							]
+							 
 							thisIsSetWord: false
 							nextCanSetWord: false
 						]
@@ -136,6 +139,7 @@ unmush: funct [value /deep] [
 								] [
 									pos: insert pos space
 								]
+								lowerCaseRun: true
 							]
 							pos: back insert next pos space
 							thisIsSetWord: 'upper = nextType

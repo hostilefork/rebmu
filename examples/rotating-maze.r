@@ -17,7 +17,7 @@ H|[l?M]
 Z|[Tre[wH]iOD?j[rvT]t]
 	
 ; cell retrieval function (accounts for applied rotations)
-C|a[
+Ca|[
 	st[xY]a
 	KrePC[[yBKx][ntSBhXbkY][ntSBhYsbWx][xSBwY]]ntJ
 	skPCmFkSk
@@ -27,10 +27,10 @@ C|a[
 ; the grid (accounts for rotation).  Every cell will be visited
 ; unless a logically true result is given from the callback
 ; which will short circuit
-G|a[rtYsZ[rtXfZ[TaRE[xY]iTbr]iTbr]rnT]
+Ga|[rtYsZ[rtXfZ[TaRE[xY]iTbr]iTbr]rnT]
 	
 ; find the ball, or none (uses the each method above)
-B|[g |a[ieSClFcA[rnA]]]
+B|[gA|[ieSClFcA[rnA]]]
 
 ; forever...
 fv[
@@ -47,7 +47,7 @@ fv[
 	]
 	
 	; print the maze
-	g |a[TfCaEEfZfA[prT][pnT]nn]
+	gA|[TfCaEEfZfA[prT][pnT]nn]
 	
 	; if ball has vanished, we're done
 	iNN?bBR

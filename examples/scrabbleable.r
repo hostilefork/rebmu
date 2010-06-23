@@ -19,11 +19,11 @@ Mai^VtsAI^vS
 	
 ; G is a func (not a funct) thus can write to the global variable M 
 ; it takes a matrix to replace the matrix with and returns the old one 
-G~a[ZcydM MaZ]
+Ga~[ZcydM MaZ]
 	
 ; F is the now common iterator finder for coordinates in a matrix
 ; modified so if you ask about out of range it always returns space
-F|a[ZpcMscA XfrA ZigX0[iZ[skZbkX]] iZ[iT?z[Zno]]eZz{ }]
+Fa|[ZpcMscA XfrA ZigX0[iZ[skZbkX]] iZ[iT?z[Zno]]eZz{ }]
 	
 ; T is a "c|function", meaning it takes parameters A B C
 ; it tries to put the string A into the matrix at coordinates B with step offset C
@@ -37,7 +37,7 @@ F|a[ZpcMscA XfrA ZigX0[iZ[skZbkX]] iZ[iT?z[Zno]]eZz{ }]
 ; (before first letter and after last must be space or board edge)
 ; points opposite a collision may be occupied on the other axis, but if there's
 ; not a collision then those points must be spaces
-T|c[
+Tc|[
 	Xno
 	Q~[Z1br]
 	ieSfrFsbBc[wh[ZfpA][JfB KfrJeeSk[OrvCYcEEsFRfADbO[eeSfrFadBngO[chJz]q]q][X1ineKzQ]BadBc]ieSfrFb[anY?xN?z]]
@@ -45,7 +45,7 @@ T|c[
 	
 ; R recursively applies itself for placing the words in A
 ; returns true if it succeeds
-R|a[
+Ra|[
 	Q~[iUbr]
 	eT?aON[
 		ZntSBvL
