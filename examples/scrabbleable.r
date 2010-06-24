@@ -14,8 +14,8 @@ L0feZa[LmxLl?Z]
 ; we add one because our loop doesn't do the theoretical minimum ++ v
 Vad2mpBKlADeOD?n1[0]dvN2
 	
-; M is our board matrix, initially set to spaces
-Mai^VtsAI^vS
+; M is our VxV board matrix, initially set to spaces 
+Mai^Vs^Vs
 	
 ; G is a func (not a funct) thus can write to the global variable M 
 ; it takes a matrix to replace the matrix with and returns the old one 
@@ -40,7 +40,7 @@ Fa|[ZpcMscA XfsA ZigX0[iZ[skZbkX]] iZ[iT?z[Zno]]eZz{ }]
 Tc|[
 	Xno
 	Q~[Z1br]
-	ieSfsFsbBc[wh[ZfpA][JfB KfsJeeSk[OrvCYcEEsFSfADbO[eeSfsFadBngO[chJz]q]q][X1ineKzQ]BadBc]ieSfsFb[anY?xN?z]]
+	ieSfsFsbBc[wh[Zf+A][JfB KfsJeeSk[OrvCYcEEsFSfADbO[eeSfsFadBngO[chJz]q]q][X1ineKzQ]BadBc]ieSfsFb[anY?xN?z]]
 ]
 	
 ; R recursively applies itself for placing the words in A
@@ -70,4 +70,4 @@ Ra|[
 ; Print the result
 ; if not "false" then cleans up the unneccessary whitespace on the board
 ; and injects i|n|t|e|r|m|e|d|i|a|t|e pipe characters as per problem spec
-wErA[JmWH[KfpJ][iM?trtK[JbkJtkJ]]feZm[KfpZwh[JfpZ][ZntISbkZegKs[egJs{|}s]s Kj]]m]{false}
+wErA[JmWH[Kf+J][iM?trtK[JbkJtkJ]]feZm[Kf+Zwh[Jf+Z][ZntISbkZegKs[egJs{|}s]s Kj]]m]{false}

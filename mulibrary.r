@@ -128,6 +128,14 @@ if-lesser?-mu: func [
 	either lesser? value1 value2 [do-mu then-param] [if else [do-mu else-param]]
 ]
 
+unless-mu: func [
+    "Evaluates the block if condition is not TRUE."
+    condition
+    block [block!]
+] [
+	unless condition [do-mu block]
+]
+
 either-mu: func [
 	{If condition is TRUE, evaluates the first block, else evaluates the second.}
 	condition
@@ -233,7 +241,11 @@ make-matrix-mu: funct [columns value rows] [
 ]
 
 make-string-mu: func [length value] [
-	to-string array/initial length value
+	result: copy ""
+	loop length [
+		append result value
+	]
+	result
 ]
 
 ; if a pair, then the first digit is the digit
@@ -389,6 +401,7 @@ readin-mu: funct [
 		integer! [set value to-integer ask "Input Integer: "]
 		decimal! [set value to-integer ask "Input Float: "]
 		block! [set value to-block ask "Input Series of Items: "]
+		percent! [set value to-percent ask "Input Percent: "]
 	] [
 		throw "Unhandled type to readin-mu"
 	]
@@ -508,4 +521,27 @@ negate-mu: funct [value] [
 	] [
 		negate value
 	]
+]
+
+add-modify-mu: funct ['value value2] [
+	set :value add-mu get :value value2
+]
+
+subtract-modify-mu: funct ['value value2] [
+	set :value subtract-mu get :value value2
+]
+
+equal-modify-mu: funct ['value value2] [
+	set :value equals? get :value value2
+]
+
+change-modify-mu: funct ['series value] [
+	also [change get :series value] [first+ :series]
+]
+
+; -1 is a particularly useful value, yet it presents complications to mushing that ON
+; does not have.  Also frequently, choosing 1 vs -1 depends on a logic.  Onesigned turns
+; true into 1 and false into -1 (compared to to-integer which treats false as zero)
+onesigned-mu: funct [value] [
+	either to-boolean value [1] [-1]
 ]

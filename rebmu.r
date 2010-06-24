@@ -258,6 +258,7 @@ rebmu-context: [
 	EE: :either-equal?-mu
 	EZ: :either-zero?-mu
 	SW: :switch
+	UL: :unless-mu
 
 	;-------------------------------------------------------------------------------------	
 	; LOOPING CONSTRUCTS
@@ -332,6 +333,7 @@ rebmu-context: [
 	CH: :change
 	SK: :skip
 	FI: :find
+	UQ: :unique
 
 	L?: :length?	
 	F?: :index?-find-mu
@@ -345,11 +347,6 @@ rebmu-context: [
 	SC: :second
 	TH: :third
 	FH: :fourth ; FR might be confused with first
-	
-	; Code changes in 0.2.0 mean that F+ and FS+ are available, but the single-character
-	; followed-by-a-plus space may be useful for some related-group of functionality.
-	; Sticking with FP for now, but revisit...
-	FP: :first+
 	
 	;-------------------------------------------------------------------------------------	
 	; METAPROGRAMMING
@@ -393,7 +390,30 @@ rebmu-context: [
 	MN: :min
 	MX: :max
 	AY: :any
+
+	;-------------------------------------------------------------------------------------
+	; MODIFIERS
+	;-------------------------------------------------------------------------------------
 	
+	; These modify their arguments to save you from situations where you might otherwise
+	; have to make things the target of an assignment, like [m: add m 2].  Shorter code
+	; with a+M2 than Ma+M2, and you also are less likely to cause a mushing break.
+	; Note that the plus doesn't mean "advance" or "add" in this context, last+ is actually
+	; an operator which traverses the series backwards.  Perhaps this should be revisited
+	; but it seems a waste to use up the minus space too...
+	
+	A+: :add-modify-mu
+	F+: :first+
+	S+: :subtract-modify-mu
+	
+	; How strange could we get?  is it useful to do [z: equals? z 3] on any kind of
+	; regular basis?  Maybe if you do that test often after but don't need the value
+	E+: :equal-modify-mu
+
+	; what about two character functions?  can they return different things than their
+	; non-modifier counterparts?
+	CH+: :change-modify-mu
+		
 	;-------------------------------------------------------------------------------------	
 	; INPUT/OUTPUT
 	;-------------------------------------------------------------------------------------	
@@ -410,7 +430,7 @@ rebmu-context: [
 	;-------------------------------------------------------------------------------------	
 	; STRINGS
 	;-------------------------------------------------------------------------------------	
-	TRM: :trim
+	TR: :trim ; not true.  for true, use ON and for false use NO, test with Y? and N?
 	TRT: rebmu-wrap 'trim/tail [series]
 	TRH: rebmu-wrap 'trim/head [series]
 	TRA: rebmu-wrap 'trim/all [series]
@@ -445,6 +465,7 @@ rebmu-context: [
 	EN: :encode
 	SX: :swap-exchange-mu
 	FR: :format
+	OS: :onesigned-mu
 	
 	;-------------------------------------------------------------------------------------
 	; SINGLE CHARACTER DEFINITIONS

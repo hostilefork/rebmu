@@ -20,7 +20,7 @@ Xa|[i?A]
 ; given an iterator position, this tells you the y coordinate of the cell
 Ya|[i?FImHDa]
 
-; pass in a coordinate pair to c and it will give you the iterator position
+; pass in a coordinate pair to C and it will give you the iterator position
 ; of that cell
 Ca|[skPCmSCaBKfsA]
 
@@ -29,15 +29,15 @@ Ca|[skPCmSCaBKfsA]
 wh[Jd++N][roG[xJyJ]]
 
 ; b is the (b)eginning coordinate pair for our stroke, we get it from g and
-; advance g's iteration position (fp="first+")
-BfpG
+; advance g's iteration position (f+="first+")
+Bf+G
 
 whB[
 	; j is the iterator position of the beginning stroke
 	JcB
 	
 	; f is the (f)inishing coordinate pair for our stroke
-	FfpG
+	Ff+G
 	
 	; if there is a finishing pair, we need to draw a line 
 	iF[
@@ -48,15 +48,16 @@ whB[
 		HqXkXj
 		VqYkYj
 		
-		; change the character at iterator location for b (now our
-		; current location) based on an index into the letters list
-		; that we figure out based on whether v is zero, h is zero,
-		; v equals h, or v doesn't equal h.
 		u[
+			; change the character at iterator location for b (now our
+			; current location) based on an index into the letters list
+			; that we figure out based on whether v is zero, h is zero,
+			; v equals h, or v doesn't equal h.
+			chCbPClEZv1[ezH2[eeHv3 4]]
+			
 			; if we update the coordinate pair by the offset and it 
 			; equals finish, then we're done with the stroke
-			chCbPClEZv1[ezH2[eeHv3 4]]
-			e? BadBre[hV]f
+			e?A+bRE[hV]f
 		]
 	]
 	
