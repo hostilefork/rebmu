@@ -15,7 +15,7 @@ L0feZa[LmxLl?Z]
 Vad2mpBKlADeOD?n1[0]dvN2
 	
 ; M is our VxV board matrix, initially set to spaces 
-Mai^Vs^Vs
+Mai^Vsi^Vs
 	
 ; G is a func (not a funct) thus can write to the global variable M 
 ; it takes a matrix to replace the matrix with and returns the old one 

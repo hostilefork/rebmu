@@ -1,9 +1,20 @@
 REBOL [
 	Title: "The Mu Rebol Library"
-	Description: {These functions are intended to help write Rebol programs that use fewer
-	lexical symbols in their source code.  This is a part of the Rebmu interpreter project
-	for code golf, but you can program to these routines even if you are not using the
-	abbreviated namaes of the routines or the "mushing" protocol of the Rebmu dialect.}
+	
+	Description: {This is a library generally designed to be used with abbreviated symbols
+	in Rebmu.  While there is a fuzzy line between "library" and "language", the intention
+	is not to achieve a low symbol count at the cost of creating something that is
+	incompatible with Rebol.  
+	
+	For instance: it might be expedient in Code Golf to have the conditonal logic treat 0 as a 
+	"false" condition.  But since Rebol's IF treats 0 as true, we do too.  On the other hand,
+	II (if-mu, aliased to I) *does* accept words and constants in its condition block.  Rebol
+	would throw an error on such constructs, so a Rebmu program which ascribes meaning
+	to that is forwards compatible with existing Rebol programming knowledge.
+	
+	Ultimately, Code Golf cannot be played with a language and library set that is allowed
+	to expand during a competition.  So the Rebmu library will have to stabilize into a fixed
+	set at some point - likely including many matrix operations.}
 ]
 
 to-string-mu: func [
@@ -240,7 +251,7 @@ make-matrix-mu: funct [columns value rows] [
 	result
 ]
 
-make-string-mu: func [length value] [
+make-string-initial-mu: func [length value] [
 	result: copy ""
 	loop length [
 		append result value
@@ -544,4 +555,8 @@ change-modify-mu: funct ['series value] [
 ; true into 1 and false into -1 (compared to to-integer which treats false as zero)
 onesigned-mu: funct [value] [
 	either to-boolean value [1] [-1]
+]
+
+ceiling-mu: funct [value] [
+	to-integer round/ceiling value
 ]

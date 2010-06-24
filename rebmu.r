@@ -199,47 +199,44 @@ rebmu-context: [
 ; passing in the query function but uses the stem, e.g. "email" => "em" and do the
 ; binding.	Think it's due to bugs in R3A99.  Workaround I pass the query function in.
 
-	(remap-datatype email! email? "em")
-	(remap-datatype block! block? "bl")
-	(remap-datatype char! char? "ch")
-	(remap-datatype decimal! decimal? "dc")
-	(remap-datatype error! error? "er")
-	(remap-datatype function! error? "fn")
-	(remap-datatype get-word! error? "gw")
-	(remap-datatype paren! paren? "pn")
-	(remap-datatype integer! integer? "in")
-	(remap-datatype pair! pair? "pr")
-	(remap-datatype closure! closure? "cl")
-	(remap-datatype logic! logic? "lg") 
-	(remap-datatype map! map? "mp")
-	(remap-datatype none! none? "nn")
-	(remap-datatype object! object? "ob")
-	(remap-datatype path! path? "pa")
-	(remap-datatype lit-word! lit-word? "lw")
-	(remap-datatype refinement! refinement? "rf")
-	(remap-datatype string! string? "st")
-	(remap-datatype time! time? "tm")
-	(remap-datatype tuple! tuple? "tu")
-	(remap-datatype file! file? "fi") 
-	(remap-datatype word! word? "wd")
-	(remap-datatype tag! tag? "tg") 
-	(remap-datatype money! money? "mn")
-	(remap-datatype binary! binary? "bi")
-	
-	; TODO: make these automatically along with the datatype shorthands
-	TWD: :to-word-mu
-	TST: :to-string-mu
-	TBL: :to-block
+	(remap-datatype email! "em")
+	(remap-datatype block! "bl")
+	(remap-datatype char! "ch")
+	(remap-datatype decimal! "dc")
+	(remap-datatype error! "er")
+	(remap-datatype function! "fn")
+	(remap-datatype get-word! "gw")
+	(remap-datatype paren! "pn")
+	(remap-datatype integer! "in")
+	(remap-datatype pair! "pr")
+	(remap-datatype closure! "cl")
+	(remap-datatype logic! "lg") 
+	(remap-datatype map! "mp")
+	(remap-datatype none! "nn")
+	(remap-datatype object! "ob")
+	(remap-datatype path! "pa")
+	(remap-datatype lit-word! "lw")
+	(remap-datatype refinement! "rf")
+	(remap-datatype string! "st")
+	(remap-datatype time! "tm")
+	(remap-datatype tuple! "tu")
+	(remap-datatype file! "fi") 
+	(remap-datatype word! "wd")
+	(remap-datatype tag! "tg") 
+	(remap-datatype money! "mn")
+	(remap-datatype binary! "bi")
 
 	;-------------------------------------------------------------------------------------	
 	; TYPE CONVERSION SHORTHANDS
 	; These are particularly common and there aren't many commands starting with T
-	; So aliasing them is useful.  May reconsider this later.
+	; So aliasing them is useful.  May reconsider this later.  Also, these are special
+	; variations that add behaviors for types unsupported by Rebol's operators.
 	;-------------------------------------------------------------------------------------	
 	
-	TW: :TWD
-	TS: :TST
-	TB: :TBL
+	TW: :to-word-mu
+	TS: :to-string-mu
+	TB: :to-block
+	TI: :to-integer
 
 	;-------------------------------------------------------------------------------------
 	; CONDITIONALS
@@ -347,6 +344,12 @@ rebmu-context: [
 	SC: :second
 	TH: :third
 	FH: :fourth ; FR might be confused with first
+	FF: :fifth
+	SX: :sixth
+	SV: :seventh
+	EH: :eighth ; EI is either, and EG is either-greater
+	NH: :ninth
+	TT: :tenth
 	
 	;-------------------------------------------------------------------------------------	
 	; METAPROGRAMMING
@@ -390,7 +393,12 @@ rebmu-context: [
 	MN: :min
 	MX: :max
 	AY: :any
-
+	
+	; to-integer (TI) always rounds down.  A "CEIL" operator is useful, though it's a bit
+	; verbose in Rebol as "to-integer round/ceiling value".  May be common enough in
+	; Code Golf math to warrant inclusion.
+	CE: :ceiling-mu
+	
 	;-------------------------------------------------------------------------------------
 	; MODIFIERS
 	;-------------------------------------------------------------------------------------
@@ -413,7 +421,17 @@ rebmu-context: [
 	; what about two character functions?  can they return different things than their
 	; non-modifier counterparts?
 	CH+: :change-modify-mu
-		
+	
+	;-------------------------------------------------------------------------------------
+	; CONVERTERS
+	;-------------------------------------------------------------------------------------
+
+	; Converters end in "-", so for instance "em-" is equivalent to "to-email".  I decided
+	; that minus signs on the end would indicate conversions because this is one place
+	; where default Rebol functions use a lot of hyphens.  The general goal of these
+	; functions is, unlike modifiers, to not change their inputs.  It might be nice
+	; to have some 
+	
 	;-------------------------------------------------------------------------------------	
 	; INPUT/OUTPUT
 	;-------------------------------------------------------------------------------------	
@@ -449,7 +467,9 @@ rebmu-context: [
 	ai^: rebmu-wrap 'array/initial [size value]
 	i^: :make-integer-mu
 	m^: :make-matrix-mu
-	s^: :make-string-mu
+	si^: :make-string-initial-mu
+	s^: does [copy ""] ; two chars cheaper than cp""
+	b^: does [copy []] ; two chars cheaper than cp[]
 	
 	;-------------------------------------------------------------------------------------		
 	; MISC
@@ -463,7 +483,7 @@ rebmu-context: [
 	GT: :get
 	RF: :redefine-mu
 	EN: :encode
-	SX: :swap-exchange-mu
+	SWP: :swap-exchange-mu
 	FR: :format
 	OS: :onesigned-mu
 	
@@ -532,13 +552,14 @@ rebmu-context: [
 	z: 0.0
 ]
 
-remap-datatype: func [type [datatype!] 'query [word!] shorter [string!]] [
-	typename: head remove back tail to-string to-word type
-;	 query: bind to-word rejoin [typename "?"] bind? 'system
-	shorter-type: bind/new to-word rejoin [shorter "!"] bind? 'system
-	shorter-query: bind/new to-word rejoin [shorter "?"] bind? 'system
-	set shorter-type type
-	set shorter-query get :query
+remap-datatype: func [type [datatype!] shorter [string!]] [
+	stem: head remove back tail to-string to-word type
+	do load rejoin [
+		shorter "!: :" stem "! "
+		shorter "?: :" stem "? "
+		shorter "-: :to-" stem
+	]
+	none ; don't return do result
 ]
 
 ; A rebmu wrapper lets you wrap a refinement
