@@ -147,6 +147,14 @@ unless-mu: func [
 	unless condition [do-mu block]
 ]
 
+unless-zero-mu: func [
+    "Evaluates the block if condition is not 0."
+    condition
+    'block
+] [
+	unless zero? condition [do-mu block]
+]
+
 either-mu: func [
 	{If condition is TRUE, evaluates the first block, else evaluates the second.}
 	condition

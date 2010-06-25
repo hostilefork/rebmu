@@ -276,7 +276,9 @@ rebmu-context: [
 	EE: :either-equal?-mu
 	EZ: :either-zero?-mu
 	SW: :switch
+	
 	UL: :unless-mu
+	UZ: :unless-zero-mu
 
 	;-------------------------------------------------------------------------------------	
 	; LOOPING CONSTRUCTS
@@ -292,7 +294,7 @@ rebmu-context: [
 	WGE: :while-greater-or-equal?-mu
 	WLE: :while-lesser-or-equal?-mu
 	WE: :while-equal?-mu
-	CN: unless unset? get/any 'continue [:continue]; Rebol 2 does not have a continue :(
+	CN: either unset? get/any 'continue [does [to-error "no CN in Rebol 2"]][:continue]
 	BR: :break
 	UT: :until
 	RT: :repeat
@@ -331,7 +333,15 @@ rebmu-context: [
 
 	US: :use
 	CX: :context	
-	OB: unless unset? get/any 'object [:object]; Rebol 2 does not have object word :(
+	OB: either unset? get/any 'object [
+		; Rebol 2 does not have object word, but it's just a convenience
+		func [
+    		"Defines a unique object."
+    		blk [block!] "Object words and values."
+		][
+    		make object! append blk none
+		]
+	] [:object] 
 	
 	;-------------------------------------------------------------------------------------
 	; SERIES OPERATIONS
@@ -510,9 +520,9 @@ rebmu-context: [
 	ST: :set
 	GT: :get
 	RF: :redefine-mu
-	EN: unless unset? get/any 'encode [:encode]; Rebol 2 does not have encode
+	EN: either unset? get/any 'encode [does [to-error "no EN in Rebol 2"]] [:encode]
 	SWP: :swap-exchange-mu
-	FR: unless unset? get/any 'format [:format]; Rebol 2 does not have format dialect
+	FR: either unset? get/any 'format [does [to-error "no FR in Rebol 2"]] [:format]
 	OS: :onesigned-mu
 	SP: if unset? get/any 'space [#" "] ; Rebol 2 does not have space but Rebmu needs it
 
