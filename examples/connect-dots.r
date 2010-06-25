@@ -12,7 +12,7 @@ Qb|[sg?SBaB]
 
 ; d finds you the iterator position of the first digit of a two digit
 ; number in the matrix
-Da~[feSm[TfiSrj[spAsp]iT[++Tbr]]t]
+Da|[feSm[TfiSrj[spAsp]iT[++Tbr]]t]
 
 ; given an iterator position, this tells you the x coordinate of the cell
 Xa|[i?A]

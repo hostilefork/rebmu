@@ -304,6 +304,14 @@ rebmu-context: [
 	w~: :func-zyxw-mu
 	RN: :return
 	
+	;-------------------------------------------------------------------------------------		
+	; OBJECTS AND CONTEXTS
+	;-------------------------------------------------------------------------------------		
+
+	US: :use
+	CX: :context	
+	OB: :object
+	
 	;-------------------------------------------------------------------------------------
 	; SERIES OPERATIONS
 	;-------------------------------------------------------------------------------------	
@@ -486,7 +494,7 @@ rebmu-context: [
 	SWP: :swap-exchange-mu
 	FR: :format
 	OS: :onesigned-mu
-	
+
 	;-------------------------------------------------------------------------------------
 	; SINGLE CHARACTER DEFINITIONS
 	; For the values (e.g. s the empty string) it is expected that you will overwrite them

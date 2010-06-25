@@ -18,7 +18,7 @@ feCs[
 	izJ[JnCN]
 	
 	; K is the sum of K and, if J < N, N - J (while setting N to 0) or otherwise j 
-	KadKelJn[alSBnJ N0]j
+	a+KelJn[alSBnJ N0]j
 	
 	; assign n to j
 	Jn

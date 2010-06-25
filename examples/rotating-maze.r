@@ -49,8 +49,8 @@ fv[
 	; print the maze
 	gA|[TfCaEEfZfA[prT][pnT]nn]
 	
-	; if ball has vanished, we're done
-	iNN?bBR
+	; unless ball position is still not none, we'll be exiting the loop...
+	ulBbr
 	
 	; Update the rotation value based on the input
 	JmoADjPC[3 1]rK4   
