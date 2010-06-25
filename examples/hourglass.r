@@ -1,11 +1,13 @@
 ; http://stackoverflow.com/questions/1683857/code-golf-hourglass
 
+
 ; read J from the user, this is our height which will be greater than 1
 ; NOTE: if we are using rebmu/args we'd do JfsA
 rJ
 
 ; read N from the user, this is our percentage sand
 ; NOTE: if we are using rebmu/args we'd do NscA
+; NOTE: Percentages are a new type introduced in Rebol 3, this won't work in Rebol 2
 N 0% rN
 
 ; Here's a doomsday hourglass... it tells you how much of your life is left until 21-dec-2012

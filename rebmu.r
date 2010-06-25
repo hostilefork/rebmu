@@ -94,7 +94,13 @@ REBOL [
 		>> rebmu/args [wSwM] [s: "Hello" m: "World"]
 		Hello
 		World
-		
+	
+	The argument block can even use Rebmu code and conventions, if you like :)
+
+		>> rebmu/args [wSwM] [S"Hello"M"World"]
+		Hello
+		World	
+	
 	Or you can pass in a block which does not begin with a set-word and that block will
 	appear in the execution context as the variable a:
 	
@@ -130,6 +136,11 @@ REBOL [
 		character operators is removed due to realization that A+
 		B+ C+ etc. are more valuable in the symbol space than one
 		character for AD.}]
+		
+		0.3.0 [24-Jun-2010 {Made backwards compatible with Rebol 2.  Note
+		that things like CN for continue or percentage! datatype operations
+		were added in Rebol 3.  You can use these in your Rebmu programs
+		but they will only work if using Rebmu with an r3 interpreter.}]
 	]
 ]
 
@@ -168,9 +179,15 @@ rebmu-context: [
 	; **	first number raised to the power of the second
 	; !=	true if the values are not equal
 
+	; Maybe reasonable use of abbreviation in the default.  Could be carriage-return
+	; and line-feed and leave it to the user to abbreviate.
+	
+	; CR	carraige return character
+	; LF	line feed character
+
 	; Questionable shorthands for terms defined elsewhere. Considering how many things do
 	; not have shorthands by default...what metric proved that *these four* were the
-	; ideal things to abbreviate? 
+	; ideal things to abbreviate?  They are only in Rebol 3.
 	
 	; SP	alias for SPACE
 	; RM	alias for DELETE
@@ -209,11 +226,15 @@ rebmu-context: [
 	(remap-datatype paren! "pn")
 	(remap-datatype integer! "in")
 	(remap-datatype pair! "pr")
+	; no percent! type in Rebol2
+	(unless unset? get/any 'percent! [remap-datatype percent! "pc"])
 	(remap-datatype closure! "cl")
 	(remap-datatype logic! "lg") 
 	(remap-datatype map! "mp")
 	(remap-datatype none! "nn")
-	(remap-datatype object! "ob")
+	; no object or to-object in Rebol2... so we skip based on missing "object" keyword
+	; even thought the object! type exists
+	(unless unset? get/any 'object [remap-datatype object! "ob"]) 
 	(remap-datatype path! "pa")
 	(remap-datatype lit-word! "lw")
 	(remap-datatype refinement! "rf")
@@ -271,7 +292,7 @@ rebmu-context: [
 	WGE: :while-greater-or-equal?-mu
 	WLE: :while-lesser-or-equal?-mu
 	WE: :while-equal?-mu
-	CN: :continue
+	CN: unless unset? get/any 'continue [:continue]; Rebol 2 does not have a continue :(
 	BR: :break
 	UT: :until
 	RT: :repeat
@@ -310,7 +331,7 @@ rebmu-context: [
 
 	US: :use
 	CX: :context	
-	OB: :object
+	OB: unless unset? get/any 'object [:object]; Rebol 2 does not have object word :(
 	
 	;-------------------------------------------------------------------------------------
 	; SERIES OPERATIONS
@@ -471,13 +492,12 @@ rebmu-context: [
 	CYD: rebmu-wrap 'copy/deep [value]
 	CP: rebmu-wrap 'copy/part [value] 
 	CPD: rebmu-wrap 'copy/part/deep [value] 
-	a^: :array
+	a^: does [copy []] ; two chars cheaper than cp[]
 	ai^: rebmu-wrap 'array/initial [size value]
 	i^: :make-integer-mu
 	m^: :make-matrix-mu
-	si^: :make-string-initial-mu
 	s^: does [copy ""] ; two chars cheaper than cp""
-	b^: does [copy []] ; two chars cheaper than cp[]
+	si^: :make-string-initial-mu
 	
 	;-------------------------------------------------------------------------------------		
 	; MISC
@@ -490,10 +510,11 @@ rebmu-context: [
 	ST: :set
 	GT: :get
 	RF: :redefine-mu
-	EN: :encode
+	EN: unless unset? get/any 'encode [:encode]; Rebol 2 does not have encode
 	SWP: :swap-exchange-mu
-	FR: :format
+	FR: unless unset? get/any 'format [:format]; Rebol 2 does not have format dialect
 	OS: :onesigned-mu
+	SP: if unset? get/any 'space [#" "] ; Rebol 2 does not have space but Rebmu needs it
 
 	;-------------------------------------------------------------------------------------
 	; SINGLE CHARACTER DEFINITIONS
@@ -642,7 +663,8 @@ rebmu: func [
 		arg: copy []
 	]
 	
-	obj: object compose/deep [
+	; if we were only targeting Rebol3 this could be "obj: object ..."
+	obj: make object! compose/deep [
 		(compose rebmu-context)
 		(arg) 
 		main: func [] [(code)]

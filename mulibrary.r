@@ -142,7 +142,7 @@ if-lesser?-mu: func [
 unless-mu: func [
     "Evaluates the block if condition is not TRUE."
     condition
-    block [block!]
+    'block
 ] [
 	unless condition [do-mu block]
 ]
@@ -261,7 +261,7 @@ make-string-initial-mu: func [length value] [
 
 ; if a pair, then the first digit is the digit
 make-integer-mu: func [value] [
-	switch/default type?/word get value [
+	switch/default type?/word :value [
 		pair! [to-integer first value * (10 ** second value)]
 		integer! [to-integer 10 ** value]
 	] [
@@ -274,7 +274,7 @@ make-integer-mu: func [value] [
 ; integer into helpful-mu will just call make-integer-mu.  There's potential here for
 ; really shortening
 helpful-mu: func ['arg] [
-	switch/default type?/word get arg [
+	switch/default type?/word :arg [
 		word! [
 			switch/default arg [
 				b: [0 1] ; binary digits
@@ -372,7 +372,8 @@ quoth-mu: funct [
 
 index?-find-mu: funct [
 	{Same as index? find, but returns 0 if find returns none}
-	series [series! gob! port! bitset! typeset! object! none!]
+	series [series! ; gob! in r3 only... leave out for r2 compatibility for now
+		port! bitset! typeset! object! none!]
 	value [any-type!]
 ] [
 	pos: find series value
@@ -384,9 +385,14 @@ index?-find-mu: funct [
 ]
 
 increment-mu: func ['word-or-path] [
-	either path? word-or-path [
-		old: get word-or-path
-		set word-or-path 1 + old
+	either path? :word-or-path [
+		; R2 doesn't support combination of "get/set" and path, but R3 does
+		comment [
+			old: get :word-or-path
+			set :word-or-path 1 + old
+		]
+		old: do :word-or-path
+		do reduce [to-set-path :word-or-path 1 + old]
 		old
 	] [
 		++ :word-or-path
@@ -394,9 +400,14 @@ increment-mu: func ['word-or-path] [
 ]
 
 decrement-mu: func ['word-or-path] [
-	either path? word-or-path [
-		old: get word-or-path
-		set word-or-path 1 - old
+	either path? :word-or-path [
+		; R2 doesn't support combination of "get/set" and path, but R3 does
+		comment [
+			old: :word-or-path
+			set :word-or-path 1 - old
+		]
+		old: do :word-or-path
+		do reduce [to-set-path :word-or-path 1 - old]
 		old
 	] [
 		-- :word-or-path
@@ -423,7 +434,7 @@ writeout-mu: funct [
 	value
 ] [
 	; better implementation coming...
-	switch/default type?/word get value [
+	switch/default type?/word :value [
 		block! [
 			foreach element value [
 				print element
@@ -439,7 +450,7 @@ writeout-mu: funct [
 inversion-mu: func [
 	value
 ] [
-	switch/default type?/word get value [
+	switch/default type?/word :value [
 		string! [empty? value]
 		decimal!
 		integer! [
@@ -451,7 +462,7 @@ inversion-mu: func [
 ]
 
 next-mu: funct [arg] [
-	switch/default type?/word get arg [
+	switch/default type?/word :arg [
 		integer! [arg + 1] 
 	] [
 		next arg
@@ -459,7 +470,7 @@ next-mu: funct [arg] [
 ]
 
 back-mu: funct [arg] [
-	switch/default type?/word get arg [
+	switch/default type?/word :arg [
 		integer! [arg - 1] 
 	] [
 		back arg
@@ -468,7 +479,12 @@ back-mu: funct [arg] [
 
 swap-exchange-mu: funct [
 	"Swap contents of variables."
-	a [word! series! gob!] b [word! series! gob!]
+	a [word! series! 
+		; gob! is in r3 only
+	] 
+	b [word! series! 
+		; gob! is in r3 only 
+	]
 ][
 	if not equal? type? a type? b [
 		throw "swap-mu must be used with common types"
@@ -487,7 +503,7 @@ div-mu: funct [value1 value2] [
 ]
 
 add-mu: funct [value1 value2] [
-	switch/default type?/word get value1 [
+	switch/default type?/word :value1 [
 		block! [
 			result: copy value1
 			while [(not tail? value1) and (not tail? value2)] [
@@ -503,7 +519,7 @@ add-mu: funct [value1 value2] [
 ]
 
 subtract-mu: funct [value1 value2] [
-	switch/default type?/word get value1 [
+	switch/default type?/word :value1 [
 		block! [
 			result: copy value1
 			while [(not tail? value1) and (not tail? value2)] [
@@ -519,7 +535,7 @@ subtract-mu: funct [value1 value2] [
 ]
 
 negate-mu: funct [value] [
-	switch/default type?/word get value [
+	switch/default type?/word :value [
 		block! [
 			result: copy value
 			while [not tail? value] [

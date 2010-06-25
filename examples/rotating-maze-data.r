@@ -1,3 +1,5 @@
+REBOL []
+
 smallmaze: [
 	{######}
 	{#o  @#}

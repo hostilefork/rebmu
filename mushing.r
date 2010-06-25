@@ -27,28 +27,28 @@ type-of-char: func [c [none! char!]] [
 	if none? c [
 		return none
 	]
-	if upper/(c) [
+	if find upper c [
 		return 'upper
 	]
-	if lower/(c) [
+	if find lower c [
 		return 'lower
 	]
-	if digit/(c) [
+	if find digit c [
 		return 'digit
 	]
-	if separatorsymbol/(c) [
+	if find separatorsymbol c [
 		; no spacing but separates
 		return 'separatorsymbol
 	]
-	if headsymbol/(c) [
+	if find headsymbol c [
 		; space before if not at start
 		return 'headsymbol
 	]
-	if tailsymbol/(c) [
+	if find tailsymbol c [
 		; space afterwards but not before (we use ~ for not)
 		return 'tailsymbol
 	]
-	if isolatedsymbol/(c) [
+	if find isolatedsymbol c [
 		; space before and after unless there's a run of identical ones
 		return 'isolatedsymbol
 	]
@@ -56,6 +56,13 @@ type-of-char: func [c [none! char!]] [
 	; with whatever is going; so most unicode characters fall into this
 	; category.
 	return 'caseless
+]
+
+; Rebol 2 complains if you try to next a position that's at the tail
+; or if you try to pick from such a position.  Rebol 3 returns none.
+; This is for compatibility for as long as Rebmu supports Rebol 2.
+firstnext: func [series] [
+	either any [tail? series tail? next series] [none] [first next series]
 ]
 
 ; Simplistic routine, open to improvements.	 Use PARSE dialect instead?
@@ -71,10 +78,10 @@ unmush: funct [value /deep] [
 			thisIsSetWord: 'upper = thisType
 			nextCanSetWord: found? find [headsymbol symbol tailsymbol] thisType
 			lowerCaseRun: 'upper <> thisType
-			while [nextType: type-of-char first next pos] [
+			while [nextType: type-of-char firstnext pos] [
 				comment [
 					print [
-						"this:" first pos "next:" first next pos
+						"this:" first pos "next:" firstnext pos
 						"thisType:" to-string thisType "nextType:" to-string nextType 
 						"thisIsSetWord:" thisIsSetWord "nextCanSetWord:" nextCanSetWord
 						"str:" str
@@ -115,13 +122,13 @@ unmush: funct [value /deep] [
 							; you instead get [a ++ b], [a +-+ b]
 							either nextPos = next pos [
 								; Break symbol on the right only
-								pos: back insert nextPos space
+								pos: back insert nextPos { }
 								thisIsSetWord: false
 							] [
 								; Break symbol on the left and on the right
-								insert pos space
+								insert pos { }
 								; We have to advance nextPos to compensate for the insertion
-								pos: back insert next nextPos space
+								pos: back insert next nextPos { }
 							]
 							 
 							thisIsSetWord: false
@@ -129,26 +136,26 @@ unmush: funct [value /deep] [
 						]
 					]
 					isolatedsymbol [
-						either (first pos) == (first next pos) [
+						either (first pos) == (firstnext pos) [
 							mergedSymbol: true
 						] [
 							if thisIsSetWord [
-								pos: insert pos ":"
+								pos: insert pos {:}
 								either mergedSymbol [
 									mergedSymbol: false
 								] [
-									pos: insert pos space
+									pos: insert pos { }
 								]
 								lowerCaseRun: true
 							]
-							pos: back insert next pos space
+							pos: back insert next pos { }
 							thisIsSetWord: 'upper = nextType
 							nextCanSetWord: false
 						]
 					]
 				] [
 					lowerCaseRun: 'upper <> thisType
-					either ('digit = thisType) and found? find [#"x" #"X"] first next pos [
+					either ('digit = thisType) and found? find [#"x" #"X"] firstnext pos [
 						; need special handling if it's an x because of pairs
 						; want to support mushings like a10x20 as [a 10x20] not [a 10 x 20]
 						; for the moment lie and say its a digit
@@ -167,7 +174,7 @@ unmush: funct [value /deep] [
 								thisIsSetWord: 'upper = nextType
 								nextCanSetWord: false
 							]
-							pos: back insert next pos space
+							pos: back insert next pos { }
 						]
 					]
 				]
@@ -176,9 +183,9 @@ unmush: funct [value /deep] [
 			]
 			if thisIsSetWord [
 				either thisType = 'tailsymbol [
-					pos: insert pos ": "
+					pos: insert pos {: }
 				] [
-					pos: back insert next pos ":"
+					pos: back insert next pos {:}
 				]
 			]
 			load lowercase str

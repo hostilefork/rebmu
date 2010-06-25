@@ -12,9 +12,6 @@
 
 ; could bracket in us's[ ... ] for a use block that protected s
 
-; 35 chars
-wh[SfiTlf][loADlO?sT[SisSc]TntS]hdT
-
 comment [
 ; >> unmush [wh[SfiTlf][loADlO?sT[SisSc]TntS]hdT]
 ; == [wh [s: fi t lf] [lo ad l o? s t [s: is s c] t: nt s] hd t]
@@ -27,3 +24,6 @@ comment [
 		head t
 	]
 ]
+
+; 35 chars
+wh[SfiTlf][loADlO?sT[SisSc]TntS]hdT
