@@ -57,7 +57,7 @@ wB[
 			
 			; if we update the coordinate pair by the offset and it 
 			; equals finish, then we're done with the stroke
-			e?A+bRE[hV]f
+			=~A+bRE[hV]f
 		]
 	]
 	

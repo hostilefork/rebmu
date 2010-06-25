@@ -44,7 +44,7 @@ fv[
 			chCbSP
 			ieTHlTbr
 			chCnSl
-			e?SnSz
+			=~SnSz
 		]
 	]
 	

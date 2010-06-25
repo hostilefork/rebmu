@@ -18,7 +18,7 @@ feCs[
 	; unless J is zero, do the sum step
 	uzJ[
 		; K is the sum of K and, if J < N, N - J (while setting N to 0) or otherwise j 
-		a+KelJn[alSBnJ N0]j
+		a+KelJn[asSBnJ N0]j
 	]
 	
 	; assign n to j

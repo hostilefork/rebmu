@@ -361,7 +361,12 @@ rebmu-context: [
 	RP: :repend
 	SE: :select
 	RV: :reverse
-	RA: rebmu-wrap 'replace/all [target search replace]
+	
+	RA: rebmu-wrap 'replace/all [target search rep] ; replace as param name causes problem
+	RAC: rebmu-wrap 'replace/all/case [target search rep]
+	RAT: rebmu-wrap 'replace/all/tail [target search rep]
+	RACT: rebmu-wrap 'replace/all/case/tail [target search rep]
+	
 	HD: :head
 	TL: :tail
 	BK: :back-mu
@@ -414,7 +419,7 @@ rebmu-context: [
 	NG: :negate-mu
 	Z?: :zero?
 	MO: :mod
-	E?: :equal?
+	=~: :equal?
 	
 	; I'm not entirely sure about the fate of tokens ending in a single tilde.
 	; Rebol's default AND/OR/XOR are infix, and the prefix versions end in tildes.
@@ -435,10 +440,11 @@ rebmu-context: [
 	OD?: :odd?
 	++: :increment-mu
 	--: :decrement-mu
-	GT?: :greater?
-	GE?: :greater-or-equal?
-	LT?: :lesser?
-	LE?: :lesser-or-equal?
+	G~: :greater?				; >~ is not a valid symbol in Rebol
+	GE~: :greater-or-equal?		; >=~ is not a valid symbol in Rebol
+	L~: :lesser?				; <~ is not a valid symbol in Rebol
+	LE~: :lesser-or-equal?		; <=~ is not a valid symbol in Rebol
+	==~: :strict-equal?
 	NG?: :negative?
 	SG?: :sign?
 	Y?: :true?
@@ -446,6 +452,7 @@ rebmu-context: [
 	MN: :min
 	MX: :max
 	AN: :any
+	AL: :all
 	
 	; to-integer (TI) always rounds down.  A "CEIL" operator is useful, though it's a bit
 	; verbose in Rebol as "to-integer round/ceiling value".  May be common enough in
@@ -469,7 +476,7 @@ rebmu-context: [
 	
 	; How strange could we get?  is it useful to do [z: equals? z 3] on any kind of
 	; regular basis?  Maybe if you do that test often after but don't need the value
-	E+: :equal-modify-mu
+	=+: :equal-modify-mu
 
 	; what about two character functions?  can they return different things than their
 	; non-modifier counterparts?
@@ -534,7 +541,7 @@ rebmu-context: [
 	; MISC
 	;-------------------------------------------------------------------------------------	
 	
-	AL: :also
+	AS: :also
 	NN: :none
 	HM: :helpful-mu
 	NN: :none

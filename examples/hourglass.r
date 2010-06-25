@@ -45,7 +45,7 @@ D0
 Hc&[
 	u[
 		; z says are we on the last line we are to print?
-		Ze?Wa
+		Z=~wA
 		
 		; start Q initialized as an empty string, and then fill it using "sand physics"
 		; dropping on the sides using alternating append/insert (if top) or repeatedly
