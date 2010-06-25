@@ -8,8 +8,8 @@ REBOL [
 	
 	For instance: it might be expedient in Code Golf to have the conditonal logic treat 0 as a 
 	"false" condition.  But since Rebol's IF treats 0 as true, we do too.  On the other hand,
-	II (if-mu, aliased to I) *does* accept words and constants in its condition block.  Rebol
-	would throw an error on such constructs, so a Rebmu program which ascribes meaning
+	IT (if-true?-mu, aliased to I) *does* accept words and constants in its condition block.
+	Rebol would throw an error on such constructs, so a Rebmu program which ascribes meaning
 	to that is forwards compatible with existing Rebol programming knowledge.
 	
 	Ultimately, Code Golf cannot be played with a language and library set that is allowed
@@ -75,7 +75,7 @@ do-mu: func [
 	]
 ]
 
-if-mu: func [
+if-true?-mu: func [
 	{If condition is TRUE, runs do-mu on the then parameter.}
 	condition
 	'then-param
@@ -139,7 +139,7 @@ if-lesser?-mu: func [
 	either lesser? value1 value2 [do-mu then-param] [if else [do-mu else-param]]
 ]
 
-unless-mu: func [
+unless-true?-mu: func [
     "Evaluates the block if condition is not TRUE."
     condition
     'block
@@ -147,7 +147,7 @@ unless-mu: func [
 	unless condition [do-mu block]
 ]
 
-unless-zero-mu: func [
+unless-zero?-mu: func [
     "Evaluates the block if condition is not 0."
     condition
     'block
@@ -155,7 +155,7 @@ unless-zero-mu: func [
 	unless zero? condition [do-mu block]
 ]
 
-either-mu: func [
+either-true?-mu: func [
 	{If condition is TRUE, evaluates the first block, else evaluates the second.}
 	condition
 	'true-param
@@ -203,7 +203,7 @@ either-equal?-mu: func [
 	either equal? value1 value2 [do-mu true-param] [do-mu false-param]
 ]
 
-while-mu: func [
+while-true?-mu: func [
 	'cond-param
 	'body-param
 ] [
@@ -400,7 +400,12 @@ increment-mu: func ['word-or-path] [
 			set :word-or-path 1 + old
 		]
 		old: do :word-or-path
-		do reduce [to-set-path :word-or-path 1 + old]
+		if path? old [
+			; this should only run in r3 unless you actually had a path to a path,
+			; on which increment will fail
+			old: get :old 
+		]
+		do reduce [to-set-path :word-or-path 1 + :old]
 		old
 	] [
 		++ :word-or-path
@@ -415,7 +420,7 @@ decrement-mu: func ['word-or-path] [
 			set :word-or-path 1 - old
 		]
 		old: do :word-or-path
-		do reduce [to-set-path :word-or-path 1 - old]
+		do reduce [to-set-path :word-or-path 1 - do :old]
 		old
 	] [
 		-- :word-or-path
@@ -441,16 +446,12 @@ writeout-mu: funct [
 	{Analogue to Rebol's print except tailored to Code Golf scenarios}
 	value
 ] [
-	; better implementation coming...
-	switch/default type?/word :value [
-		block! [
-			foreach element value [
-				print element
-			]
-		]
-	] [
-		print value
-	]
+	; better implementation coming, maybe.  Have to think.
+	; had a matrix printer but abandoned it for Rebol's default
+	; starting to think that w should start as "while" as reading input
+	; and writing it out is not something that necessarily needs a small
+	; character space
+	print value
 ]
 
 ; Don't think want to call it not-mu because we probably want a more powerful operator
@@ -574,6 +575,14 @@ change-modify-mu: funct ['series value] [
 	also [change get :series value] [first+ :series]
 ]
 
+head-modify-mu: func ['series] [
+	set :series head get :series
+]
+
+tail-modify-mu: func ['series] [
+	set :series tail get :series
+]
+
 ; -1 is a particularly useful value, yet it presents complications to mushing that ON
 ; does not have.  Also frequently, choosing 1 vs -1 depends on a logic.  Onesigned turns
 ; true into 1 and false into -1 (compared to to-integer which treats false as zero)
@@ -583,4 +592,28 @@ onesigned-mu: funct [value] [
 
 ceiling-mu: funct [value] [
 	to-integer round/ceiling value
+]
+
+not-mu: func [value] [
+	not true? value
+]
+
+only-first-true-mu: func [value1 value2] [
+	(true? value1) and (not true? value2)
+]
+
+only-second-true-mu: func [value1 value2] [
+	(true? value2) and (not true? value1)
+]
+
+prefix-or-mu: func [value1 value2] [
+	(true? value1) or (true? value2)
+]
+
+prefix-and-mu: func [value1 value2] [
+	(true? value1) and (true? value2)
+]
+
+prefix-xor-mu: func [value1 value2] [
+	(true? value1) xor (true? value2)
 ]

@@ -10,6 +10,8 @@ L{#o@}
 MeFI?a[rlA]a
 	
 ; define data width and height functions
+; Note: we don't use while loops so this shows an overwriting of w
+; if while is needed it's still available under WT (while-true?-mu)
 W|[l?Fm]
 H|[l?M]
 	
@@ -35,7 +37,7 @@ B|[gA|[ieSClFcA[rnA]]]
 ; forever...
 fv[
 	NbIn[
-		ut[		
+		un[		
 		    ++N/2
 		    TfCn
 			ieFlTbr
@@ -50,7 +52,7 @@ fv[
 	gA|[TfCaEEfZfA[prT][pnT]nn]
 	
 	; unless ball position is still not none, we'll be exiting the loop...
-	ulBbr
+	utBbr
 	
 	; Update the rotation value based on the input
 	JmoADjPC[3 1]rK4   

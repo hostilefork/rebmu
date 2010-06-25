@@ -19,7 +19,7 @@ Mai^Vsi^Vs
 	
 ; G is a func (not a funct) thus can write to the global variable M 
 ; it takes a matrix to replace the matrix with and returns the old one 
-Ga~[ZcydM MaZ]
+Ga&[ZcydM MaZ]
 	
 ; F is the now common iterator finder for coordinates in a matrix
 ; modified so if you ask about out of range it always returns space
@@ -39,14 +39,14 @@ Fa|[ZpcMscA XfsA ZigX0[iZ[skZbkX]] iZ[iT?z[Zno]]eZz{ }]
 ; not a collision then those points must be spaces
 Tc|[
 	Xno
-	Q~[Z1br]
-	ieSfsFsbBc[wh[Zf+A][JfB KfsJeeSk[OrvCYcEEsFSfADbO[eeSfsFadBngO[chJz]q]q][X1ineKzQ]BadBc]ieSfsFb[anY?xN?z]]
+	Q&[Z1br]
+	ieSfsFsbBc[w[Zf+A][JfB KfsJeeSk[OrvCYcEEsFSfADbO[eeSfsFadBngO[chJz]q]q][X1ineKzQ]BadBc]ieSfsFb[f~Xz]]
 ]
 	
 ; R recursively applies itself for placing the words in A
 ; returns true if it succeeds
 Ra|[
-	Q~[iUbr]
+	Q&[iUbr]
 	eT?aON[
 		ZntSBvL
 		rtXz[
@@ -68,6 +68,15 @@ Ra|[
 ]
 
 ; Print the result
-; if not "false" then cleans up the unneccessary whitespace on the board
-; and injects i|n|t|e|r|m|e|d|i|a|t|e pipe characters as per problem spec
-wErA[JmWH[Kf+J][iM?trtK[JbkJtkJ]]feZm[Kf+Zwh[Jf+Z][ZntISbkZegKs[egJs{|}s]s Kj]]m]{false}
+eRa[
+	; if r(a) returned true... then
+	
+	; clean up the unneccessary whitespace on the board
+	JmW[Kf+J][iM?trtK[JbkJtkJ]]
+	
+	; and injects i|n|t|e|r|m|e|d|i|a|t|e pipe characters as per problem spec
+	feZm[Kf+Zw[Jf+Z][ZntISbkZegKs[egJs{|}s]s Kj]prHDz]
+][
+	; otherwise print false
+	pr{false}
+]

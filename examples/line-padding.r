@@ -13,17 +13,19 @@
 ; could bracket in us's[ ... ] for a use block that protected s
 
 comment [
-; >> unmush [wh[SfiTlf][loADlO?sT[SisSc]TntS]hdT]
-; == [wh [s: fi t lf] [lo ad l o? s t [s: is s c] t: nt s] hd t]
+; >> unmush [w[SfiTlf][loADlO?sT[SisSc]TntS]hd+T]
+; == [w [s: fi t lf] [lo ad l o? s t [s: is s c] t: nt s] hd t]
 
 	while [s: find t lf] [
 		loop add l offset? s t [
 			s: insert s c
 		]
 		t: next s
-		head t
+		
+		; head+ is "head and modify", so it sets T to its head and returns the head too
+		head-modify-mu t
 	]
 ]
 
 ; 35 chars
-wh[SfiTlf][loADlO?sT[SisSc]TntS]hdT
+w[SfiTlf][loADlO?sT[SisSc]TntS]hd+T

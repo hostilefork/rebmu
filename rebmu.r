@@ -140,7 +140,10 @@ REBOL [
 		0.3.0 [24-Jun-2010 {Made backwards compatible with Rebol 2.  Note
 		that things like CN for continue or percentage! datatype operations
 		were added in Rebol 3.  You can use these in your Rebmu programs
-		but they will only work if using Rebmu with an r3 interpreter.}]
+		but they will only work if using Rebmu with an r3 interpreter.
+		Also did several name tweaks like instead of AA for AND~ it's now A~
+		along with other consistencies (IT -> if-true, WT -> while-true, 
+		UT -> unless true).}]
 	]
 ]
 
@@ -263,22 +266,22 @@ rebmu-context: [
 	; CONDITIONALS
 	;-------------------------------------------------------------------------------------	
 	
-	II: :if-mu  ;short for "iiiiiiif...", since Rebol uses IF already! :)
+	IT: :if-true?-mu   ; IF is taken by Rebol, don't overwrite
 	IL: :if-lesser?-mu
 	IG: :if-greater?-mu
 	IE: :if-equal?-mu
 	INE: :if-not-equal?-mu
 	IZ: :if-zero?-mu
 
-	EI: :either-mu
+	ET: :either-true?-mu   ; EI isn't taken by Rebol, but consistent with IT
 	EL: :either-lesser?-mu
 	EG: :either-greater?-mu
 	EE: :either-equal?-mu
 	EZ: :either-zero?-mu
 	SW: :switch
 	
-	UL: :unless-mu
-	UZ: :unless-zero-mu
+	UT: :unless-true?-mu
+	UZ: :unless-zero?-mu
 
 	;-------------------------------------------------------------------------------------	
 	; LOOPING CONSTRUCTS
@@ -288,15 +291,15 @@ rebmu-context: [
 	FE: :foreach
 	FA: :forall
 	LO: :loop
-	WH: :while-mu
+	WT: :while-true?-mu
 	WG: :while-greater?-mu
 	WL: :while-lesser?-mu
 	WGE: :while-greater-or-equal?-mu
 	WLE: :while-lesser-or-equal?-mu
 	WE: :while-equal?-mu
-	CN: either unset? get/any 'continue [does [to-error "no CN in Rebol 2"]][:continue]
+	CN: missing-in-r2 'continue "CN"
 	BR: :break
-	UT: :until
+	UN: :until
 	RT: :repeat
 	FV: :forever
 
@@ -317,14 +320,14 @@ rebmu-context: [
 	x|: :funct-zyx-mu
 	w|: :funct-zyxw-mu
 	; TODO: Write generator? 
-	a~: :func-a-mu
-	b~: :func-ab-mu
-	c~: :func-abc-mu
-	d~: :func-abcd-mu
-	z~: :func-z-mu
-	y~: :func-zy-mu
-	x~: :func-zyx-mu
-	w~: :func-zyxw-mu
+	a&: :func-a-mu
+	b&: :func-ab-mu
+	c&: :func-abc-mu
+	d&: :func-abcd-mu
+	z&: :func-z-mu
+	y&: :func-zy-mu
+	x&: :func-zyx-mu
+	w&: :func-zyxw-mu
 	RN: :return
 	
 	;-------------------------------------------------------------------------------------		
@@ -333,15 +336,12 @@ rebmu-context: [
 
 	US: :use
 	CX: :context	
-	OB: either unset? get/any 'object [
-		; Rebol 2 does not have object word, but it's just a convenience
-		func [
+	OB: missing-in-r2/substitute 'object "OB" func [
     		"Defines a unique object."
     		blk [block!] "Object words and values."
 		][
     		make object! append blk none
 		]
-	] [:object] 
 	
 	;-------------------------------------------------------------------------------------
 	; SERIES OPERATIONS
@@ -415,8 +415,22 @@ rebmu-context: [
 	Z?: :zero?
 	MO: :mod
 	E?: :equal?
-	AN: :AND~ ; mapped to & as well but maybe we should use that for something else
-	OO: :OR~ ; don't want to change infix default, consider this short for "ooooor...." :)
+	
+	; I'm not entirely sure about the fate of tokens ending in a single tilde.
+	; Rebol's default AND/OR/XOR are infix, and the prefix versions end in tildes.
+	; That precedent guided my decision to create a~ / o~ / x~ ... Rebol's infix
+	; or is special and unlikely to be used in code golf
+	
+	A~: :prefix-and-mu
+	O~: :prefix-or-mu
+	X~: :prefix-xor-mu
+	N~: :not-mu
+	
+	; Question: What other functions seem to fit in the theme of ending in tildes?
+	; These are just ideas
+	F~: :only-first-true-mu
+	S~: :only-second-true-mu
+	
 	EV?: :even?
 	OD?: :odd?
 	++: :increment-mu
@@ -431,7 +445,7 @@ rebmu-context: [
 	N?: func [val] [not true? val] ; can be useful
 	MN: :min
 	MX: :max
-	AY: :any
+	AN: :any
 	
 	; to-integer (TI) always rounds down.  A "CEIL" operator is useful, though it's a bit
 	; verbose in Rebol as "to-integer round/ceiling value".  May be common enough in
@@ -460,6 +474,8 @@ rebmu-context: [
 	; what about two character functions?  can they return different things than their
 	; non-modifier counterparts?
 	CH+: :change-modify-mu
+	HD+: :head-modify-mu
+	TL+: :tail-modify-mu 
 	
 	;-------------------------------------------------------------------------------------
 	; CONVERTERS
@@ -470,7 +486,7 @@ rebmu-context: [
 	; where default Rebol functions use a lot of hyphens.  The general goal of these
 	; functions is, unlike modifiers, to not change their inputs.  It might be nice
 	; to have some 
-	
+
 	;-------------------------------------------------------------------------------------	
 	; INPUT/OUTPUT
 	;-------------------------------------------------------------------------------------	
@@ -494,7 +510,10 @@ rebmu-context: [
 	
 	;-------------------------------------------------------------------------------------	
 	; CONSTRUCTION FUNCTIONS
-	; Although a caret in isolation means "copy", a letter and a caret means "factory"
+	; Letter and a caret means "factory".  This convention is not in Rebol but I thought
+	; that even if AR and AI were available for ARRAY and ARRAY/INITIAL the use of the
+	; caret would allow the pattern to continue for some other things which *would*
+	; collide.
 	;-------------------------------------------------------------------------------------	
 
 	CY: :copy
@@ -502,12 +521,14 @@ rebmu-context: [
 	CYD: rebmu-wrap 'copy/deep [value]
 	CP: rebmu-wrap 'copy/part [value] 
 	CPD: rebmu-wrap 'copy/part/deep [value] 
-	a^: does [copy []] ; two chars cheaper than cp[]
-	ai^: rebmu-wrap 'array/initial [size value]
-	i^: :make-integer-mu
-	m^: :make-matrix-mu
-	s^: does [copy ""] ; two chars cheaper than cp""
-	si^: :make-string-initial-mu
+
+	A^: :array
+	AI^: rebmu-wrap 'array/initial [size value]
+	B^: does [copy []] ; two chars cheaper than cp[]
+	I^: :make-integer-mu
+	M^: :make-matrix-mu
+	S^: does [copy ""] ; two chars cheaper than cp""
+	SI^: :make-string-initial-mu
 	
 	;-------------------------------------------------------------------------------------		
 	; MISC
@@ -520,11 +541,11 @@ rebmu-context: [
 	ST: :set
 	GT: :get
 	RF: :redefine-mu
-	EN: either unset? get/any 'encode [does [to-error "no EN in Rebol 2"]] [:encode]
+	EN: missing-in-r2 'encode "en"
 	SWP: :swap-exchange-mu
-	FR: either unset? get/any 'format [does [to-error "no FR in Rebol 2"]] [:format]
+	FR: missing-in-r2 'format "fr"
 	OS: :onesigned-mu
-	SP: if unset? get/any 'space [#" "] ; Rebol 2 does not have space but Rebmu needs it
+	SP: missing-in-r2/substitute 'space "sp" #" "
 
 	;-------------------------------------------------------------------------------------
 	; SINGLE CHARACTER DEFINITIONS
@@ -548,10 +569,10 @@ rebmu-context: [
 	; frequently applied to series literals.  decoding base-64 strings
 	; might be an option as they are used a lot in code golf.
 	^: :caret-mu
-	~: :DZ  ; "does" generator, can write context variables
+	&: :DZ  ; "does" generator, can write context variables
 	|: :DF	; funct generator w/no parameters, block always follows		
-	&: :AN
-	
+	~: none ; don't know yet
+
 	; TODO: there is an issue where if an argument a is put into the block you can't
 	; overwrite its context if you're inside something like a while block.	How
 	; to resolve this?
@@ -559,11 +580,11 @@ rebmu-context: [
 	b: to-char 0 ; "byte"
 	c: #"A" ; "char"
 	d: #"0" ; "digit"
-	e: :EI ; "either-mu"
+	e: :ET ; "either-true?-mu"
 	f: :FR ; "first"
 	g: copy [] ; "group"
 	h: :HM ; "helpful" constant declaration tool
-	i: :II ; "if-mu"
+	i: :IT ; "if-true?-mu"
 	j: 0
 	k: 0
 	l: :LO ; "loop"
@@ -582,9 +603,9 @@ rebmu-context: [
 	r: :RI ; "readin"
 	s: copy "" ; "string"
 	t: :TO ; note that to can use example types, e.g. t "foo" 10 is "10"!
-	u: :UT ; "until"
+	u: :UN ; "until"
 	v: copy [] ; "vector"
-	w: :WO ; "writeout"
+	w: :WT ; "while-true?-mu"
 	; decimal! values starting at 0.0 (common mathematical variables)
 	x: 0.0
 	y: 0.0 
@@ -608,6 +629,16 @@ rebmu-wrap: funct [refined [path!] args [block!]] [
 	func args compose [
 		(refined) (args)
 	]
+]
+
+missing-in-r2: funct [keyword [word!] shorthand [string!] /substitute other] [
+	either unset? get/any keyword [
+		either substitute [
+			:other
+		] [
+			does [to-error reform ["no" shorthand "in Rebol 2"]]
+		]
+	] [get keyword]
 ]
 
 rebmu: func [

@@ -42,7 +42,7 @@ D0
 ; A is the limit for the draw
 ; B is the count of the volume of *spaces* to draw before we start drawing X characters
 ; C is our offset (-1 for top half, 1 for bottom)
-Hc~[
+Hc&[
 	u[
 		; z says are we on the last line we are to print?
 		Ze?Wa
