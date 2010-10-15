@@ -14,10 +14,14 @@ N 0% rN
 ; Demonstrates how native Rebol code can be used natively right smack dab in the middle of Rebmu.
 
 comment [
-	birthday: to-date (ask "When were you born? ")
+	; Caution: Using PAREN! inside of COMMENT causes the Pygments
+	; syntax highlighter, used by GitHub, to hang... as of 14-Oct-2010
+	birthday: to-date ask "When were you born? "
 	
-	; Note: use difference function for more precise result than days
-	n: (21-dec-2012 - now/date) / (21-dec-2012 - birthday)
+	; Note: use DIFFERENCE function for more precise result than days
+	numerator: 21-dec-2012 - now/date
+	denominator: 21-dec-2012 - birthday
+	n: numerator / denominator
 ]
 
 ; top line width is what we get when add 1 to the result of multiplying j * 2
