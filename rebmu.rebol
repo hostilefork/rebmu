@@ -11,7 +11,7 @@ REBOL [
 	Version: 0.2.0
 	
 	; Header conventions: http://www.rebol.org/one-click-submission-help.r
-	File: %rebmu.r
+	File: %rebmu.rebol
 	Type: dialect
 	Level: advanced
 	
@@ -176,10 +176,10 @@ REBOL [
 ]
 
 ; Load the library of xxx-mu functions
-do %mulibrary.r
+do %mulibrary.rebol
 
 ; Load the library implementing mush/unmush
-do %mushing.r
+do %mushing.rebol
 
 rebmu-context: [
 	;----------------------------------------------------------------------
