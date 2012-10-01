@@ -1,17 +1,17 @@
 REBOL [
 	Title: "The Mu Rebol Library"
-	
+
 	Description: {This is a library generally designed to be used with abbreviated symbols
 	in Rebmu.  While there is a fuzzy line between "library" and "language", the intention
 	is not to achieve a low symbol count at the cost of creating something that is
-	incompatible with Rebol.  
-	
-	For instance: it might be expedient in Code Golf to have the conditonal logic treat 0 as a 
+	incompatible with Rebol.
+
+	For instance: it might be expedient in Code Golf to have the conditonal logic treat 0 as a
 	"false" condition.  But since Rebol's IF treats 0 as true, we do too.  On the other hand,
 	IT (if-true?-mu, aliased to I) *does* accept words and constants in its condition block.
 	Rebol would throw an error on such constructs, so a Rebmu program which ascribes meaning
 	to that is forwards compatible with existing Rebol programming knowledge.
-	
+
 	Ultimately, Code Golf cannot be played with a language and library set that is allowed
 	to expand during a competition.  So the Rebmu library will have to stabilize into a fixed
 	set at some point - likely including many matrix operations.}
@@ -24,7 +24,7 @@ to-string-mu: func [
 		; This code comes from spelling? from an old version of Bindology
 		; Ladislav and Fork are hoping for this to be the functionality of to-string in Rebol 3.0
 		; for words (then this function would then be unnecessary).
-		
+
 		case [
 			word? :value [mold :value]
 			set-word? :value [head remove back tail mold :value]
@@ -53,7 +53,7 @@ caret-mu: func ['value] [
 ]
 
 redefine-mu: func ['dest 'source] [
-	set :dest get :source 
+	set :dest get :source
 ]
 
 do-mu: func [
@@ -305,29 +305,29 @@ helpful-mu: func ['arg] [
 ; "func|a" is the same for funcs
 
 funct-a-mu: funct [body [block!]] [
-	funct [a] body 
+	funct [a] body
 ]
 funct-ab-mu: funct [body [block!]] [
-	funct [a b] body 
+	funct [a b] body
 ]
 funct-abc-mu: funct [body [block!]] [
-	funct [a b c] body 
+	funct [a b c] body
 ]
 funct-abcd-mu: funct [body [block!]] [
-	funct [a b c d] body 
+	funct [a b c d] body
 ]
 
 funct-z-mu: funct [body [block!]] [
-	funct [z] body 
+	funct [z] body
 ]
 funct-zy-mu: funct [body [block!]] [
-	funct [z y] body 
+	funct [z y] body
 ]
 funct-zyx-mu: funct [body [block!]] [
-	funct [z y x] body 
+	funct [z y x] body
 ]
 funct-zyxw-mu: funct [body [block!]] [
-	funct [z y x w] body 
+	funct [z y x w] body
 ]
 
 func-a-mu: func [body [block!]] [
@@ -392,6 +392,15 @@ index?-find-mu: funct [
 	]
 ]
 
+insert-at-mu: func [
+	{Just insert and at combined}
+	series
+	index
+	value
+] [
+	insert at series index value
+]
+
 increment-mu: func ['word-or-path] [
 	either path? :word-or-path [
 		; R2 doesn't support combination of "get/set" and path, but R3 does
@@ -403,7 +412,7 @@ increment-mu: func ['word-or-path] [
 		if path? old [
 			; this should only run in r3 unless you actually had a path to a path,
 			; on which increment will fail
-			old: get :old 
+			old: get :old
 		]
 		do reduce [to-set-path :word-or-path 1 + :old]
 		old
@@ -472,7 +481,7 @@ inversion-mu: func [
 
 next-mu: funct [arg] [
 	switch/default type?/word :arg [
-		integer! [arg + 1] 
+		integer! [arg + 1]
 	] [
 		next arg
 	]
@@ -480,7 +489,7 @@ next-mu: funct [arg] [
 
 back-mu: funct [arg] [
 	switch/default type?/word :arg [
-		integer! [arg - 1] 
+		integer! [arg - 1]
 	] [
 		back arg
 	]
@@ -488,19 +497,19 @@ back-mu: funct [arg] [
 
 swap-exchange-mu: funct [
 	"Swap contents of variables."
-	a [word! series! 
+	a [word! series!
 		; gob! is in r3 only
-	] 
-	b [word! series! 
-		; gob! is in r3 only 
+	]
+	b [word! series!
+		; gob! is in r3 only
 	]
 ][
 	if not equal? type? a type? b [
 		throw "swap-mu must be used with common types"
 	]
 	either word? a [
-		x: get a  
-		set a get b	 
+		x: get a
+		set a get b
 		set b x
 	] [
 		swap a b
@@ -521,7 +530,7 @@ add-mu: funct [value1 value2] [
 				++ value2
 			]
 			head result
-		] 
+		]
 	] [
 		add value1 value2
 	]
@@ -537,7 +546,7 @@ subtract-mu: funct [value1 value2] [
 				++ value2
 			]
 			head result
-		] 
+		]
 	] [
 		subtract value1 value2
 	]
@@ -553,7 +562,7 @@ negate-mu: funct [value] [
 				++ value
 			]
 			head result
-		] 
+		]
 	] [
 		negate value
 	]
@@ -581,6 +590,10 @@ head-modify-mu: func ['series] [
 
 tail-modify-mu: func ['series] [
 	set :series tail get :series
+]
+
+skip-modify-mu: func ['series offset] [
+	set :series skip get :series offset
 ]
 
 ; -1 is a particularly useful value, yet it presents complications to mushing that ON
