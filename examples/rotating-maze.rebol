@@ -1,7 +1,9 @@
 ; http://stackoverflow.com/questions/3034331/code-golf-rotating-maze
 
 ; We use "first" and "second" a lot, worth it to define f and s
-.fFS.sSC
+; temporarily not using form .[fFSsSC] until I figure out what's
+; wrong with the binding there
+rfFfsRFsSC
 
 ; character set
 L{#o@}
@@ -21,7 +23,7 @@ Z|[Tre[wH]iOD?j[rvT]t]
 ; cell retrieval function (accounts for applied rotations)
 Ca|[
 	st[xY]a
-	KrePC[[yBKx][ntSBhXbkY][ntSBhYsbWx][xSBwY]]ntJ
+	KrePC[[yBKx][nxSBhXbkY][nxSBhYsbWx][xSBwY]]nxJ
 	skPCmFkSk
 ]
 	
@@ -29,15 +31,19 @@ Ca|[
 ; the grid (accounts for rotation).  Every cell will be visited
 ; unless a logically true result is given from the callback
 ; which will short circuit
-Ga|[rtYsZ[rtXfZ[TaRE[xY]iTbr]iTbr]rnT]
+Ga|[
+	rtYsZ[rtXfZ[TaRE[xY]iTbr]iTbr]rnT
+]
 	
 ; find the ball, or none (uses the each method above)
-B|[gA|[ieSClFcA[rnA]]]
+B|[
+	gA|[ieSClFcA[rnA]]
+]
 
 ; forever...
 fv[
 	NbIn[
-		un[		
+		un[
 		    ++N/2
 		    TfCn
 			ieFlTbr
@@ -55,5 +61,5 @@ fv[
 	utBbr
 	
 	; Update the rotation value based on the input
-	JmoADjPC[3 1]rK4   
+	JmoADjPC[3 1]rK04   
 ]

@@ -7,14 +7,16 @@ Ssp
 Nl?A
    
 ; L is our longest string length
-L0feZa[LmxLl?Z]
+L00feZa[LmxLl?Z]
 
 ; V is our board size
 ; expression is V(1 + (l - 1) * (ad eOD?n1[0] dv n 2)])
 ; we add one because our loop doesn't do the theoretical minimum ++ v
-Vad2mpBKlADeOD?n1[0]dvN2
+Va2mpBKlADeOD?n01[0]d2N
 	
 ; M is our VxV board matrix, initially set to spaces 
+print v
+print s
 Mai^Vsi^Vs
 	
 ; G is a func (not a funct) thus can write to the global variable M 
@@ -23,7 +25,7 @@ Ga&[ZcydM MaZ]
 	
 ; F is the now common iterator finder for coordinates in a matrix
 ; modified so if you ask about out of range it always returns space
-Fa|[ZpcMscA XfsA ZigX0[iZ[skZbkX]] iZ[iT?z[Zno]]eZz{ }]
+Fa|[ZpcMscA XfsA ZigX00[iZ[skZbkX]] iZ[iT?z[Zno]]eZz{ }]
 	
 ; T is a "c|function", meaning it takes parameters A B C
 ; it tries to put the string A into the matrix at coordinates B with step offset C
@@ -39,8 +41,8 @@ Fa|[ZpcMscA XfsA ZigX0[iZ[skZbkX]] iZ[iT?z[Zno]]eZz{ }]
 ; not a collision then those points must be spaces
 Tc|[
 	Xno
-	Q&[Z1br]
-	ieSfsFsbBc[w[Zf+A][JfB KfsJeeSk[OrvCYcEEsFSfADbO[eeSfsFadBngO[chJz]q]q][X1ineKzQ]BadBc]ieSfsFb[f~Xz]]
+	Q&[Z01br]
+	ieSfsFsbBc[w[Zf+A][JfB KfsJeeSk[OrvCYcEEsFSfADbO[eeSfsFadBngO[chJz]q]q][X01iuKzQ]BadBc]ieSfsFb[f~Xz]]
 ]
 	
 ; R recursively applies itself for placing the words in A
@@ -48,14 +50,14 @@ Tc|[
 Ra|[
 	Q&[iUbr]
 	eT?aON[
-		ZntSBvL
+		ZnxSBvL
 		rtXz[
 			rtYz[
 				O[0 1]
-				lo2[
+				lo 2[
 					JgM ; save matrix copy
-					UeTfsAre[xY]o[rNTa][eH?a[rNTa]no]
-					eU0[gJ]
+					UeTfsAre[xY]o[rNXa][eH?a[rNXa]no]
+					eU00[gJ]
 					rvO
 					q
 				]
@@ -75,7 +77,7 @@ eRa[
 	JmW[Kf+J][iM?trtK[JbkJtkJ]]
 	
 	; and injects i|n|t|e|r|m|e|d|i|a|t|e pipe characters as per problem spec
-	feZm[Kf+Zw[Jf+Z][ZntISbkZegKs[egJs{|}s]s Kj]prHDz]
+	feZm[Kf+Zw[Jf+Z][ZnxISbkZegKs[egJs{|}s]s Kj]prHDz]
 ][
 	; otherwise print false
 	pr{false}

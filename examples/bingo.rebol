@@ -7,8 +7,11 @@
 ; to find a series of 5 asterisks in this expanded set which starts on
 ; one of these boundaries
 
+; store the number five since we use it a lot and it's not, "Size"
+S05
+
 ; RepeaT this loop five times, with variable Z counting 1 to 5
-rtZ5[
+rtZs[
 	; a trick that helps reduce the number of loops is that the 5-line input loop
 	; actually builds the diagonal solutions.  as it proceeds it inserts one at
 	; the beginning and appends the other as it goes.  so if the first line of your
@@ -29,18 +32,18 @@ rtZ5[
 	;
 	; we also build a vector of five asterisk literals in V, so long as we loop x5
 
-	GisGpcRaZisGaAPgPCaSB6zAPv'*
+	GisGpcRaZisGaAPgPCaSB06zAPv'*
 ]
 
 ; our second loop is nested, with the job of capturing the vertical winning solutions
 ; and appending them to the list as new sequences of 5 values.  Each iteration of
 ; the outer loop appends one vertical solution
-l5[
+lS[
 	; we start by assigning A to point to G, which starts with pointing at the first
 	; element of a non-diagonal row in our series.  Then we loop five times to append
 	; the vertical to the list by skipping five elements at a time
-	AgL5[
-		apGfAsk+A5
+	AgLs[
+		apGfAsk+aS
 	]
 
 	; we advance the G pointer to the next first element of a non-diagonal row, to
@@ -54,7 +57,7 @@ hd+Gu[
 	; portion of the string we read from the user...putting an asterisk in the place
 	; a number is found.  Then we just use find with a skip value of 5 on the vector
 	; of asterisks we created earlier.
-	raGin-NTrM'*fisGv5
+	raGin-NXrM'*FISgVs
 ]
 
 ; print bingo, 'cause we're done...

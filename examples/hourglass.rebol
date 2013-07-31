@@ -25,7 +25,7 @@ comment [
 ]
 
 ; top line width is what we get when add 1 to the result of multiplying j * 2
-Wad1mpJ2
+Wa1m2j
 
 ; S is a string whose elements correspond to:
 ;
@@ -40,7 +40,7 @@ Wad1mpJ2
 S{ \x/ }
 
 ; D is how far we are currently inDented during a print
-D0
+D00
 
 ; Hourglass func takes three parameters...
 ; A is the limit for the draw
@@ -54,32 +54,32 @@ Hc&[
 		; start Q initialized as an empty string, and then fill it using "sand physics"
 		; dropping on the sides using alternating append/insert (if top) or repeatedly
 		; inserting at midpoint (if bottom)
-		Qs^RTkW[isEL0c[skQdvK2][eEV?kQ[tlQ]]pcSeg--B0[eZ1 5]3]
+		Qs^rtKw[isEL00c[skQd2k][eEV?kQ[tlQ]]pcSeg--b00[eZ 1 5]3]
 		
 		; rejoin a string composed of an indentation of length d, the left hourglass
 		; side, the Q string, and the right hourglass side.
-		prRJ[si^DspSCsQfhS]
-		
+		prRJ[si^dSPscSqFHs]
+
 		; loop termination condition and continuation
-		eZ1[s+DcA+wMPc2no]
+		eZ 1[s+dCa+wM2cNO]
 	]
 ]
 
 ; V is the volume function, pass it a percentage and it will tell you
 ; how many spaces need to be drawn in order to be that capacity
-Va|[mpAj**2]
+Va|[mpAp2j]
 
 ; draw the top line; it's an outlier, use string constructor
 prSI^w{_}
 
 ; inner width at widest point starts out as two less
-Ls+W2
+Ls2w Wl
 
 ; print top half
-h1tiVsb1n -1
+h01tiVsb01n -1
 
 ; reverse the stringmap and change first character to underscore
 chRVs{_}
 
 ; print bottom half
-hLceVn1
+hLceVn01

@@ -1,12 +1,12 @@
 ; http://codegolf.stackexchange.com/questions/2/99-bottles-of-beer
 
-; start both m and n at 99
-M N 99
-
 ; b is a parameterless "func" that returns a string 
 ; "N bottle(s) of beer on the wall" with correct
 ; pluralization.
 Bdz[rj[n{ bottle}egN 1{s}{}{ of beer}]]
+
+; start both m and n at 99
+M99Nm
 
 ; loop n times (99)
 loN[

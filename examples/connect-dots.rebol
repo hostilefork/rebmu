@@ -53,7 +53,7 @@ wB[
 			; current location) based on an index into the letters list
 			; that we figure out based on whether v is zero, h is zero,
 			; v equals h, or v doesn't equal h.
-			chCbPClEZv1[ezH2[eeHv3 4]]
+			chCbPClEZv01[ezH02[eeHv03 4]]
 			
 			; if we update the coordinate pair by the offset and it 
 			; equals finish, then we're done with the stroke

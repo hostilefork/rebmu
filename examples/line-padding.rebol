@@ -28,4 +28,4 @@ comment [
 ]
 
 ; 35 chars
-w[SfiTlf][loADlO?sT[SisSc]TntS]hd+T
+w[SfiTlf][loADlO?sT[SisSc]TnxS]hd+T
