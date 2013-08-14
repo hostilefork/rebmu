@@ -210,7 +210,7 @@ unmush: funct [
                         opt [lone-digit | lone-symbol]
                     |
                         some upper
-                        opt [lone-digit (caps-means-set: true) | lone-symbol if (not caps-means-set)] (
+                        opt [[lone-digit | lone-symbol] if (not caps-means-set)] (
                             if caps-means-set and (target-type = word!) [
                                 target-type: set-word!
                                 caps-means-set: false

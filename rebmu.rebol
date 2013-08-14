@@ -518,20 +518,34 @@ rebmu-context: [
     ; MICRO MATH
     ;
     ; These can be overridden, but are helpful because mushing tries not to
-    ; overload single-character semantics, in favor of giving us things like
-    ; +a and a+
-    ;
+    ; overload single-symbol/digit terminal semantics, in favor of giving us
+    ; things like +a and a+.  We should automatically generate these for all
+    ; single digits, although figuring out special meanings for a0, s0, m0,
+    ; d1 etc. would be a good idea.
+
+    e0: func [value] [value == 0]
+    e1: func [value] [value == 1]
+    e2: func [value] [value == 2]
+    ; ...
+    e9: func [value] [value == 9]
 
     a1: func [value] [add-mu value 1]
     a2: func [value] [add-mu value 2]
+    ; ...
 
     s1: func [value] [subtract-mu value 1]
     s2: func [value] [subtract-mu value 2]
+    ; ...
 
     d2: func [value] [divide value 2]
+    ; ...
+
     m2: func [value] [multiply value 2]
+    m3: func [value] [multiply value 3]
+    ; ...
 
     p2: func [value] [value ** 2]
+    ; ...
 
     ;----------------------------------------------------------------------
     ; PREFIX PLUS
@@ -679,7 +693,7 @@ missing-in-r2: funct [keyword [word!] shorthand [string!] /substitute other] [
 rebmu: func [
     {Visit http://hostilefork.com/rebmu/}
     code [file! any-block! string!] "The Rebmu or Rebol code"
-    /args arg {named Rebmu arguments [X10Y20] or implicit a: block [1"hello"2]}
+    /args arg [any-type!] {block in Rebmu format [X10Y20]; if no set-words are found in block assumed as implicit argument "A"}
     /nocopy "Default is to copy/deep the arguments for safety but you can not do that"
     /stats "print out statistical information"
     /debug "output debug information"
@@ -733,9 +747,13 @@ rebmu: func [
     ]
 
     either args [
-        arg: unmush either nocopy [arg] [copy/deep arg]
-        if not set-word? first arg [
-            ; implicitly assign to a if the block doesn't start with a set-word
+        either block? arg [
+            arg: unmush either nocopy [arg] [copy/deep arg]
+            if not set-word? first arg [
+                ; implicitly assign to a if the block doesn't start with a set-word
+                arg: compose/only [a: (arg)]
+            ]
+        ] [
             arg: compose/only [a: (arg)]
         ]
     ] [
