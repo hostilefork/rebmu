@@ -1,5 +1,34 @@
-; http://stackoverflow.com/questions/1683857/code-golf-hourglass
+Rebmu [
+	Description: {Hourglass}
+	Home: http://stackoverflow.com/a/3110684/211160
 
+	Purpose: {
+		Input is composed of two numbers: First number is a greater than 1
+		integer that represents the height of the bulbs, second number is a
+		percentage (0 - 100) of the hourglass' capacity.
+
+		The hourglass' height is made by adding more lines to the hourglass'
+		bulbs, so size 2 (the minimal accepted size) would be:
+
+			_____
+			\   /
+			 \ /
+			 / \
+			/___\
+
+		Size 3 will add more lines making the bulbs be able to fit more 'sand'.
+
+		Sand will be drawn using the character x. The top bulb will contain N
+		percent 'sand' while the bottom bulb will contain (100 - N) percent
+		sand, where N is the second variable.
+
+		'Capacity' is measured by the amount of spaces () the hourglass
+		contains. Where percentage is not exact, it should be rounded up.
+
+		Sand is drawn from outside in, giving the right side precedence in case
+		percentage result is even.
+	}
+]
 
 ; read J from the user, this is our height which will be greater than 1
 ; NOTE: if we are using rebmu/args we'd do JfsA
@@ -7,11 +36,11 @@ rJ
 
 ; read N from the user, this is our percentage sand
 ; NOTE: if we are using rebmu/args we'd do NscA
-; NOTE: Percentages are a new type introduced in Rebol 3, this won't work in Rebol 2
 N 0% rN
 
-; Here's a doomsday hourglass... it tells you how much of your life is left until 21-dec-2012
-; Demonstrates how native Rebol code can be used natively right smack dab in the middle of Rebmu.
+; Doomsday hourglass tells you how much of your life is left until 21-dec-2012
+; Demonstrates how native Rebol code can be used natively right smack dab in
+the middle of Rebmu.
 
 comment [
 	; Caution: Using PAREN! inside of COMMENT causes the Pygments
@@ -44,20 +73,20 @@ D00
 
 ; Hourglass func takes three parameters...
 ; A is the limit for the draw
-; B is the count of the volume of *spaces* to draw before we start drawing X characters
+; B counts the volume of spaces to draw before we start drawing X characters
 ; C is our offset (-1 for top half, 1 for bottom)
 Hc&[
 	u[
 		; z says are we on the last line we are to print?
 		Z=~wA
 		
-		; start Q initialized as an empty string, and then fill it using "sand physics"
-		; dropping on the sides using alternating append/insert (if top) or repeatedly
-		; inserting at midpoint (if bottom)
+		; start Q as an empty string, and then fill it using "sand physics"
+		; dropping on the sides using alternating append/insert (if top) or
+		; repeatedly inserting at midpoint (if bottom)
 		Qs^rtKw[isEL00c[skQd2k][eEV?kQ[tlQ]]pcSeg--b00[eZ 1 5]3]
 		
-		; rejoin a string composed of an indentation of length d, the left hourglass
-		; side, the Q string, and the right hourglass side.
+		; rejoin a string composed of an indentation of length d, the left
+		; hourglass side, the Q string, and the right hourglass side.
 		prRJ[si^dSPscSqFHs]
 
 		; loop termination condition and continuation

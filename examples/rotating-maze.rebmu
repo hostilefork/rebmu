@@ -1,0 +1,112 @@
+Rebmu [
+	Title: {Rotating Maze}
+	Home: http://stackoverflow.com/a/3060396/211160
+
+	Purpose: {
+		Make a program that takes in a file consisting of a maze. The maze
+		has walls given by #. The maze must include a single ball, given by
+		a o and any number of holes given by a @. The maze file can either be
+		entered via command line or read in as a line through standard input.
+		Please specify which in your solution.
+
+		Your program then does the following:
+
+		1: If the ball is not directly above a wall, drop it down to the
+		   nearest wall.
+
+		2: If the ball passes through a hole during step 1, remove the ball.
+
+		3: Display the maze in the standard output (followed by a newline).
+		   Extraneous whitespace should not be displayed.
+   		   Extraneous whitespace is defined to be whitespace outside of a
+   		   rectangle that fits snugly around the maze.
+
+		4: If there is no ball in the maze, exit.
+
+		5: Read a line from the standard input. 
+   		   Given a 1, rotate the maze counterclockwise. 
+   		   Given a 2, rotate the maze clockwise. 
+   		   Rotations are done by 90 degrees. 
+   		   It is up to you to decide if extraneous whitespace is allowed.
+   		   If the user enters other inputs, repeat this step.
+
+		6: Goto step 1.
+
+		You may assume all input mazes are closed. Note: a hole effectively 
+		acts as a wall in this regard.
+
+		You may assume all input mazes have no extraneous whitespace.
+	}
+
+	Notes: {
+		The implementation is capable of handling either a direct matrix
+		argument (block of strings of equal length) or to read/lines out
+		of a file.  Sample invocation:
+
+			rebmu/args %rotating-maze.rebmu %rotating-maze-data/bigmaze.txt
+	} 
+]
+
+; We use "first" and "second" a lot, worth it to define f and s
+; temporarily not using form .[fFSsSC] until I figure out what's
+; wrong with the binding there
+rfFfsRFsSC
+
+; character set
+L{#o@}
+	
+; copy input to matrix, or read file if it's a filename
+MeFI?a[rlA]a
+	
+; define data width and height functions
+; Note: we don't use while loops so this shows an overwriting of w
+; if while is needed it's still available under WT (while-true?-mu)
+W|[l?Fm]
+H|[l?M]
+	
+; size function (accounts for applied rotations)
+Z|[Tre[wH]iOD?j[rvT]t]
+	
+; cell retrieval function (accounts for applied rotations)
+Ca|[
+	st[xY]a
+	KrePC[[yBKx][nxSBhXbkY][nxSBhYsbWx][xSBwY]]nxJ
+	skPCmFkSk
+]
+	
+; grid enumerator function, does a callback for every coordinate pair in
+; the grid (accounts for rotation).  Every cell will be visited
+; unless a logically true result is given from the callback
+; which will short circuit
+Ga|[
+	rtYsZ[rtXfZ[TaRE[xY]iTbr]iTbr]rnT
+]
+	
+; find the ball, or none (uses the each method above)
+B|[
+	gA|[ieSClFcA[rnA]]
+]
+
+; forever...
+fv[
+	NbIn[
+		un[
+		    ++N/2
+		    TfCn
+			ieFlTbr
+			chCbSP
+			ieTHlTbr
+			chCnSl
+			=~SnSz
+		]
+	]
+	
+	; print the maze
+	gA|[TfCaEEfZfA[prT][pnT]nn]
+	
+	; unless ball position is still not none, we'll be exiting the loop...
+	utBbr
+	
+	; Update the rotation value based on the input
+	JmoADjPC[3 1]rK04   
+]

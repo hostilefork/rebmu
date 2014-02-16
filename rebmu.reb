@@ -1,88 +1,91 @@
-REBOL [
+Rebol [
     Title: "Rebmu Dialect"
-    Description: {Rebol dialect designed for participating in "Code Golf"
-    challenges}
+    Purpose: {
+        Rebol dialect designed for participating in "Code Golf"
+        challenges
+    }
 
     Author: "Dr. Rebmu"
     Home: http://rebmu.rebol.net
     License: 'bsd
 
-    Date: 10-Jan-2010
-    Version: 0.2.0
+    Date: 16-Feb-2014
+    Version: 0.5.0
 
     ; Header conventions: http://www.rebol.org/one-click-submission-help.r
-    File: %rebmu.rebol
+    File: %rebmu.reb
     Type: 'dialect
     Level: 'advanced
 
-    Usage: { The Rebmu language is a dialect of Rebol which uses some
-    unusual tricks to achieve smaller character counts in source code.
-    The goal is to make it easier to participate in programming challenges
-    where the goal is to achieve a given task in as few characters as
-    possible.
+    Notes: {
+        The Rebmu language is a dialect of Rebol which uses some
+        unusual tricks to achieve smaller character counts in source code.
+        The goal is to make it easier to participate in programming challenges
+        where the goal is to achieve a given task in as few characters as
+        possible.
 
-    There is the obvious need to come up with abbreviations for long words
-    like WH instead of WHILE.  Rebol is particularly good at allowing one
-    to do this kind of thing within the language and without a
-    preprocessor.  However, this takes it even farther using a technique
-    fancifully named "mushing"...which is explained in %mushing.rebol
+        There is the obvious need to come up with abbreviations for long words
+        like WH instead of WHILE.  Rebol is particularly good at allowing one
+        to do this kind of thing within the language and without a
+        preprocessor.  However, this takes it even farther using a technique
+        fancifully named "mushing"...which is explained in %mushing.rebol
 
-    Despite being a little bit "silly" (as Code Golf is sort of silly),
-    there is a serious side to the design.  Rebmu is a genuine dialect...
-    meaning that it uses the Rebol data format and thus relegates most
-    parsing--such as parentheses and block matches. This means that
-    there's no string-oriented trickery taking advantage of illegal
-    source token sequences in Rebol (like 1FOO, A$B...)
+        Despite being a little bit "silly" (as Code Golf is sort of silly),
+        there is a serious side to the design.  Rebmu is a genuine dialect...
+        meaning that it uses the Rebol data format and thus relegates most
+        parsing--such as parentheses and block matches. This means that
+        there's no string-oriented trickery taking advantage of illegal
+        source token sequences in Rebol (like 1FOO, A$B...)
 
-    Also, Rebmu is a superset of Rebol, so any Rebol code should be able
-    to be used safely.  That's because despite several shorthands defined
-    for common Rebol operations (even as far as I for IF) the functions
-    are true to their Rebol bretheren across all inputs that Rebol
-    accepts.  [Current exceptions to this are q and ?]
+        Also, Rebmu is a superset of Rebol, so any Rebol code should be able
+        to be used safely.  That's because despite several shorthands defined
+        for common Rebol operations (even as far as I for IF) the functions
+        are true to their Rebol bretheren across all inputs that Rebol
+        accepts.  [Current exceptions to this are q and ?]
 
-    Rebmu programs get their own execution context.  They will unmush
-    their input, set up the environment of abbreviated routines, and run
-    the code:
+        Rebmu programs get their own execution context.  They will unmush
+        their input, set up the environment of abbreviated routines, and run
+        the code:
 
-        >> rebmu [w"Hello World"]
-        Hello World
+            >> rebmu [w"Hello World"]
+            Hello World
 
-    You can also pass in named arguments via a block:
+        You can also pass in named arguments via a block:
 
-        >> rebmu/args [wSwM] [s: "Hello" m: "World"]
-        Hello
-        World
+            >> rebmu/args [wSwM] [s: "Hello" m: "World"]
+            Hello
+            World
 
-    The argument block can even use Rebmu code and conventions:
+        The argument block can even use Rebmu code and conventions:
 
-        >> rebmu/args [wSwM] [S"Hello"M"World"]
-        Hello
-        World
+            >> rebmu/args [wSwM] [S"Hello"M"World"]
+            Hello
+            World
 
-    Or you can pass in a block which does not begin with a SET-WORD! and
-    that block will appear in the execution context as the variable A
+        Or you can pass in a block which does not begin with a SET-WORD! and
+        that block will appear in the execution context as the variable A
 
-        >> rebmu/args [wA] [1 2 3]
-        1 2 3
+            >> rebmu/args [wA] [1 2 3]
+            1 2 3
 
-    You can run your Rebmu program and let it set some values in its
-    environment, such as defining functions you might want to call.  Using
-    the /INJECT refinement you can run some code after the program has
-    executed but before the environment is disposed.
+        You can run your Rebmu program and let it set some values in its
+        environment, such as defining functions you might want to call.  Using
+        the /INJECT refinement you can run some code after the program has
+        executed but before the environment is disposed.
 
-    For instance, the following example uses a shorthand format for
-    defining a function that triples a number and saving it in t:
+        For instance, the following example uses a shorthand format for
+        defining a function that triples a number and saving it in t:
 
-        >> rebmu [Ta|[a*3]]
+            >> rebmu [Ta|[a*3]]
 
-    But defining the function isn't enough to call it, so if you had
-    wanted to do that you could have said:
+        But defining the function isn't enough to call it, so if you had
+        wanted to do that you could have said:
 
-        >> rebmu/inject [Ta|[a*3]] [wT10]
-        30
+            >> rebmu/inject [Ta|[a*3]] [wT10]
+            30
 
-    The injected code is just shorthand for [w t 10], where w is
-    WRITEOUT-MU, a variation of Rebol's PRINT.
+        The injected code is just shorthand for [w t 10], where w is
+        WRITEOUT-MU, a variation of Rebol's PRINT.
     }
 
     History: [
@@ -103,14 +106,18 @@ REBOL [
         Also did several name tweaks like instead of AA for AND~ it's
         now A~ along with other consistencies (IT -> if-true,
         WT -> while-true, UT -> unless true).}]
+
+        0.5.0 [16-Feb-2014 {Version bump to indicate growing maturity
+        of the language.  Abandon Rebol 2 support.  Rebmu files now
+        have proper Rebol ecology headers.}]
     ]
 ]
 
 ; Load the library of xxx-mu functions
-do %mulibrary.rebol
+do %mulibrary.reb
 
 ; Load the library implementing mush/unmush
-do %mushing.rebol
+do %mushing.reb
 
 rebmu-context: [
     ;----------------------------------------------------------------------
@@ -279,7 +286,7 @@ rebmu-context: [
     WLE: :while-lesser-or-equal?-mu
     WE: :while-equal?-mu
     WU: :while-unequal?-mu
-    CN: missing-in-r2 'continue "CN"
+    CN: :continue
     BR: :break
     UN: :until
     RT: :repeat
@@ -289,18 +296,18 @@ rebmu-context: [
     ; DEFINING FUNCTIONS
     ;----------------------------------------------------------------------
 
-    FN: :funct
+    FN: :function
     FC: :func
     DZ: :does
-    DF: :does-funct-mu
-    a|: :funct-a-mu
-    b|: :funct-ab-mu
-    c|: :funct-abc-mu
-    d|: :funct-abcd-mu
-    z|: :funct-z-mu
-    y|: :funct-zy-mu
-    x|: :funct-zyx-mu
-    w|: :funct-zyxw-mu
+    DF: :does-function-mu
+    a|: :function-a-mu
+    b|: :function-ab-mu
+    c|: :function-abc-mu
+    d|: :function-abcd-mu
+    z|: :function-z-mu
+    y|: :function-zy-mu
+    x|: :function-zyx-mu
+    w|: :function-zyxw-mu
     ; TODO: Write generator?
     a&: :func-a-mu
     b&: :func-ab-mu
@@ -317,12 +324,7 @@ rebmu-context: [
     ;----------------------------------------------------------------------
     US: :use
     CX: :context
-    OB: missing-in-r2/substitute 'object "OB" func [
-            "Defines a unique object."
-            blk [block!] "Object words and values."
-        ][
-            make object! append blk none
-        ]
+    OB: :object
 
     ;----------------------------------------------------------------------
     ; SERIES OPERATIONS
@@ -344,7 +346,8 @@ rebmu-context: [
     SE: :select
     RV: :reverse
 
-    RA: rebmu-wrap 'replace/all [target search rep] ; replace as param name causes problem
+    ;-- "rep" because replace as param name causes problem
+    RA: rebmu-wrap 'replace/all [target search rep]
     RAC: rebmu-wrap 'replace/all/case [target search rep]
     RAT: rebmu-wrap 'replace/all/tail [target search rep]
     RACT: rebmu-wrap 'replace/all/case/tail [target search rep]
@@ -499,7 +502,8 @@ rebmu-context: [
     S^: does [copy ""] ; two chars cheaper than cp""
     SI^: :make-string-initial-mu
 
-    ;----------------------------------------------------------------------     ; MISC
+    ;----------------------------------------------------------------------
+    ; MISC
     ;----------------------------------------------------------------------
 
     AS: :also
@@ -508,11 +512,11 @@ rebmu-context: [
     ST: :set
     GT: :get
     RF: :redefine-mu
-    EN: missing-in-r2 'encode "en"
+    EN: :encode
     SWP: :swap-exchange-mu
-    FR: missing-in-r2 'format "fr"
+    FR: :format
     OS: :onesigned-mu
-    SP: missing-in-r2/substitute 'space "sp" #" "
+    SP: :space
 
     ;----------------------------------------------------------------------
     ; MICRO MATH
@@ -562,8 +566,8 @@ rebmu-context: [
     ; gives the symbol to the next word e.g. [A+b] => [a: +b] instead of
     ; [a+: b].
     ;
-    ; Idea is that these modify their arguments to save you from situations where you
-    ; might otherwise have to make things the target of an assignment,
+    ; Idea is that these modify their arguments to save you from situations
+    ; where you might otherwise have to make things the target of an assignment,
     ; like [M: ADD M 2].  Shorter code with a+M2 than Ma+M2, and you also
     ; are less likely to cause a mushing break.  Note that the plus doesn't
     ; mean "advance" or "add" in this context, LAST+ is actually an
@@ -572,6 +576,8 @@ rebmu-context: [
     A+: :add-modify-mu
     F+: :first+
     S+: :subtract-modify-mu
+    N+: :next-modify-mu
+    B+: :back-modify-mu
 
     ; How strange could we get?  Is it useful to do [Z: EQUALS? Z 3] on any
     ; kind of regular basis?  Maybe if you do that test often after but
@@ -612,7 +618,7 @@ rebmu-context: [
     ; might be an option as they are used a lot in code golf.
     ^: :caret-mu
     &: :DZ  ; "does" generator, can write context variables
-    |: :DF  ; funct generator w/no parameters, block always follows
+    |: :DF  ; function generator w/no parameters, block always follows
     ~: none ; don't know yet
 
     ; TODO: there is an issue where if an argument a is put into the block
@@ -620,7 +626,7 @@ rebmu-context: [
     ; while block.  How to resolve this?
 
     a: copy [] ; "array"
-    b: to-char 0 ; "byte"
+    b: to char! 0 ; "byte"
     c: #"A" ; "char"
     d: #"0" ; "digit"
     e: :ET ; "either-true?-mu"
@@ -657,7 +663,7 @@ rebmu-context: [
     z: 0.0
 ]
 
-remap-datatype: func [type [datatype!] shorter [string!] /noconvert] [
+remap-datatype: function [type [datatype!] shorter [string!] /noconvert] [
     stem: head remove back tail to-string to-word type
     do load rejoin [
         shorter "!: :" stem "! "
@@ -674,47 +680,69 @@ remap-datatype: func [type [datatype!] shorter [string!] /noconvert] [
 ; A rebmu wrapper lets you wrap a refinement
 ; need to write generalization of spec capture with reflect, e.g.
 ; spec: reflect :arg 'spec
-rebmu-wrap: funct [refined [path!] args [block!]] [
+rebmu-wrap: function [refined [path!] args [block!]] [
     func args compose [
         (refined) (args)
     ]
 ]
 
-missing-in-r2: funct [keyword [word!] shorthand [string!] /substitute other] [
-    either unset? get/any keyword [
-        either substitute [
-            :other
-        ] [
-            does [to-error reform ["no" shorthand "in Rebol 2"]]
-        ]
-    ] [get keyword]
-]
-
-rebmu: func [
+rebmu: function [
     {Visit http://hostilefork.com/rebmu/}
-    code [file! any-block! string!] "The Rebmu or Rebol code"
-    /args arg [any-type!] {block in Rebmu format [X10Y20]; if no set-words are found in block assumed as implicit argument "A"}
-    /nocopy "Default is to copy/deep the arguments for safety but you can not do that"
-    /stats "print out statistical information"
-    /debug "output debug information"
-    /env "return the runnable object plus environment, but don't execute main function"
-    /inject injection [block! string!] "run some test code in the environment after main function"
-    /local result elem obj
+    code [file! url! block! string!] 
+        {The Rebmu or Rebol code}
+    /args arg [any-type!]
+        {argument A, unless a block w/set-words; can be Rebmu format [X10Y20]}
+    /nocopy
+        {Disable the default copy/deep of arguments for safety}
+    /stats
+        {Print out some statistical information}
+    /debug
+        {Output debugging information}
+    /env
+        {Return runnable object plus environment without executing main}
+    /inject injection [block! string!]
+        {Run some test code in the environment after main function}
 ] [
-    either any [
-        file? code
-        string? code
-    ] [
-        if stats [
-            if string? code [
+    case [
+        string? code [
+            if stats [
                 print ["Original Rebmu string was:" length? code "characters."]
+            ]
+            code: load code
+        ]
+
+        any [
+            file? code
+            url? code
+        ] [
+            code: load code
+
+            either all [
+                'Rebmu = first code
+                block? second code
+            ] [
+                ;-- ignore the header for the moment... just pick offset
+                ;-- the first two values from code
+                take code
+                take code
+            ] [
+                print "WARNING: Rebmu sources should start with Rebmu [...]"
+                print "(See: http://curecode.org/rebol3/ticket.rsp?id=2105)"
+
+                ;-- Keep running, hope the file was valid Rebmu anyway
             ]
         ]
 
-        code: load code
-    ] [
-        if stats [
-            print ["NOTE: Pass in Rebmu as string, not a block, to get official character count."]
+        block? code [
+            if stats [
+                print "NOTE: Pass in Rebmu as string, not a block."
+                print "(That will give you a canonical character count.)"
+            ]
+        ]
+
+        true [
+            print "Bad code parameter."
+            quit
         ]
     ]
 
@@ -723,7 +751,11 @@ rebmu: func [
     ]
 
     if stats [
-        print ["Rebmu as mushed Rebol block molds to:" length? mold/only code "characters."]
+        print [
+            "Rebmu as mushed Rebol block molds to:"
+            length? mold/only code
+            "characters."
+        ]
     ]
 
     code: unmush code
@@ -733,13 +765,15 @@ rebmu: func [
     ]
 
     if debug [
-        print ["Executing: " mold code]
+        print ["Executing:" mold code]
     ]
 
     either inject [
-        if string? injection [injection: load injection]
-        if not block? injection [
-            code: to-block injection
+        if string? injection [
+            injection: load injection
+        ]
+        unless block? injection [
+            code: to block! injection
         ]
         injection: unmush injection
     ] [
@@ -749,8 +783,8 @@ rebmu: func [
     either args [
         either block? arg [
             arg: unmush either nocopy [arg] [copy/deep arg]
-            if not set-word? first arg [
-                ; implicitly assign to a if the block doesn't start with a set-word
+            unless set-word? first arg [
+                ; assign to a if the block doesn't start with a set-word
                 arg: compose/only [a: (arg)]
             ]
         ] [

@@ -1,0 +1,75 @@
+Rebmu [
+	Tile {Character Mapping}
+	Home: http://stackoverflow.com/questions/372668/
+
+	Purpose: {
+		Write a program which takes 2 command line arguments as defined below:
+
+		Arg1: a string to be "encoded".  Example:
+
+			EncodeMe
+
+		Arg2: a pipe separated list of comma separated characters representing
+		an encoding map to apply to the first argument.  Example:
+
+			e,f|M,N|c,d|n,m|E,F|o,p|d,e
+
+		The program shall apply the character mapping specified in arg 2 to
+		the characters of arg1, and display the output (map e to f, M to N,
+		etc). The program above would output:
+
+			FmdpefNf
+
+		If a character in arg 1 is missing from the mapping in arg 2, that
+		particular character should merely be skipped.  Assume that no invalid
+		input will ever be given (lack of separator, too many separators, etc),
+		so no additional error checking or handling is needed
+	}
+
+	Usage: {
+
+		Try with:
+
+		rebmu/args %character-mapping.r [
+			"EncodeMe" "e,f|M,N|c,d|n,m|E,F|o,p|d,e"
+		]
+	}
+]
+
+;-- Mushed version.
+ScyFSaFE[fCtU]scA[DfsAw[Kf+S Jf+D][iAL[==~Jk==~Kf][chBKsT]]hd+S]prS
+
+;-- Unmushed version.
+comment [
+
+	; Make a copy of the first element of our argument array
+	s: cy fs a 
+
+	; foreach can take a block of series elements to iterate with, this does
+	; four at a time taken from the second element of the arguments list (sc a)
+	;
+	; the characters are (F)rom, (C)omma, (T)o, and (U)nderscore
+	; ...though only from and to interest us
+	fe [f c t u] sc a [
+
+		; point d to the first element of our argument list (string to encode)
+		d: fs a
+		
+		; while we can pick the first elements off of both s and d without 
+		; reaching the end of the strings...
+		w [k: f+ s j: f+ d] [
+			; if all conditions of equality apply, namely that the character
+			; in this position from the original hasn't changed since the start
+			; and the current character is equal to the "from" character...
+			i al [==~ j k ==~ k f] [
+				; then change the last (back) character in the series S to the
+				; to character
+				ch bk s t
+			]
+		]
+		
+		; reset s to series head position (+ functions modify their arguments)
+		hd+ s
+	]
+	pr s
+]

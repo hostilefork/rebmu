@@ -1,4 +1,26 @@
-; http://stackoverflow.com/questions/2261681/code-golf-scrabble-able/
+Rebmu [
+	Title: {Scrabble-able}
+	Home: http://stackoverflow.com/a/3088746/211160
+
+	Purpose: {
+		Input: a list of words
+
+		Output: a legal arrangement for the words on a scrabble board (or
+		false if impossible). Format of output is entirely up to you, as long
+		as it is comprehensible. Bonus points for pretty printing. Scrabble
+		board size is unbounded, no un-listed words should be found in solution.
+
+		Examples:
+
+			input: {"alice", "bob", "eve"}
+			output: false
+
+			input: {"alice", "eve", "victoria"}
+			output: a|l|i|c|e
+			                v|i|c|t|o|r|i|a
+			                e
+	}
+]
 
 ; we use the space constant a lot, so it's worth it to define s to be space
 Ssp
@@ -28,13 +50,17 @@ Ga&[ZcydM MaZ]
 Fa|[ZpcMscA XfsA ZigX00[iZ[skZbkX]] iZ[iT?z[Zno]]eZz{ }]
 	
 ; T is a "c|function", meaning it takes parameters A B C
-; it tries to put the string A into the matrix at coordinates B with step offset C
-; returns true if successful false if not
-; NOTES: as written, will corrupt the board in the case of a failure, so save a copy
+;
+; it tries to put the string A into the matrix at coordinates B with step
+; offset C, and returns true if successful false if not
+;
+; * as written, will corrupt the board on failure, so save a copy
+;
 ; (for horizontal placemement C = [1 0] and vertical placement C = [0 1])
 ; rule is that any non-space must match the word we're putting down
 ; also at least one such collision must happen for a true result
 ; (ignored by the first word placement)
+;
 ; also we cannot make a continuation of an existing word
 ; (before first letter and after last must be space or board edge)
 ; points opposite a collision may be occupied on the other axis, but if there's
@@ -42,7 +68,10 @@ Fa|[ZpcMscA XfsA ZigX00[iZ[skZbkX]] iZ[iT?z[Zno]]eZz{ }]
 Tc|[
 	Xno
 	Q&[Z01br]
-	ieSfsFsbBc[w[Zf+A][JfB KfsJeeSk[OrvCYcEEsFSfADbO[eeSfsFadBngO[chJz]q]q][X01iuKzQ]BadBc]ieSfsFb[f~Xz]]
+	ieSfsFsbBc[w[Zf+A][
+		JfB KfsJeeSk[OrvCYcEEsFSfADbO[eeSfsFadBngO[chJz]q]q][X01iuKzQ]BadBc
+	]
+	ieSfsFb[f~Xz]]
 ]
 	
 ; R recursively applies itself for placing the words in A

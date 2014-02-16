@@ -1,4 +1,4 @@
-REBOL [
+Rebol [
     Title: "Mushing Routines"
 
     Author: "Dr. Rebmu"
@@ -9,7 +9,7 @@ REBOL [
     Version: 0.3.0
 
     ; Header conventions: http://www.rebol.org/one-click-submission-help.r
-    File: %mushing.rebol
+    File: %mushing.reb
     Type: dialect
     Level: advanced
 

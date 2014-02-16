@@ -1,29 +1,35 @@
-REBOL [
+Rebol [
     Title: "The Mu Rebol Library"
 
-    Description: {This is a library generally designed to be used with abbreviated symbols
-    in Rebmu.  While there is a fuzzy line between "library" and "language", the intention
-    is not to achieve a low symbol count at the cost of creating something that is
-    incompatible with Rebol.
+    Description: {
+        This is a library generally designed to be used with abbreviated
+        symbols in Rebmu.  While there is a fuzzy line between "library" and
+        "language", the intention is not to achieve a low symbol count at the
+        cost of creating something that is incompatible with Rebol.
 
-    For instance: it might be expedient in Code Golf to have the conditonal logic treat 0 as a
-    "false" condition.  But since Rebol's IF treats 0 as true, we do too.  On the other hand,
-    IT (if-true?-mu, aliased to I) *does* accept words and constants in its condition block.
-    Rebol would throw an error on such constructs, so a Rebmu program which ascribes meaning
-    to that is forwards compatible with existing Rebol programming knowledge.
+        For instance: it might be expedient in Code Golf to have the conditonal
+        logic treat 0 as a "false" condition.  But since Rebol's IF treats 0
+        as true, we do too.  On the other hand, IT (if-true?-mu, aliased to I)
+        *does* accept words and constants in its true-clause block. Rebol would
+        throw an error on such constructs, so a Rebmu program which ascribes
+        meaning to that is forwards compatible with existing Rebol programming
+        knowledge.
 
-    Ultimately, Code Golf cannot be played with a language and library set that is allowed
-    to expand during a competition.  So the Rebmu library will have to stabilize into a fixed
-    set at some point - likely including many matrix operations.}
+        Ultimately, Code Golf cannot be played with a language and library
+        set that is allowed to expand during a competition.  So the Rebmu
+        library will have to stabilize into a fixed set at some point - likely
+        including many matrix operations.
+    }
 ]
 
-to-string-mu: func [
+to-string-mu: function [
     value
 ] [
     either any-word? value [
         ; This code comes from spelling? from an old version of Bindology
-        ; Ladislav and Fork are hoping for this to be the functionality of to-string in Rebol 3.0
-        ; for words (then this function would then be unnecessary).
+        ; Ladislav and Fork are hoping for this to be the functionality of
+        ; to-string in Rebol 3.0 for words (then this function would then be
+        ; unnecessary).
 
         case [
             word? :value [mold :value]
@@ -35,13 +41,14 @@ to-string-mu: func [
     ]
 ]
 
-to-char-mu: func [
+to-char-mu: function [
     value
 ] [
     either any-word? value [
         ; This code comes from spelling? from an old version of Bindology
-        ; Ladislav and Fork are hoping for this to be the functionality of to-string in Rebol 3.0
-        ; for words (then this function would then be unnecessary).
+        ; Ladislav and HostileFork are hoping for this to be the functionality
+        ; of to-string in Rebol 3.0 for words (then this function would then
+        ; be unnecessary).
 
         case [
             word? :value [first mold :value]
@@ -54,7 +61,7 @@ to-char-mu: func [
 
 ]
 
-to-word-mu: func [value] [
+to-word-mu: function [value] [
     either char? value [
         to-word to-string value
     ] [
@@ -62,21 +69,24 @@ to-word-mu: func [value] [
     ]
 ]
 
-caret-mu: func ['value] [
+caret-mu: function ['value] [
     switch/default type?/word :value [
         string! [return to-string debase value]
     ] [
-        throw "caret mu needs to be thought out for non-strings, see rebmu.r"
+        throw "caret mu needs to be thought out for non-strings, see rebmu.reb"
     ]
 
 ]
 
 redefine-mu: func ['dest 'source] [
+    ;-- Has to be a FUNC to set in caller's environment...
+    ;-- or does it?  Look into that.
+
     set :dest get :source
 ]
 
-do-mu: func [
-    {Is like Rebol's do except does not interpret string literals as loadable code.}
+do-mu: function [
+    {Like Rebol's DO but does not interpret string literals as loadable code.}
     value
 ] [
     switch/default type?/word :value [
@@ -94,7 +104,7 @@ do-mu: func [
     ]
 ]
 
-if-true?-mu: func [
+if-true?-mu: function [
     {If condition is TRUE, runs do-mu on the then parameter.}
     condition
     'then-param
@@ -104,7 +114,7 @@ if-true?-mu: func [
     either condition [do-mu then-param] [if else [do-mu else-param]]
 ]
 
-if-greater?-mu: func [
+if-greater?-mu: function [
     {If condition is TRUE, runs do-mu on the then parameter.}
     value1
     value2
@@ -115,7 +125,7 @@ if-greater?-mu: func [
     either greater? value1 value2 [do-mu then-param] [if else [do-mu else-param]]
 ]
 
-if-unequal?-mu: func [
+if-unequal?-mu: function [
     {If condition is TRUE, runs do-mu on the then parameter.}
     value1
     value2
@@ -126,7 +136,7 @@ if-unequal?-mu: func [
     either not-equal? value1 value2 [do-mu then-param] [if else [do-mu else-param]]
 ]
 
-if-equal?-mu: func [
+if-equal?-mu: function [
     {If condition is TRUE, runs do-mu on the then parameter.}
     value1
     value2
@@ -137,7 +147,7 @@ if-equal?-mu: func [
     either equal? value1 value2 [do-mu then-param] [if else [do-mu else-param]]
 ]
 
-if-zero?-mu: func [
+if-zero?-mu: function [
     {If condition is TRUE, runs do-mu on the then parameter.}
     value
     'then-param
@@ -147,7 +157,7 @@ if-zero?-mu: func [
     either zero? value [do-mu then-param] [if else [do-mu else-param]]
 ]
 
-if-lesser?-mu: func [
+if-lesser?-mu: function [
     {If condition is TRUE, runs do-mu on the then parameter.}
     value1
     value2
@@ -158,7 +168,7 @@ if-lesser?-mu: func [
     either lesser? value1 value2 [do-mu then-param] [if else [do-mu else-param]]
 ]
 
-unless-true?-mu: func [
+unless-true?-mu: function [
     "Evaluates the block if condition is not TRUE."
     condition
     'block
@@ -166,7 +176,7 @@ unless-true?-mu: func [
     unless condition [do-mu block]
 ]
 
-unless-zero?-mu: func [
+unless-zero?-mu: function [
     "Evaluates the block if condition is not 0."
     condition
     'block
@@ -174,7 +184,7 @@ unless-zero?-mu: func [
     unless zero? condition [do-mu block]
 ]
 
-either-true?-mu: func [
+either-true?-mu: function [
     {If condition is TRUE, evaluates the first block, else evaluates the second.}
     condition
     'true-param
@@ -183,7 +193,7 @@ either-true?-mu: func [
     either condition [do-mu true-param] [do-mu false-param]
 ]
 
-either-zero?-mu: func [
+either-zero?-mu: function [
     {If condition is ZERO, evaluates the first block, else evaluates the second.}
     value
     'true-param
@@ -192,7 +202,7 @@ either-zero?-mu: func [
     either zero? value [do-mu true-param] [do-mu false-param]
 ]
 
-either-greater?-mu: func [
+either-greater?-mu: function [
     {If condition is TRUE, evaluates the first block, else evaluates the second.}
     value1
     value2
@@ -202,7 +212,7 @@ either-greater?-mu: func [
     either greater? value1 value2 [do-mu true-param] [do-mu false-param]
 ]
 
-either-lesser?-mu: func [
+either-lesser?-mu: function [
     {If condition is TRUE, evaluates the first block, else evaluates the second.}
     value1
     value2
@@ -212,7 +222,7 @@ either-lesser?-mu: func [
     either lesser? value1 value2 [do-mu true-param] [do-mu false-param]
 ]
 
-either-equal?-mu: func [
+either-equal?-mu: function [
     {If values are equal runs do-mu on the then parameter.}
     value1
     value2
@@ -222,7 +232,7 @@ either-equal?-mu: func [
     either equal? value1 value2 [do-mu true-param] [do-mu false-param]
 ]
 
-either-unequal?-mu: func [
+either-unequal?-mu: function [
     {If values are not equal runs do-mu on the then parameter.}
     value1
     value2
@@ -232,14 +242,14 @@ either-unequal?-mu: func [
     either not-equal? value1 value2 [do-mu true-param] [do-mu false-param]
 ]
 
-while-true?-mu: func [
+while-true?-mu: function [
     'cond-param
     'body-param
 ] [
     while [do-mu cond-param] [do-mu body-param]
 ]
 
-while-greater?-mu: func [
+while-greater?-mu: function [
     value1
     value2
     'cond-param
@@ -248,7 +258,7 @@ while-greater?-mu: func [
     while [greater? value1 value2 do-mu cond-param] [do-mu body-param]
 ]
 
-while-lesser-or-equal?-mu: func [
+while-lesser-or-equal?-mu: function [
     value1
     value2
     'cond-param
@@ -257,7 +267,7 @@ while-lesser-or-equal?-mu: func [
     while-mu [lesser-or-equal? value1 value2 do-mu cond-param] [do-mu body-param]
 ]
 
-while-greater-or-equal?-mu: func [
+while-greater-or-equal?-mu: function [
     value1
     value2
     'cond-param
@@ -266,7 +276,7 @@ while-greater-or-equal?-mu: func [
     while [greater-or-equal? value1 value2 do-mu cond-param] [do-mu body-param]
 ]
 
-while-lesser?-mu: func [
+while-lesser?-mu: function [
     value1
     value2
     'cond-param
@@ -275,8 +285,7 @@ while-lesser?-mu: func [
     while-mu [lesser? value1 value2 do-mu cond-param] [do-mu body-param]
 ]
 
-
-while-equal?-mu: func [
+while-equal?-mu: function [
     value1
     value2
     'cond-param
@@ -285,7 +294,7 @@ while-equal?-mu: func [
     while [equal? value1 value2 do-mu cond-param] [do-mu body-param]
 ]
 
-while-unequal?-mu: func [
+while-unequal?-mu: function [
     value1
     value2
     'cond-param
@@ -294,7 +303,7 @@ while-unequal?-mu: func [
     while [not-equal? value1 value2 do-mu cond-param] [do-mu body-param]
 ]
 
-make-matrix-mu: funct [columns value rows] [
+make-matrix-mu: function [columns value rows] [
     result: copy []
     loop rows [
         append/only result array/initial columns value
@@ -302,7 +311,7 @@ make-matrix-mu: funct [columns value rows] [
     result
 ]
 
-make-string-initial-mu: func [length value] [
+make-string-initial-mu: function [length value] [
     result: copy ""
     loop length [
         append result value
@@ -311,7 +320,7 @@ make-string-initial-mu: func [length value] [
 ]
 
 ; if a pair, then the first digit is the digit
-make-integer-mu: func [value] [
+make-integer-mu: function [value] [
     switch/default type?/word :value [
         pair! [to-integer first value * (10 ** second value)]
         integer! [to-integer 10 ** value]
@@ -320,26 +329,27 @@ make-integer-mu: func [value] [
     ]
 ]
 
-; helpful is a special routine that quotes its argument and lets you pick from common
-; values.  for instance helpful-mu d gives you a charaset of digits.  Passing an
-; integer into helpful-mu will just call make-integer-mu.  There's potential here for
-; really shortening
-helpful-mu: func ['arg] [
+; helpful is a special routine that quotes its argument and lets you pick from
+; common values.  for instance helpful-mu d gives you a charaset of digits.
+; Passing an integer into helpful-mu will just call make-integer-mu.  This is
+; just an exploration of using this concept to shorten code.
+helpful-mu: function ['arg] [
     switch/default type?/word :arg [
         word! [
             switch/default arg [
                 b: [0 1] ; binary digits
                 d: charset [#"0" - #"9"] ; digits charset
-                h: charset [#"0" - #"9" #"A" - "F" #"a" - #"f"] ; hexadecimal charset
+                h: charset [#"0" - #"9" #"A" - "F" #"a" - #"f"] ; hex charset
                 u: charset [#"A" - #"Z"] ; uppercase
                 l: charset [#"a" - #"z"] ; lowercase
             ]
         ]
-        ; Are there better ways to handle this?  h2 for instance is no shorter than 20
+        ; Are there better ways to handle this?
+        ; h2 for instance is no shorter than 20
         integer! [make-integer-mu arg]
         pair! [make-integer-mu arg]
     ] [
-        throw "Unhandled parameter to make-magic-mu"
+        throw "Unhandled parameter to helpful-mu"
     ]
 ]
 
@@ -347,30 +357,30 @@ helpful-mu: func ['arg] [
 ; need to supply the code block.  obvious extensions for other letters.  The
 ; "func|a" is the same for funcs
 
-funct-a-mu: funct [body [block!]] [
-    funct [a] body
+function-a-mu: func [body [block!]] [
+    function [a] body
 ]
-funct-ab-mu: funct [body [block!]] [
-    funct [a b] body
+function-ab-mu: func [body [block!]] [
+    function [a b] body
 ]
-funct-abc-mu: funct [body [block!]] [
-    funct [a b c] body
+function-abc-mu: func [body [block!]] [
+    function [a b c] body
 ]
-funct-abcd-mu: funct [body [block!]] [
-    funct [a b c d] body
+function-abcd-mu: func [body [block!]] [
+    function [a b c d] body
 ]
 
-funct-z-mu: funct [body [block!]] [
-    funct [z] body
+function-z-mu: func [body [block!]] [
+    function [z] body
 ]
-funct-zy-mu: funct [body [block!]] [
-    funct [z y] body
+function-zy-mu: func [body [block!]] [
+    function [z y] body
 ]
-funct-zyx-mu: funct [body [block!]] [
-    funct [z y x] body
+function-zyx-mu: func [body [block!]] [
+    function [z y x] body
 ]
-funct-zyxw-mu: funct [body [block!]] [
-    funct [z y x w] body
+function-zyxw-mu: func [body [block!]] [
+    function [z y x w] body
 ]
 
 func-a-mu: func [body [block!]] [
@@ -399,12 +409,12 @@ func-zyxw-mu: func [body [block!]] [
     func [z y x w] body
 ]
 
-does-funct-mu: func [body [block!]] [
-    funct [] body
+does-function-mu: func [body [block!]] [
+    function [] body
 ]
 
 
-quoth-mu: funct [
+quoth-mu: function [
     'arg
 ] [
     switch/default type?/word :arg [
@@ -421,10 +431,9 @@ quoth-mu: funct [
     ]
 ]
 
-index?-find-mu: funct [
+index?-find-mu: function [
     {Same as index? find, but returns 0 if find returns none}
-    series [series! ; gob! in r3 only... leave out for r2 compatibility for now
-        port! bitset! typeset! object! none!]
+    series [series! gob! port! bitset! typeset! object! none!]
     value [any-type!]
 ] [
     pos: find series value
@@ -435,7 +444,7 @@ index?-find-mu: funct [
     ]
 ]
 
-insert-at-mu: func [
+insert-at-mu: function [
     {Just insert and at combined}
     series
     index
@@ -445,44 +454,36 @@ insert-at-mu: func [
 ]
 
 increment-mu: func ['word-or-path] [
+    ;-- Has to be a FUNC to set in callers environment...
+    ;-- ...or could we leverage the caller's binding?
+
     either path? :word-or-path [
-        ; R2 doesn't support combination of "get/set" and path, but R3 does
-        comment [
-            old: get :word-or-path
-            set :word-or-path add-mu old 1
-        ]
-        old: do :word-or-path
-        if path? old [
-            ; this should only run in r3 unless you actually had a path to a path,
-            ; on which increment will fail
-            old: get :old
-        ]
-        do reduce [to-set-path :word-or-path add-mu :old 1]
-        old
+        old: get :word-or-path
+        set :word-or-path add-mu old 1
     ] [
         set word-or-path add-mu get :word-or-path 1 
     ]
 ]
 
 decrement-mu: func ['word-or-path] [
+    ;-- Has to be a FUNC to set in callers environment...
+    ;-- ...or could we leverage the caller's binding?
+
     either path? :word-or-path [
-        ; R2 doesn't support combination of "get/set" and path, but R3 does
-        comment [
-            old: :word-or-path
-            set :word-or-path subtract-mu old 1
-        ]
-        old: do :word-or-path
-        do reduce [to-set-path :word-or-path subtract-mu :old 1]
-        old
+        old: :word-or-path
+        set :word-or-path subtract-mu old 1
     ] [
         set word-or-path subtract-mu get :word-or-path 1
     ]
 ]
 
-readin-mu: funct [
+readin-mu: func [
     {Use data type after getting the quoted argument to determine input coercion}
     'value
 ] [
+    ;-- Has to be a FUNC to set in callers environment...
+    ;-- ...or could we leverage the caller's binding?
+
     switch/default type?/word get value [
         string! [prin "Input String: " set value input]
         integer! [set value to-integer ask "Input Integer: "]
@@ -494,7 +495,7 @@ readin-mu: funct [
     ]
 ]
 
-writeout-mu: funct [
+writeout-mu: function [
     {Analogue to Rebol's print except tailored to Code Golf scenarios}
     value
 ] [
@@ -506,9 +507,9 @@ writeout-mu: funct [
     print value
 ]
 
-; Don't think want to call it not-mu because we probably want a more powerful operator
-; defined as ~ in order to compete with GolfScript/etc, rethink this.
-inversion-mu: func [
+; Don't think want to call it not-mu because we probably want a more powerful
+; operator defined as ~ in order to compete with GolfScript/etc, rethink this.
+inversion-mu: function [
     value
 ] [
     switch/default type?/word :value [
@@ -522,7 +523,7 @@ inversion-mu: func [
     ]
 ]
 
-next-mu: funct [arg] [
+next-mu: function [arg] [
     switch/default type?/word :arg [
         integer! [arg + 1]
     ] [
@@ -530,7 +531,7 @@ next-mu: funct [arg] [
     ]
 ]
 
-back-mu: funct [arg] [
+back-mu: function [arg] [
     switch/default type?/word :arg [
         integer! [arg - 1]
     ] [
@@ -538,7 +539,7 @@ back-mu: funct [arg] [
     ]
 ]
 
-swap-exchange-mu: funct [
+swap-exchange-mu: func [
     "Swap contents of variables."
     a [word! series!
         ; gob! is in r3 only
@@ -547,6 +548,9 @@ swap-exchange-mu: funct [
         ; gob! is in r3 only
     ]
 ][
+    ;-- Has to be a FUNC to set in callers environment...
+    ;-- ...or could we leverage the caller's binding?
+
     if not equal? type? a type? b [
         throw "swap-mu must be used with common types"
     ]
@@ -559,12 +563,15 @@ swap-exchange-mu: funct [
     ]
 ]
 
-div-mu: funct [value1 value2] [
+div-mu: function [value1 value2] [
     to-integer divide value1 value2
 ]
 
-add-mu: funct [value1 value2] [
+add-mu: function [value1 value2] [
     switch/default type?/word :value1 [
+        string! [
+            skip value1 value2
+        ]
         block! [
             result: copy value1
             while [(not tail? value1) and (not tail? value2)] [
@@ -579,7 +586,7 @@ add-mu: funct [value1 value2] [
     ]
 ]
 
-subtract-mu: funct [value1 value2] [
+subtract-mu: function [value1 value2] [
     switch/default type?/word :value1 [
         block! [
             result: copy value1
@@ -595,7 +602,7 @@ subtract-mu: funct [value1 value2] [
     ]
 ]
 
-negate-mu: funct [value] [
+negate-mu: function [value] [
     switch/default type?/word :value [
         block! [
             result: copy value
@@ -611,65 +618,113 @@ negate-mu: funct [value] [
     ]
 ]
 
-add-modify-mu: funct ['value value2] [
+add-modify-mu: func ['value value2] [
+    ;-- Has to be a FUNC to set in callers environment...
+    ;-- ...or could we leverage the caller's binding?
+
     set :value add-mu get :value value2
 ]
 
-subtract-modify-mu: funct ['value value2] [
+subtract-modify-mu: func ['value value2] [
+    ;-- Has to be a FUNC to set in callers environment...
+    ;-- ...or could we leverage the caller's binding?
+
     set :value subtract-mu get :value value2
 ]
 
-equal-modify-mu: funct ['value value2] [
+equal-modify-mu: func ['value value2] [
+    ;-- Has to be a FUNC to set in callers environment...
+    ;-- ...or could we leverage the caller's binding?
+
     set :value equals? get :value value2
 ]
 
-change-modify-mu: funct ['series value] [
+next-modify-mu: func ['value value2] [
+    ;-- Has to be a FUNC to set in callers environment...
+    ;-- ...or could we leverage the caller's binding?
+
+    set :value next get :value value2
+]
+
+back-modify-mu: func ['value value2] [
+    ;-- Has to be a FUNC to set in callers environment...
+    ;-- ...or could we leverage the caller's binding?
+
+    set :value back get :value value2
+]
+
+change-modify-mu: func ['series value] [
+    ;-- Has to be a FUNC to set in callers environment...
+    ;-- ...or could we leverage the caller's binding?
+
     also [change get :series value] [first+ :series]
 ]
 
 head-modify-mu: func ['series] [
+    ;-- Has to be a FUNC to set in callers environment...
+    ;-- ...or could we leverage the caller's binding?
+
     set :series head get :series
 ]
 
 tail-modify-mu: func ['series] [
+    ;-- Has to be a FUNC to set in callers environment...
+    ;-- ...or could we leverage the caller's binding?
+
     set :series tail get :series
 ]
 
 skip-modify-mu: func ['series offset] [
+    ;-- Has to be a FUNC to set in callers environment...
+    ;-- ...or could we leverage the caller's binding?
+
     set :series skip get :series offset
 ]
 
-; -1 is a particularly useful value, yet it presents complications to mushing that ON
-; does not have.  Also frequently, choosing 1 vs -1 depends on a logic.  Onesigned turns
-; true into 1 and false into -1 (compared to to-integer which treats false as zero)
-onesigned-mu: funct [value] [
+; -1 is a particularly useful value, yet it presents complications to mushing
+; that ON does not have.  Also frequently, choosing 1 vs -1 depends on a logic.
+; Onesigned turns true into 1 and false into -1 (compared to to-integer which
+; treats false as zero)
+onesigned-mu: function [value] [
     either to-boolean value [1] [-1]
 ]
 
-ceiling-mu: funct [value] [
+ceiling-mu: function [value] [
     to-integer round/ceiling value
 ]
 
-not-mu: func [value] [
+not-mu: function [value] [
     not true? value
 ]
 
-only-first-true-mu: func [value1 value2] [
-    (true? value1) and (not true? value2)
+only-first-true-mu: function [value1 value2] [
+    all [
+        true? value1
+        not true? value2
+    ]
 ]
 
-only-second-true-mu: func [value1 value2] [
-    (true? value2) and (not true? value1)
+only-second-true-mu: function [value1 value2] [
+    all [
+        true? value2
+        not true? value1
+    ]
 ]
 
-prefix-or-mu: func [value1 value2] [
-    (true? value1) or (true? value2)
+prefix-or-mu: function [value1 value2] [
+    any [
+        true? value1
+        true? value2
+    ]
 ]
 
-prefix-and-mu: func [value1 value2] [
-    (true? value1) and (true? value2)
+prefix-and-mu: function [value1 value2] [
+    all [
+        true? value1
+        true? value2
+    ]
 ]
 
-prefix-xor-mu: func [value1 value2] [
+prefix-xor-mu: function [value1 value2] [
     (true? value1) xor (true? value2)
 ]

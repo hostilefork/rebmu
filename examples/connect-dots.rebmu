@@ -1,7 +1,55 @@
-; http://stackoverflow.com/questions/2527477/code-golf-connecting-the-dots/
+Rebmu [
+	Title: {Connect the Dots}
+	Home: http://stackoverflow.com/a/3066878/211160
+
+	Purpose: {
+		The input are multiple lines (terminated by a newline) which describe
+		a 'field'. There are 'numbers' scattered across this field (seperated
+		by whitespace). All lines can be considered to be the same length (you
+		can pad spaces to the end).
+
+			* the numbers always start at 1
+
+			* they follow the ordering of the natural numbers: every
+			  'next number' is incremented with 1
+
+			* every number is surrounded by (at least) one whitespace on
+			  its left and right
+
+		Draw lines between these numbers in their natural order
+		(1 -> 2 -> 3 -> ...N) (assume N <= 99) with the following
+		characteristics:
+
+			* replace a number with a '+' character
+
+			* for horizontal lines: use '-'
+
+			* for vertical lines: use '|'
+
+			* going left and down or right and up: /
+
+			* going left and up or right and down: \
+
+		When drawing lines of type 4 and 5 you can assume (given the points to
+		connect with coordinates x1, y1 and x2, y2) that
+		distance(x1,x2) == distance(y1,y2). Or in other words:
+		"consecutive elements that are not horizontally or vertically aligned
+		always align to the slope of the slash or backslash".
+
+		It is important to follow the order in which the dots are connected
+		(newer lines can strike out older lines).
+	}
+
+	Notes: {
+		Pass in the filename containing the input like this:
+
+			rebmu/args %connect-dots.rebmu %connect-dots-data/unicorn.txt
+	}
+]
 
 ; copy program argument into variable (m)atrix
-Ma
+; (Note: used to just be Ma but for now loads file with rl (read/lines)
+MrlA
 
 ; string containing the (l)etters used for walls
 L{-|\/}
@@ -12,7 +60,7 @@ Qb|[sg?SBaB]
 
 ; d finds you the iterator position of the first digit of a two digit
 ; number in the matrix
-Da|[feSm[TfiSrj[spAsp]iT[++Tbr]]t]
+Da|[feSm[TfiSrj[spAsp]iT[n+Tbr]]t]
 
 ; given an iterator position, this tells you the x coordinate of the cell
 Xa|[i?A]
@@ -24,9 +72,9 @@ Ya|[i?FImHDa]
 ; of that cell
 Ca|[skPCmSCaBKfsA]
 
-; n defaults to 1 in Rebmu.	 we loop through all the numbers up front and
+; k defaults to 0 in Rebmu.	 we loop through all the numbers up front and
 ; gather their coordinate pairs into a list called g
-w[Jd++N][roG[xJyJ]]
+w[Jd++K][roG[xJyJ]]
 
 ; b is the (b)eginning coordinate pair for our stroke, we get it from g and
 ; advance g's iteration position (f+="first+")
