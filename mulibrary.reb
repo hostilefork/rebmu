@@ -548,6 +548,15 @@ collect-mu: function [body [block!] /into output [series!]] [
     either into [output] [head output]
 ]
 
+remove-each-mu: function [
+    'word [get-word! word! block!]
+    data [series!]
+    body [block!]
+] [
+    remove-each :word data body
+    data
+]
+
 swap-exchange-mu: func [
     "Swap contents of variables."
     a [word! series!
