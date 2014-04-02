@@ -245,6 +245,8 @@ rebmu-context: [
     TC: :to-char-mu
     TB: :to-block
     TI: :to-integer
+    H~: :to-http-url-mu
+    HS~: rebmu-wrap 'to-http-url-mu/secure [:url]
 
     ;----------------------------------------------------------------------
     ; CONDITIONALS
