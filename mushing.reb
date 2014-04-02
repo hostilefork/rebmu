@@ -137,7 +137,7 @@ lower: charset [#"a" - #"z"]
 digit: charset [#"0" - #"9"]
 symbol: charset [#"!" #"?" #"^^" #"|" #"*" #"+" #"-" #"~" #"&" #"=" #"." #"`"]
 
-unmush: funct [
+unmush: function [
     {Take any Rebol symbol or structure, and recursively apply a decoding
     known as "unmushing" on it...where the usage of capital letters cues
     special handling for inserting spaces or converting runs of
