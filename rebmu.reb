@@ -346,6 +346,7 @@ rebmu-context: [
     SE: :select
     RV: :reverse
     SL: :split
+    CT: :collect-mu
 
     ;-- "rep" because replace as param name causes problem
     RA: rebmu-wrap 'replace/all [target search rep]

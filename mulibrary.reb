@@ -539,6 +539,15 @@ back-mu: function [arg] [
     ]
 ]
 
+collect-mu: function [body [block!] /into output [series!]] [
+    unless output [output: make block! 16]
+    do func [kp] body func [value [any-type!] /only] [
+        output: apply :insert [output :value none none only]
+        :value
+    ]
+    either into [output] [head output]
+]
+
 swap-exchange-mu: func [
     "Swap contents of variables."
     a [word! series!
