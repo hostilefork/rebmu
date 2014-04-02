@@ -69,7 +69,7 @@ to-word-mu: function [value] [
     ]
 ]
 
-to-http-url-mu: function ['target [word! string!] /secure][
+to-http-url-mu: function ['target [word! path! string!] /secure][
 	join either secure [https://][http://] target
 ]
 
