@@ -279,6 +279,8 @@ rebmu-context: [
 
     FO: :for
     FE: :foreach
+    ME: :map-each
+    RME: :remove-each-mu
     FA: :forall
     LO: :loop
     WT: :while-true?-mu
@@ -348,9 +350,6 @@ rebmu-context: [
     SE: :select
     RV: :reverse
     SL: :split
-    CT: :collect-mu
-    RME: :remove-each-mu
-    ME: :map-each
 
     ;-- "rep" because replace as param name causes problem
     RA: rebmu-wrap 'replace/all [target search rep]
@@ -397,9 +396,11 @@ rebmu-context: [
     COD: rebmu-wrap 'compose/deep [value]
     ML: :mold
     DR: :rebmu ; "Do Rebmu"
+    JN: :join
     RE: :reduce
     RJ: :rejoin
     RO: rebmu-wrap 'repend/only [series value]
+    CT: :collect-mu
 
     ;----------------------------------------------------------------------
     ; MATH AND LOGIC OPERATIONS
