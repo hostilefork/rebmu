@@ -245,8 +245,6 @@ rebmu-context: [
     TC: :to-char-mu
     TB: :to-block
     TI: :to-integer
-    H~: :to-http-url-mu
-    HS~: rebmu-wrap 'to-http-url-mu/secure [:url]
 
     ;----------------------------------------------------------------------
     ; CONDITIONALS
@@ -420,27 +418,29 @@ rebmu-context: [
     ; tilde.  Rebol's default AND/OR/XOR are infix, and the prefix versions
     ; end in tildes.  That precedent guided my decision to create A~, O~,
     ; etc. but Rebol's infix OR is special and unlikely to be used in code
-    ; golf
+    ; golf... anyway, due to feedback that's now done with carets because
+    ; of the desire to use tilde for the constructors.  An aesthetic choice.
+    ; Will that feed back into the Rebol design?  Who knows...
 
-    A~: :prefix-and-mu
-    O~: :prefix-or-mu
-    X~: :prefix-xor-mu
-    N~: :not-mu
+    A^: :prefix-and-mu
+    O^: :prefix-or-mu
+    X^: :prefix-xor-mu
+    N^: :not-mu
 
     ; Question: What other functions seem to fit in the theme of ending in
     ; tildes?  These are just ideas
-    F~: :only-first-true-mu
-    S~: :only-second-true-mu
+    F^: :only-first-true-mu
+    S^: :only-second-true-mu
 
     EV?: :even?
     OD?: :odd?
     ++: :increment-mu
     --: :decrement-mu
-    G~: :greater?           ; >~ is not a valid symbol in Rebol
-    GE~: :greater-or-equal?     ; >=~ is not a valid symbol in Rebol
-    L~: :lesser?            ; <~ is not a valid symbol in Rebol
-    LE~: :lesser-or-equal?      ; <=~ is not a valid symbol in Rebol
-    ==~: :strict-equal?
+    G^: :greater?           ; >~ is not a valid symbol in Rebol
+    GE^: :greater-or-equal?     ; >=~ is not a valid symbol in Rebol
+    L^: :lesser?            ; <~ is not a valid symbol in Rebol
+    LE^: :lesser-or-equal?      ; <=~ is not a valid symbol in Rebol
+    ==^: :strict-equal?
     NG?: :negative?
     SG?: :sign?
     Y?: :true?
@@ -489,10 +489,13 @@ rebmu-context: [
 
     ;----------------------------------------------------------------------
     ; CONSTRUCTION FUNCTIONS
-    ; Letter and a caret means "factory".  This convention is not in Rebol
+    ; Letter and a tilde means "factory".  This convention is not in Rebol
     ; but I thought that even if AR and AI were available for ARRAY and
-    ; ARRAY/INITIAL the use of the caret would allow the pattern to
+    ; ARRAY/INITIAL the use of the tilde would allow the pattern to
     ; continue for some other things which *would* collide.
+    ; 
+    ; This used to be done with carets, but Christopher Ross-Gill thought
+    ; tildes looked better.
     ;----------------------------------------------------------------------
 
     CY: :copy
@@ -501,13 +504,15 @@ rebmu-context: [
     CP: rebmu-wrap 'copy/part [value]
     CPD: rebmu-wrap 'copy/part/deep [value]
 
-    A^: :array
-    AI^: rebmu-wrap 'array/initial [size value]
-    B^: does [copy []] ; two chars cheaper than cp[]
-    I^: :make-integer-mu
-    M^: :make-matrix-mu
-    S^: does [copy ""] ; two chars cheaper than cp""
-    SI^: :make-string-initial-mu
+    A~: :array
+    AI~: rebmu-wrap 'array/initial [size value]
+    B~: does [copy []] ; two chars cheaper than cp[]
+    H~: :to-http-url-mu
+    HS~: rebmu-wrap 'to-http-url-mu/secure [:url]
+    I~: :make-integer-mu
+    M~: :make-matrix-mu
+    S~: does [copy ""] ; two chars cheaper than cp""
+    SI~: :make-string-initial-mu
 
     ;----------------------------------------------------------------------
     ; MISC
