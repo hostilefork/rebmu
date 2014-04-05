@@ -245,6 +245,8 @@ rebmu-context: [
     TC: :to-char-mu
     TB: :to-block
     TI: :to-integer
+    H~: :to-http-url-mu
+    HS~: rebmu-wrap 'to-http-url-mu/secure [:url]
 
     ;----------------------------------------------------------------------
     ; CONDITIONALS
@@ -277,6 +279,8 @@ rebmu-context: [
 
     FO: :for
     FE: :foreach
+    ME: :map-each
+    RME: :remove-each-mu
     FA: :forall
     LO: :loop
     WT: :while-true?-mu
@@ -392,9 +396,11 @@ rebmu-context: [
     COD: rebmu-wrap 'compose/deep [value]
     ML: :mold
     DR: :rebmu ; "Do Rebmu"
+    JN: :join
     RE: :reduce
     RJ: :rejoin
     RO: rebmu-wrap 'repend/only [series value]
+    CT: :collect-mu
 
     ;----------------------------------------------------------------------
     ; MATH AND LOGIC OPERATIONS

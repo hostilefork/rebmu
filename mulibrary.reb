@@ -69,6 +69,10 @@ to-word-mu: function [value] [
     ]
 ]
 
+to-http-url-mu: function ['target [word! path! string!] /secure][
+	join either secure [https://][http://] target
+]
+
 caret-mu: function ['value] [
     switch/default type?/word :value [
         string! [return to-string debase value]
@@ -537,6 +541,24 @@ back-mu: function [arg] [
     ] [
         back arg
     ]
+]
+
+collect-mu: function [body [block!] /into output [series!]] [
+    unless output [output: make block! 16]
+    do func [kp] body func [value [any-type!] /only] [
+        output: apply :insert [output :value none none only]
+        :value
+    ]
+    either into [output] [head output]
+]
+
+remove-each-mu: function [
+    'word [get-word! word! block!]
+    data [series!]
+    body [block!]
+] [
+    remove-each :word data body
+    data
 ]
 
 swap-exchange-mu: func [
