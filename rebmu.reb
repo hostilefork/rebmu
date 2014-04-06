@@ -144,16 +144,11 @@ rebmu-context: [
     (remap-datatype paren! "pn")
     (remap-datatype integer! "in")
     (remap-datatype pair! "pr")
-    ; no percent! type in Rebol2
-    (unless unset? get/any 'percent! [remap-datatype percent! "pc"])
+    (remap-datatype percent! "pc")
     (remap-datatype closure! "cl")
     (remap-datatype logic! "lg")
     (remap-datatype map! "mp")
-    ; there is no "to-none" operation in Rebol, all other datatypes have it...
-    (remap-datatype/noconvert none! "nn")
-    ; no object or to-object in Rebol2... so we skip based on missing
-    ; "object" keyword even thought the object! type exists
-    (unless unset? get/any 'object [remap-datatype object! "ob"])
+    (remap-datatype object! "ob")
     (remap-datatype path! "pa")
     (remap-datatype lit-word! "lw")
     (remap-datatype refinement! "rf")
@@ -165,6 +160,9 @@ rebmu-context: [
     (remap-datatype tag! "tg")
     (remap-datatype money! "mn")
     (remap-datatype binary! "bi")
+
+    ; there is no "to-none" operation in Rebol, all other datatypes have it...
+    (remap-datatype/noconvert none! "nn")
 
     ;----------------------------------------------------------------------
     ; TYPE CONVERSION SHORTHANDS
