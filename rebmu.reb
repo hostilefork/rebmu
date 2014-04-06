@@ -5,93 +5,22 @@ Rebol [
         challenges
     }
 
-    Author: "Dr. Rebmu"
-    Home: http://rebmu.rebol.net
+    Author: {"Dr. Rebmu"}
+    Home: https://github.com/hostilefork/rebmu
     License: 'bsd
 
-    Date: 16-Feb-2014
-    Version: 0.5.0
+    Date: 6-Apr-2014
+    Version: 0.6.0
 
     ; Header conventions: http://www.rebol.org/one-click-submission-help.r
     File: %rebmu.reb
     Type: 'dialect
     Level: 'advanced
 
-    Notes: {
-        The Rebmu language is a dialect of Rebol which uses some
-        unusual tricks to achieve smaller character counts in source code.
-        The goal is to make it easier to participate in programming challenges
-        where the goal is to achieve a given task in as few characters as
-        possible.
-
-        There is the obvious need to come up with abbreviations for long words
-        like WH instead of WHILE.  Rebol is particularly good at allowing one
-        to do this kind of thing within the language and without a
-        preprocessor.  However, this takes it even farther using a technique
-        fancifully named "mushing"...which is explained in %mushing.rebol
-
-        Despite being a little bit "silly" (as Code Golf is sort of silly),
-        there is a serious side to the design.  Rebmu is a genuine dialect...
-        meaning that it uses the Rebol data format and thus relegates most
-        parsing--such as parentheses and block matches. This means that
-        there's no string-oriented trickery taking advantage of illegal
-        source token sequences in Rebol (like 1FOO, A$B...)
-
-        Also, Rebmu is a superset of Rebol, so any Rebol code should be able
-        to be used safely.  That's because despite several shorthands defined
-        for common Rebol operations (even as far as I for IF) the functions
-        are true to their Rebol bretheren across all inputs that Rebol
-        accepts.  [Current exceptions to this are q and ?]
-
-        Rebmu programs get their own execution context.  They will unmush
-        their input, set up the environment of abbreviated routines, and run
-        the code:
-
-            >> rebmu [w"Hello World"]
-            Hello World
-
-        You can also pass in named arguments via a block:
-
-            >> rebmu/args [wSwM] [s: "Hello" m: "World"]
-            Hello
-            World
-
-        The argument block can even use Rebmu code and conventions:
-
-            >> rebmu/args [wSwM] [S"Hello"M"World"]
-            Hello
-            World
-
-        Or you can pass in a block which does not begin with a SET-WORD! and
-        that block will appear in the execution context as the variable A
-
-            >> rebmu/args [wA] [1 2 3]
-            1 2 3
-
-        You can run your Rebmu program and let it set some values in its
-        environment, such as defining functions you might want to call.  Using
-        the /INJECT refinement you can run some code after the program has
-        executed but before the environment is disposed.
-
-        For instance, the following example uses a shorthand format for
-        defining a function that triples a number and saving it in t:
-
-            >> rebmu [Ta|[a*3]]
-
-        But defining the function isn't enough to call it, so if you had
-        wanted to do that you could have said:
-
-            >> rebmu/inject [Ta|[a*3]] [wT10]
-            30
-
-        The injected code is just shorthand for [w t 10], where w is
-        WRITEOUT-MU, a variation of Rebol's PRINT.
-    }
-
     History: [
         0.1.0 [10-Jan-2010 {Sketchy prototype written to cover only the
         Roman Numeral example I worked through when coming up with the
-        idea.  So very incomplete, more a proof of concept.} "Fork"]
+        idea.  So very incomplete, more a proof of concept.}]
 
         0.2.0 [22-Jun-2010 {Language more complete, includes examples.
         Ditched concept of mushing symbols like + and - into single
@@ -114,11 +43,7 @@ Rebol [
         0.6.0 [6-Apr-2014 {Large cleanup creating incompatibility with
         most all previous Rebmu code solutions.  Examples have been updated
         in GitHub.  Major theme was removing the custom IF/UNLESS/EITHER
-        implementation and instead falling to the new default behavior (a
-        case of Rebmu feeding into Rebol, though a more "sane" version was
-        chosen.)  Names altered to feel more natural at the cost of lengthening
-        some of them (RP for REPEND to RPN, retaking RP for REPEAT instead of
-        RT and giving RT to RETURN instead).}]
+        implementation and some clearer names.}]
     ]
 ]
 
