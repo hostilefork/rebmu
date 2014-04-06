@@ -47,11 +47,15 @@ Rebol [
     ]
 ]
 
-; Load the library of xxx-mu functions
-do %mulibrary.reb
-
 ; Load the library implementing mush/unmush
 do %mushing.reb
+
+; Helpful functions that aren't mainline Rebol/Red but may be slated to be
+do %incubator.reb
+
+; Load the library of xxx-mu functions; tricks that are specific to Rebmu
+; and would not seriously find their way into Rebol/Red mainline
+do %mulibrary.reb
 
 rebmu-context: [
     ;----------------------------------------------------------------------
@@ -339,6 +343,10 @@ rebmu-context: [
     RPNO: rebmu-wrap 'repend/only [series value]
     CT: :collect-mu
     LD: :load
+    CB: :combine
+    CBW: rebmu-wrap 'combine/with [block delimiter]
+    CBA: rebmu-wrap 'combine/all [block]
+    FL: :flatten
 
     ;----------------------------------------------------------------------
     ; MATH AND LOGIC OPERATIONS
