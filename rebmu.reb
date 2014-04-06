@@ -476,6 +476,7 @@ rebmu-context: [
     WR: :write
     PR: :print
     PN: :prin
+    PB: :probe
     RI: :readin-mu
     WO: :writeout-mu
     RL: rebmu-wrap 'read/lines [source]
