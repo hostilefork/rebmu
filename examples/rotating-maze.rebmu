@@ -79,12 +79,12 @@ Ca|[
 ; unless a logically true result is given from the callback
 ; which will short circuit
 Ga|[
-	rtYsZ[rtXfZ[TaRE[xY]iTbr]iTbr]rnT
+	rpYsZ[rpXfZ[TaRE[xY]iTbr]iTbr]t
 ]
 	
 ; find the ball, or none (uses the each method above)
 B|[
-	gA|[ieSClFcA[rnA]]
+	gA|[ieSClFcA[rtA]]
 ]
 
 ; forever...

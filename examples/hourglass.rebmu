@@ -40,7 +40,7 @@ N 0% rN
 
 ; Doomsday hourglass tells you how much of your life is left until 21-dec-2012
 ; Demonstrates how native Rebol code can be used natively right smack dab in
-the middle of Rebmu.
+; the middle of Rebmu.
 
 comment [
 	; Caution: Using PAREN! inside of COMMENT causes the Pygments
@@ -83,11 +83,11 @@ Hc&[
 		; start Q as an empty string, and then fill it using "sand physics"
 		; dropping on the sides using alternating append/insert (if top) or
 		; repeatedly inserting at midpoint (if bottom)
-		Qs^rtKw[isEL00c[skQd2k][eEV?kQ[tlQ]]pcSeg--b00[eZ 1 5]3]
+		Qs~rpKw[isEL00c[skQd2k][eEV?kQ[tlQ]]pcSeg--b00[eZ 1 5]3]
 		
 		; rejoin a string composed of an indentation of length d, the left
 		; hourglass side, the Q string, and the right hourglass side.
-		prRJ[si^dSPscSqFHs]
+		prRJ[si~dSPscSqFHs]
 
 		; loop termination condition and continuation
 		eZ 1[s+dCa+wM2cNO]
@@ -99,7 +99,7 @@ Hc&[
 Va|[mpAp2j]
 
 ; draw the top line; it's an outlier, use string constructor
-prSI^w{_}
+prSI~w{_}
 
 ; inner width at widest point starts out as two less
 Ls2w Wl

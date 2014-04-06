@@ -69,12 +69,14 @@ Xa|[i?A]
 Ya|[i?FImHDa]
 
 ; pass in a coordinate pair to C and it will give you the iterator position
-; of that cell
-Ca|[skPCmSCaBKfsA]
+; of that cell.  Note: this used to be effectively
+; (skip pick m second a back first a...this developed an off-by-one error
+; somehow so there's a NEXT on here that is probably not needed)
+Ca|[nxSKpcMscAbkFSa]
 
 ; k defaults to 0 in Rebmu.	 we loop through all the numbers up front and
 ; gather their coordinate pairs into a list called g
-w[Jd++K][roG[xJyJ]]
+w[Jd++K][rpnoG[xJyJ]]
 
 ; b is the (b)eginning coordinate pair for our stroke, we get it from g and
 ; advance g's iteration position (f+="first+")

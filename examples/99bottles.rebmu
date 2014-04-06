@@ -46,7 +46,7 @@ Bdz[rj[n{ bottle}egN 1{s}{}{ of beer}]]
 M99Nm
 
 ; loop n times (99)
-loN[
+lpN[
 
   ; "print rejoin"
   ; rejoin is an operation which REduces ("evals")

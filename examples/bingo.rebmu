@@ -63,8 +63,8 @@ Rebmu [
 ; store the number five since we use it a lot, s for "Size"
 S05
 
-; RepeaT this loop five times, with variable Z counting 1 to 5
-rtZs[
+; RePeat this loop five times, with variable Z counting 1 to 5
+rpZs[
 	; a trick that helps reduce the number of loops is that the 5-line input
 	; loop actually builds the diagonal solutions.  as it proceeds it inserts
 	; one at the beginning and appends the other as it goes.  so if the first

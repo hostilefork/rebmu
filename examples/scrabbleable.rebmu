@@ -19,6 +19,10 @@ Rebmu [
 			output: a|l|i|c|e
 			                v|i|c|t|o|r|i|a
 			                e
+
+		Invoke with:
+
+			rebmu/args %scrabbleable.rebmu ["alice" "bob" "eve"]
 	}
 ]
 
@@ -32,14 +36,12 @@ Nl?A
 L00feZa[LmxLl?Z]
 
 ; V is our board size
-; expression is V(1 + (l - 1) * (ad eOD?n1[0] dv n 2)])
+; expression is v: 1 + (l - 1) * (ad eOD?n1[0] dv n 2)
 ; we add one because our loop doesn't do the theoretical minimum ++ v
-Va2mpBKlADeOD?n01[0]d2N
-	
+Va2mpBKlADeOD?n01[0]dvN02
+
 ; M is our VxV board matrix, initially set to spaces 
-print v
-print s
-Mai^Vsi^Vs
+Mai~Vsi~Vs
 	
 ; G is a func (not a funct) thus can write to the global variable M 
 ; it takes a matrix to replace the matrix with and returns the old one 
@@ -71,7 +73,7 @@ Tc|[
 	ieSfsFsbBc[w[Zf+A][
 		JfB KfsJeeSk[OrvCYcEEsFSfADbO[eeSfsFadBngO[chJz]q]q][X01iuKzQ]BadBc
 	]
-	ieSfsFb[f~Xz]]
+	ieSfsFb[f^Xz]]
 ]
 	
 ; R recursively applies itself for placing the words in A
@@ -80,10 +82,10 @@ Ra|[
 	Q&[iUbr]
 	eT?aON[
 		ZnxSBvL
-		rtXz[
-			rtYz[
+		rpXz[
+			rpYz[
 				O[0 1]
-				lo 2[
+				lp 2[
 					JgM ; save matrix copy
 					UeTfsAre[xY]o[rNXa][eH?a[rNXa]no]
 					eU00[gJ]

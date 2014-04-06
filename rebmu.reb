@@ -250,7 +250,7 @@ rebmu-context: [
     ; CONDITIONALS
     ;----------------------------------------------------------------------
 
-    IT: :if-true?-mu   ; IF is taken by Rebol, don't overwrite
+    IT: :if-true?-mu
     IL: :if-lesser?-mu
     IG: :if-greater?-mu
     IE: :if-equal?-mu
@@ -280,7 +280,7 @@ rebmu-context: [
     ME: :map-each
     RME: :remove-each-mu
     FA: :forall
-    LO: :loop
+    LP: :loop
     WT: :while-true?-mu
     WG: :while-greater?-mu
     WL: :while-lesser?-mu
@@ -291,7 +291,7 @@ rebmu-context: [
     CN: :continue
     BR: :break
     UN: :until
-    RT: :repeat
+    RP: :repeat
     FV: :forever
 
     ;----------------------------------------------------------------------
@@ -319,13 +319,12 @@ rebmu-context: [
     y&: :func-zy-mu
     x&: :func-zyx-mu
     w&: :func-zyxw-mu
-    RN: :return
+    RT: :return
 
     ;----------------------------------------------------------------------
     ; OBJECTS AND CONTEXTS
     ;----------------------------------------------------------------------
     US: :use
-    CX: :context
     OB: :object
 
     ;----------------------------------------------------------------------
@@ -344,7 +343,6 @@ rebmu-context: [
     TK: :take
     MNO: :minimum-of
     MXO: :maximum-of
-    RP: :repend
     SE: :select
     RV: :reverse
     SL: :split
@@ -360,6 +358,7 @@ rebmu-context: [
     BK: :back-mu
     NX: :next-mu
     CH: :change
+    CHP: rebmu-wrap 'change/part [series value size]
     SK: :skip
     FI: :find
     FIO: rebmu-wrap 'find/only [series value]
@@ -396,9 +395,11 @@ rebmu-context: [
     DR: :rebmu ; "Do Rebmu"
     JN: :join
     RE: :reduce
+    RPN: :repend
     RJ: :rejoin
-    RO: rebmu-wrap 'repend/only [series value]
+    RPNO: rebmu-wrap 'repend/only [series value]
     CT: :collect-mu
+    LD: :load
 
     ;----------------------------------------------------------------------
     ; MATH AND LOGIC OPERATIONS
@@ -428,7 +429,7 @@ rebmu-context: [
     N^: :not-mu
 
     ; Question: What other functions seem to fit in the theme of ending in
-    ; tildes?  These are just ideas
+    ; carets?  These are just ideas
     F^: :only-first-true-mu
     S^: :only-second-true-mu
 
@@ -648,7 +649,7 @@ rebmu-context: [
     i: :IT ; "if-true?-mu"
     j: 0
     k: 0
-    l: :LO ; "loop"
+    l: :LP ; "loop"
     m: copy "" ; "message"
     n: 1
     o: :OR ; "or"
