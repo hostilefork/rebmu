@@ -174,7 +174,7 @@ It can help to find errors by using the feature that shows you the unmushed vers
 
 ### DISCUSSION ###
 
-A prerequisite to using Rebmu is to know some Rebol or [Red](http://red-lang.org).  If you're looking for help on golfing with Rebmu, please join the [Rebol and Red StackOverflow chat room](http://chat.stackoverflow.com/rooms/291/rebol-and-red)!
+A prerequisite to using Rebmu is to know some Rebol or [Red](http://red-lang.org).  If you're looking for help on golfing with Rebmu, please join the [Rebol and Red StackOverflow chat room](http://chat.stackoverflow.com/rooms/291/rebol-and-red)!  You might also want to refer to the [Rebol Bookmarks](https://trello.com/b/PtKS3RfJ/rebol-bookmarks) Trello board, which is a new community project to assemble articles and resources on the language.
 
 The main place where the Code Golf problems are studied are on the [Code Golf StackExchange](http://codegolf.stackexchange.com/).
 
