@@ -448,6 +448,10 @@ rebmu-context: [
     TRT: rebmu-wrap 'trim/tail [series]
     TRH: rebmu-wrap 'trim/head [series]
     TRA: rebmu-wrap 'trim/all [series]
+    UP: :uppercase
+    UPP: rebmu-wrap 'uppercase/part [string length]
+    LW: :lowercase
+    LWP: rebmu-wrap 'lowercase/part [string length]
 
     ;----------------------------------------------------------------------
     ; CONSTRUCTION FUNCTIONS
