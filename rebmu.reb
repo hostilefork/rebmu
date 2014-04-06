@@ -378,6 +378,8 @@ rebmu-context: [
     FIO: rebmu-wrap 'find/only [series value]
     FIS: rebmu-wrap 'find/skip [series value size]
     UQ: :unique
+    PA: :parse-mu
+    PP: :pre-parse-mu
 
     L?: :length?
     F?: :index?-find-mu
@@ -489,6 +491,7 @@ rebmu-context: [
     WR: :write
     PR: :print
     PN: :prin
+    PB: :probe
     RI: :readin-mu
     WO: :writeout-mu
     RL: rebmu-wrap 'read/lines [source]
