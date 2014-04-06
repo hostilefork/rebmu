@@ -23,6 +23,14 @@ Rebmu [
 		Invoke with:
 
 			rebmu/args %scrabbleable.rebmu ["alice" "bob" "eve"]
+
+		NOTE: This example appeared to work at one time, although I found
+		some test data it couldn't solve.  So it was already broken somewhere.
+		The Rebmu language update which removed Rebmu-specific IF/UNLESS/EITHER
+		behaviors broke it.  If you want to see it sort-of-working, revert back
+		to Rebmu before the IF/UNLESS/EITHER commit.  The best idea I think
+		would probably be a fresh take now that Rebmu has evolved a bit; but
+		it wasn't worth holding up the important alignment change with Rebol.
 	}
 ]
 
@@ -42,8 +50,8 @@ Va2mpBKlADeOD?n01[0]dvN02
 
 ; M is our VxV board matrix, initially set to spaces 
 Mai~Vsi~Vs
-	
-; G is a func (not a funct) thus can write to the global variable M 
+
+; G is a "func" (not a "function") thus can write to the global variable M 
 ; it takes a matrix to replace the matrix with and returns the old one 
 Ga&[ZcydM MaZ]
 	
@@ -79,7 +87,7 @@ Tc|[
 ; R recursively applies itself for placing the words in A
 ; returns true if it succeeds
 Ra|[
-	Q&[iUbr]
+	Q&[iU[br]]
 	eT?aON[
 		ZnxSBvL
 		rpXz[

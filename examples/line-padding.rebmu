@@ -16,7 +16,7 @@ Rebmu [
 		Invoke using named inputs and injecting a code to print the result.
 		(the problem did not specify having to print)
 		
-		rebmu/args/inject %examples/line-padding.r [
+		rebmu/args/inject %examples/line-padding.rebmu [
 			t: {^/1^/22^/333^/4444^/55555^/666666} c: #"#" l: 4
 		] [print t]
 

@@ -108,142 +108,94 @@ do-mu: function [
     ]
 ]
 
-if-true?-mu: function [
-    {If condition is TRUE, runs do-mu on the then parameter.}
-    condition
-    'then-param
-    /else "If not true, then run do-mu on this parameter"
-    'else-param
-] [
-    either condition [do-mu then-param] [if else [do-mu else-param]]
-]
-
 if-greater?-mu: function [
-    {If condition is TRUE, runs do-mu on the then parameter.}
     value1
     value2
-    'then-param
-    /else "If not true, then run do-mu on this parameter"
-    'else-param
+    true-branch
 ] [
-    either greater? value1 value2 [do-mu then-param] [if else [do-mu else-param]]
+    if greater? value1 value2 true-branch
 ]
 
 if-unequal?-mu: function [
-    {If condition is TRUE, runs do-mu on the then parameter.}
     value1
     value2
-    'then-param
-    /else "If not true, then run do-mu on this parameter"
-    'else-param
+    true-branch
 ] [
-    either not-equal? value1 value2 [do-mu then-param] [if else [do-mu else-param]]
+    if not-equal? value1 value2 true-branch
 ]
 
-if-equal?-mu: function [
-    {If condition is TRUE, runs do-mu on the then parameter.}
+if-equal?-mu: func [
     value1
     value2
-    'then-param
-    /else "If not true, then run do-mu on this parameter"
-    'else-param
+    true-branch
 ] [
-    either equal? value1 value2 [do-mu then-param] [if else [do-mu else-param]]
+    if equal? value1 value2 true-branch
 ]
 
-if-zero?-mu: function [
-    {If condition is TRUE, runs do-mu on the then parameter.}
+if-zero?-mu: func [
     value
-    'then-param
-    /else "If not true, then run do-mu on this parameter"
-    'else-param
+    true-branch
 ] [
-    either zero? value [do-mu then-param] [if else [do-mu else-param]]
+    if zero? value true-branch
 ]
 
-if-lesser?-mu: function [
-    {If condition is TRUE, runs do-mu on the then parameter.}
+if-lesser?-mu: func [
     value1
     value2
-    'then-param
-    /else "If not true, then run do-mu on this parameter"
-    'else-param
+    true-branch
 ] [
-    either lesser? value1 value2 [do-mu then-param] [if else [do-mu else-param]]
+    if lesser? value1 value2 true-branch
 ]
 
-unless-true?-mu: function [
-    "Evaluates the block if condition is not TRUE."
-    condition
-    'block
-] [
-    unless condition [do-mu block]
-]
-
-unless-zero?-mu: function [
-    "Evaluates the block if condition is not 0."
-    condition
-    'block
-] [
-    unless zero? condition [do-mu block]
-]
-
-either-true?-mu: function [
-    {If condition is TRUE, evaluates the first block, else evaluates the second.}
-    condition
-    'true-param
-    'false-param
-] [
-    either condition [do-mu true-param] [do-mu false-param]
-]
-
-either-zero?-mu: function [
-    {If condition is ZERO, evaluates the first block, else evaluates the second.}
+unless-zero?-mu: func [
     value
-    'true-param
-    'false-param
+    false-branch
 ] [
-    either zero? value [do-mu true-param] [do-mu false-param]
+    unless zero? value false-branch
 ]
 
-either-greater?-mu: function [
-    {If condition is TRUE, evaluates the first block, else evaluates the second.}
-    value1
-    value2
-    'true-param
-    'false-param
+either-zero?-mu: func [
+    value
+    true-branch
+    false-branch
 ] [
-    either greater? value1 value2 [do-mu true-param] [do-mu false-param]
+    either zero? value true-branch false-branch
 ]
 
-either-lesser?-mu: function [
-    {If condition is TRUE, evaluates the first block, else evaluates the second.}
+either-greater?-mu: func [
     value1
     value2
-    'true-param
-    'false-param
+    true-branch
+    false-branch
 ] [
-    either lesser? value1 value2 [do-mu true-param] [do-mu false-param]
+    either greater? value1 value2 true-branch false-branch
 ]
 
-either-equal?-mu: function [
-    {If values are equal runs do-mu on the then parameter.}
+either-lesser?-mu: func [
     value1
     value2
-    'true-param
-    'false-param
+    true-branch
+    false-branch
 ] [
-    either equal? value1 value2 [do-mu true-param] [do-mu false-param]
+    either lesser? value1 value2 true-branch false-branch
 ]
 
-either-unequal?-mu: function [
-    {If values are not equal runs do-mu on the then parameter.}
+either-equal?-mu: func [
     value1
     value2
-    'true-param
-    'false-param
+    true-branch
+    false-branch
 ] [
-    either not-equal? value1 value2 [do-mu true-param] [do-mu false-param]
+    either equal? value1 value2 true-branch false-branch
+]
+
+either-unequal?-mu: func [
+    value1
+    value2
+    true-branch
+    false-branch
+] [
+    either not-equal? value1 value2 true-branch false-branch
 ]
 
 while-true?-mu: function [

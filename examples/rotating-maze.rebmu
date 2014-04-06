@@ -63,7 +63,7 @@ MeFI?a[rlA]a
 ; if while is needed it's still available under WT (while-true?-mu)
 W|[l?Fm]
 H|[l?M]
-	
+
 ; size function (accounts for applied rotations)
 Z|[Tre[wH]iOD?j[rvT]t]
 	
@@ -79,7 +79,7 @@ Ca|[
 ; unless a logically true result is given from the callback
 ; which will short circuit
 Ga|[
-	rpYsZ[rpXfZ[TaRE[xY]iTbr]iTbr]t
+	rpYsZ[rpXfZ[TaRE[xY]iT[br]]iT[br]]t
 ]
 	
 ; find the ball, or none (uses the each method above)
@@ -90,12 +90,12 @@ B|[
 ; forever...
 fv[
 	NbIn[
-		un[
+		ut[
 		    ++N/2
 		    TfCn
-			ieFlTbr
+			ieFlT[br]
 			chCbSP
-			ieTHlTbr
+			ieTHlT[br]
 			chCnSl
 			=~SnSz
 		]
@@ -105,7 +105,7 @@ fv[
 	gA|[TfCaEEfZfA[prT][pnT]nn]
 	
 	; unless ball position is still not none, we'll be exiting the loop...
-	utBbr
+	unB[br]
 	
 	; Update the rotation value based on the input
 	JmoADjPC[3 1]rK04   

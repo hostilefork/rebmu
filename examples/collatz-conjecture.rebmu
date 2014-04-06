@@ -24,6 +24,10 @@ Rebmu [
 			16 -> 4
 			5  -> 5
 			7  -> 16
+
+		Invocation is for instance:
+
+			rebmu/args %examples/collatz-conjecture.rebmu 16
 	}
 ]
 

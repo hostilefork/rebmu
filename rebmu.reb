@@ -110,6 +110,15 @@ Rebol [
         0.5.0 [16-Feb-2014 {Version bump to indicate growing maturity
         of the language.  Abandon Rebol 2 support.  Rebmu files now
         have proper Rebol ecology headers.}]
+
+        0.6.0 [6-Apr-2014 {Large cleanup creating incompatibility with
+        most all previous Rebmu code solutions.  Examples have been updated
+        in GitHub.  Major theme was removing the custom IF/UNLESS/EITHER
+        implementation and instead falling to the new default behavior (a
+        case of Rebmu feeding into Rebol, though a more "sane" version was
+        chosen.)  Names altered to feel more natural at the cost of lengthening
+        some of them (RP for REPEND to RPN, retaking RP for REPEAT instead of
+        RT and giving RT to RETURN instead).}]
     ]
 ]
 
@@ -250,14 +259,16 @@ rebmu-context: [
     ; CONDITIONALS
     ;----------------------------------------------------------------------
 
-    IT: :if-true?-mu
+    ;-- Rebol's IF is already two characters
+    IO: rebmu-wrap 'if/only [condition true-branch]
     IL: :if-lesser?-mu
     IG: :if-greater?-mu
     IE: :if-equal?-mu
     IU: :if-unequal?-mu
     IZ: :if-zero?-mu
 
-    ET: :either-true?-mu   ; EI isn't taken by Rebol, but consistent with IT
+    EI: :either
+    EO: rebmu-wrap 'either/only [condition true-branch false-branch]
     EL: :either-lesser?-mu
     EG: :either-greater?-mu
     EE: :either-equal?-mu
@@ -265,10 +276,11 @@ rebmu-context: [
     EZ: :either-zero?-mu
 
     SW: :switch
-    CS: :case
-    CSA: rebmu-wrap 'case/all [block]
+    CA: :case
+    CAA: rebmu-wrap 'case/all [block]
 
-    UT: :unless-true?-mu
+    UN: :unless
+    UO: rebmu-wrap 'unless/only [condition false-branch]
     UZ: :unless-zero?-mu
 
     ;----------------------------------------------------------------------
@@ -290,7 +302,7 @@ rebmu-context: [
     WU: :while-unequal?-mu
     CN: :continue
     BR: :break
-    UN: :until
+    UT: :until
     RP: :repeat
     FV: :forever
 
@@ -300,6 +312,8 @@ rebmu-context: [
 
     FN: :function
     FC: :func
+    CL: :closure
+    CS: :clos
     DZ: :does
     DF: :does-function-mu
     a|: :function-a-mu
@@ -642,11 +656,11 @@ rebmu-context: [
     b: to char! 0 ; "byte"
     c: #"A" ; "char"
     d: #"0" ; "digit"
-    e: :ET ; "either-true?-mu"
+    e: :EI ; "either"
     f: :FS ; "first"
     g: copy [] ; "group"
     h: :HM ; "helpful" constant declaration tool
-    i: :IT ; "if-true?-mu"
+    i: :IF
     j: 0
     k: 0
     l: :LP ; "loop"
@@ -667,7 +681,7 @@ rebmu-context: [
     r: :RI ; "readin"
     s: copy "" ; "string"
     t: :TO ; note that to can use example types, e.g. t "foo" 10 is "10"!
-    u: :UN ; "until"
+    u: :UT ; "until"
     v: copy [] ; "vector"
     w: :WT ; "while-true?-mu"
     ; decimal! values starting at 0.0 (common mathematical variables)
