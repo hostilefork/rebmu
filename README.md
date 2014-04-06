@@ -24,7 +24,7 @@ A big goal for the project is serving as a teaching tool for the Rebol and Red l
 
 There is the obvious need to come up with abbreviations for long words like WH instead of WHILE.  Rebol is particularly good at allowing one to do this kind of thing within the language and without a preprocessor.  However, this takes it even farther using a technique fancifully named "mushing".
 
-It doesn't really change the nature of the language.  But it's funny, and it has an internal consistency to it.  You'll save 40% empirically, while being about as easy to read as pig-latin once you know the trick.
+It doesn't really change the nature of the language--and is purely optional.  But it's funny, and it has an internal consistency to it.  You'll save 40% empirically, while being about as easy to read as pig-latin once you know the trick.
 
 Mushed Rebol still passes the parser but uses particular sequences of upper and lower case terms and symbol processing within words:
 
@@ -99,7 +99,7 @@ There is a difference from symbol, when you switch from upper to lowercase acros
 
     [A0b] => [a0: b]
 
-It's important to notice that unless there is an uppercase letter *somewhere* in your words, the mushing will not be applied.  So the mushing rules wouldn't apply in this case, for instance:
+Again, mushing is optional, and lowercase-code-with-spaces runs as normal.  So it's important to realize an implication of that.  *Unless there is an uppercase letter **somewhere** in a word or path sequence, nothing will unmush.*  That's why it doesn't apply in this case, for instance:
 
 	[a00] => [a00]
 
