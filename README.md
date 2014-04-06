@@ -4,9 +4,9 @@ The Rebmu language is a dialect of Rebol which uses some unusual tricks to achie
 
 Despite being a little bit "silly"--as Code Golf is sort of silly--there is a serious side to the design.  Rebmu is a genuine dialect...meaning that it stands upon the Rebol and Red common code-as-data format, which is coming to be referred to as [REN (REadable Notation)](https://github.com/humanistic/REN).  Thus Rebmu relegates most parsing--such as parentheses and block matches. This means that there's no string-oriented trickery taking advantage of illegal source token sequences in Rebol (like 1FOO, A$B...)
 
-It is for this reason that Rebmu is quite small.  Rebol's [Apache-licensed cross-platform executable](http://rebolsource.net/) needed is a single binary file with no installation required...and there are only a few small scripts (seen here on GitHub) implementing Rebmu itself.
+It is for this reason that Rebmu is quite small.  Rebol's [Apache-licensed cross-platform executable](http://rebolsource.net/) needed is a single binary file with no installation required...and there are only a few small scripts (seen here on GitHub) implementing Rebmu itself.  The half-megabyte interpreter includes quite an impressive set of functionality!
 
-Leveraging the underlying logic of Rebol as well as somewhat natural naming, Rebmu programs can be very intuitive--despite the odd way they look at first.  Also, Rebmu is a superset of Rebol, so any Rebol code should be able to be used safely.  This is incredibly handy in debugging to temporarily switch in the midst of Rebmu to using non-shorthanded code!  When put under the microscope, you may agree that it is the most 
+Leveraging the underlying logic of Rebol as well as somewhat natural naming, Rebmu programs can be very intuitive--despite the odd way they look at first.  Also, Rebmu is a superset of Rebol, so any Rebol code should be able to be used safely.  This is incredibly handy in debugging to temporarily switch in the midst of Rebmu to using non-shorthanded code!  When put under the microscope, you may agree that it is the most human-friendly "Pro golfer's" tool yet created!
 
 
 ### NAMING ###
