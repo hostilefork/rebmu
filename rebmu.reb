@@ -365,6 +365,8 @@ rebmu-context: [
     FIO: rebmu-wrap 'find/only [series value]
     FIS: rebmu-wrap 'find/skip [series value size]
     UQ: :unique
+    PA: :parse-mu
+    PP: :pre-parse-mu
 
     L?: :length?
     F?: :index?-find-mu

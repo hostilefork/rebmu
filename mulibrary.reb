@@ -703,6 +703,43 @@ skip-modify-mu: func ['series offset] [
     set :series skip get :series offset
 ]
 
+pre-parse-mu: use [digit lower-alpha upper-alpha hex-digit subs] [
+    digit: charset [#"0" - #"9"] ; digits charset
+    hex-digit: charset [#"0" - #"9" #"A" - #"F" #"a" - #"f"] ; hex charset
+    upper-alpha: charset [#"A" - #"Z"] ; uppercase
+    lower-alpha: charset [#"a" - #"z"] ; lowercase
+
+    subs: [
+        sm some
+        an any
+        th thru
+        cp copy
+        st set
+        dg digit
+        hx hex-digit
+        la lower-alpha
+        ua upper-alpha
+    ]
+
+    function [parse-rule [block!]] [
+        rule: [
+            mark: [
+                'sm | 'an | 'th | 'cp | 'st | 'dg | 'hx | 'la | 'ua
+            ] (change mark select subs mark/1)
+            | and block! into [some rule]
+            | skip
+        ]
+
+        parse parse-rule [some rule]
+        parse-rule
+    ]
+]
+
+parse-mu: func [input [series!] rules [block! string! char! none!]] [
+    if block? rules [rules: pre-parse-mu rules]
+    parse/case input rules
+]
+
 ; -1 is a particularly useful value, yet it presents complications to mushing
 ; that ON does not have.  Also frequently, choosing 1 vs -1 depends on a logic.
 ; Onesigned turns true into 1 and false into -1 (compared to to-integer which
