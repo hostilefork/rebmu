@@ -288,6 +288,12 @@ rebmu-context: [
     RV: :reverse
     SL: :split
 
+    ;-- note that Rebol uses RM for a DELETE alias, that's not very useful
+    ;-- if anything in the box RM should be a shorthand for it's Rebol's
+    ;-- notion of REMOVE, not Unix's.  Overriding in an act of protest...
+    ;--    --Dr. Rebmu
+    RM: :remove
+
     ;-- "rep" because replace as param name causes problem
     RA: rebmu-wrap 'replace/all [target search rep]
     RAC: rebmu-wrap 'replace/all/case [target search rep]
@@ -327,6 +333,13 @@ rebmu-context: [
     NH: :ninth
     TT: :tenth
     LS: :last ; override LS list directory?  We need shell dialect
+
+    ;----------------------------------------------------------------------
+    ; PORTS
+    ;----------------------------------------------------------------------
+
+    DEL: :delete ; If shipping in console, why not use the matching term?
+    DL: :delete ; Corresponding to the act of protest of changing RM
 
     ;----------------------------------------------------------------------
     ; METAPROGRAMMING
