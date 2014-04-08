@@ -150,7 +150,7 @@ rebmu-context: [
     (remap-datatype pair! "pr")
     (remap-datatype percent! "pc")
     (remap-datatype closure! "cl")
-    (remap-datatype logic! "lg")
+    (remap-datatype logic! "lc")
     (remap-datatype map! "mp")
     (remap-datatype object! "ob")
     (remap-datatype path! "pa")
@@ -315,6 +315,8 @@ rebmu-context: [
     PP: :pre-parse-mu
 
     L?: :length?
+    LN: :length? ;-- Reserved... LENGTH? => LENGTH is likely in Rebol3 final
+
     F?: :index?-find-mu
     O?: :offset?
     I?: :index?
@@ -374,6 +376,20 @@ rebmu-context: [
     Z?: :zero?
     MO: :mod
     =~: :equal?
+
+    ; LG was originally used for type naming in logic, which isn't technically
+    ; a conflict but a bit confusing; taking LC for that to avoid another
+    ; non-conflict (but confusing) with LOOP.  Given Rebol's "human" bias it
+    ; makes more sense to go with the base 10 default for logarithms, but lg10
+    ; is available also.  lge fits the pattern and lines up better with the
+    ; Rebol.  It might be tempting to abbreviate LN for natural log but it is
+    ; looking like LENGTH? is going to become finalized as LENGTH in Rebol3
+    ; because it does not yield a boolean result, while less common ? forms
+    ; that do not return booleans will be suffixed with -OF so LN is reserved. 
+    LG10: :log-10
+    LG2: :log-2
+    LGE: :log-e
+    LG: :LG10
 
     ; I'm not entirely sure about the fate of tokens ending in a single
     ; tilde.  Rebol's default AND/OR/XOR are infix, and the prefix versions
@@ -527,11 +543,6 @@ rebmu-context: [
     ; ...
 
     p2: func [value] [value ** 2]
-    ; ...
-
-    l2: :log-2
-    lg: :log-10
-    le: :log-e
     ; ...
 
     ;----------------------------------------------------------------------
