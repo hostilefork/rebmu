@@ -2,22 +2,28 @@
 
 The Rebmu language is a dialect of Rebol which uses some unusual tricks to achieve smaller character counts in source code.  The goal is to make it easier to participate in programming challenges where the goal is to achieve a given task in as few characters as possible.
 
-Despite being a little bit "silly"--as Code Golf is sort of silly--there is a serious side to the design.  Rebmu is a genuine dialect...meaning that it stands upon the Rebol and Red common code-as-data format, which is coming to be referred to as [REN (REadable Notation)](https://github.com/humanistic/REN).  Thus Rebmu relegates most parsing--such as parentheses and block matches. This means that there's no string-oriented trickery taking advantage of illegal source token sequences in Rebol (like 1FOO, A$B...)
+Despite being a little bit "silly"--as Code Golf is sort of silly--there is a serious side to the design.  Rebmu is a genuine dialect...meaning that it stands upon the Rebol and [Red](http://red-lang.org) common code-as-data format, which is coming to be referred to as [REN (REadable Notation)](https://github.com/humanistic/REN).  Thus Rebmu relegates most parsing--such as parentheses and block matches. This means that there's no string-oriented trickery taking advantage of illegal source token sequences in Rebol (like 1FOO, A$B...)
 
 It is for this reason that Rebmu is quite small.  Rebol's [Apache-licensed cross-platform executable](http://rebolsource.net/) needed is a single binary file with no installation required...and there are only a few small scripts (seen here on GitHub) implementing Rebmu itself.  The half-megabyte interpreter includes quite an impressive set of functionality!
 
 Leveraging the underlying logic of Rebol as well as somewhat natural naming, Rebmu programs can be very intuitive--despite the odd way they look at first.  Also, Rebmu is a superset of Rebol, so any Rebol code should be able to be used safely.  This is incredibly handy in debugging to temporarily switch in the midst of Rebmu to using non-shorthanded code!  When put under the microscope, you may agree that it is the most human-friendly "Pro golfer's" tool yet created!
 
+While it could be argued that Rebmu is a "Rebol library" and not an independent "language", it purposefully demonstrates how Rebol blurs the distinction between these two.  Dialecting is a tool for bending the language as you see fit, as part of Rebol's "language construction set" philosophy.  One could make a reasonable case that it is no less a language than GolfScript is a set of routines running on its Ruby host.  Either way, hopefully it is at least interesting.  :-)
+
 
 ### NAMING ###
 
-Despite several shorthands defined for common Rebol operations (even as far as `I` for `IF`) the functions are true to their Rebol bretheren across all inputs that Rebol accepts.  Current exceptions to this are q and ?
+Despite several shorthands defined for common Rebol operations (even as far as `I` for `IF`) the functions are true to their Rebol bretheren across all inputs that Rebol accepts.  Current exceptions to this are q and ?, due to controversy on whether these rare abbreviations (Q for QUIT and ? for HELP) should be in the console only and not allowed in written Rebol scripts.  *(Due to their relative lack of literacy in Rebol's otherwise full-English aesthetic.)*  Instead Q was retaken for QUOTE.
 
 P is a shortcut for PR, which is in turn a shortcut for PRINT.  This provides the ability to redefine P and use it as a variable if you are solving a problem that needs it while still having access to the abbreviated PR form if you must do so.  Currently all single letters have been given initial functions or values, so you can pick which ones you wish to overwrite at the point of initialization.
 
 A big goal for the project is serving as a teaching tool for the Rebol and Red languages, while being fun and a highly serious competitive tool in code golf.  So the philosophy of naming in Rebmu tries to strike a balance between the necessary brevity and fidelity to the naming patterns of the language.  It is also biased away from necessarily giving commands oddly abbreviated names just for the sake of fitting them into fewer characters.
 
-*(For instance: at one point RP was REPEND (a Rebolism) while RT was REPEAT with RN as RETURN.  Shifting this to RPN for REPEND and RP for REPEAT with RT as RETURN is more natural.  Other examples like this are being contemplated and shifted as the design matures...so expect some churn.)*
+For instance: at one point RP was REPEND (a Rebolism) while RT was REPEAT with RN as RETURN.  Shifting this to RPN for REPEND and RP for REPEAT with RT as RETURN seeming more natural.  Ree-Peet lines up better with RP than the implied Repea-Tuh of RT, as does Ruh-Turn more suggest RT instead of Ruhtur-Nuh of RN.  This is a subjective issue and has been evolving as the dialect and philosophy stabilize.
+
+A tough example of a naming choice was the decision to abbreviate CY for COPY and CP for COPY/PART.  While having a shorter name for the very useful COPY/PART is helpful for golfing, it doesn't necessarily teach Rebol as well as CP and CPP would: which reflects the additive nature of refinements and doesn't introduce a seemingly arbitrary difference in abbreviation.  In this case, the compromise was to default C to COPY and have CY be only a "fallback" you use if you overwrite C for your own variable use.  This makes the CP seem a less arbitrary abbreviation "out of the box".
+
+Other examples like this are being contemplated and shifted as the design matures...so expect some churn.
 
 
 ### "MUSHING" ###
@@ -176,7 +182,7 @@ It can help to find errors by using the feature that shows you the unmushed vers
 
 A prerequisite to using Rebmu is to know some Rebol or [Red](http://red-lang.org).  If you're looking for help on golfing with Rebmu, please join the [Rebol and Red StackOverflow chat room](http://chat.stackoverflow.com/rooms/291/rebol-and-red)!  You might also want to refer to the [Rebol Bookmarks](https://trello.com/b/PtKS3RfJ/rebol-bookmarks) Trello board, which is a new community project to assemble articles and resources on the language.
 
-The main place where the Code Golf problems are studied are on the [Code Golf StackExchange](http://codegolf.stackexchange.com/).
+The main place where the Code Golf problems are studied are on the [Code Golf StackExchange](http://codegolf.stackexchange.com/).  As a general rule, if you are going to post a Rebmu solution that is not substantially different from your Rebol answer (or an existing one) then just put it in the same answer...and present both counts in the header.  *(For instance **Rebmu: 20 chars, Rebol: 80 chars**)*  If it's someone else's Rebol answer, then add the Rebmu form as a comment or suggested edit.
 
 Feel free to bring up any ideas also, on the [Rebmu GitHub issue tracker](https://github.com/hostilefork/rebmu/issues).
 
