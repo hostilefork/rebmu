@@ -30,6 +30,10 @@ lower: charset [#"a" - #"z"]
 digit: charset [#"0" - #"9"]
 symbol: charset [#"!" #"?" #"^^" #"|" #"*" #"+" #"-" #"~" #"&" #"=" #"." #"`"]
 
+;-- WARNING... until the LIT-WORD! value decay problem is fixed, you might
+;-- get a LIT-WORD! back from this, and to prevent the decay you need to
+;-- use a get-word! on the result.  :-/  This has been patched in Red but
+;-- yet to be integrated into Rebol.
 unmush: function [
     {Take any Rebol symbol or structure, and recursively apply a decoding
     known as "unmushing" on it...where the usage of capital letters cues
@@ -154,7 +158,7 @@ unmush: function [
             ] ]
 
             either 1 = length? result [
-                return result/1
+                return :result/1
             ] [
                 return result
             ]
@@ -185,13 +189,13 @@ unmush: function [
                 unmushed: unmush pos/1
                 next-path-symbol: none
 
-                either block? unmushed [
+                either block? :unmushed [
                     if temp-path [
                         ;
                         ; the last element of this block becomes the head of our working
                         ; path, and we're done constructing it so add to the result
                         ;
-                        insert temp-path take/last unmushed
+                        insert temp-path take/last :unmushed
                         insert/only result temp-path
                         temp-path: none
                     ]
@@ -200,36 +204,36 @@ unmush: function [
                         ; any blocks not at the beginning create discontinuity,
                         ; and their first element is the last element of some path
                         ;
-                        next-path-symbol: take unmushed
+                        next-path-symbol: take :unmushed
                     ] 
                     ;
                     ; any symbols left over in the block after the above two
                     ; checks aren't parts of a path, so insert them as-is
                     ; 
-                    insert result unmushed
+                    insert result :unmushed
                 ] [
                     ;
                     ; If the unmush didn't return a block, then just consider its
                     ; symbol to be the next element for the path in progress
                     ; 
-                    next-path-symbol: unmushed
+                    next-path-symbol: :unmushed
                 ]
 
                 ;
-                ; Add the next symbol to the inn-progress path if applicable.
+                ; Add the next symbol to the in-progress path if applicable.
                 ; Create the path if necessary, using the type of the symbol to
                 ; cue whether it needs to be a SET-PATH! or a PATH!
                 ;
-                if next-path-symbol [
+                if :next-path-symbol [
                     if not temp-path [
-                        either set-word? next-path-symbol [
+                        either set-word? :next-path-symbol [
                             temp-path: make set-path! []
-                            next-path-symbol: to word! next-path-symbol
+                            next-path-symbol: to word! :next-path-symbol
                         ] [
                             temp-path: make path! []
                         ]
                     ]
-                    insert temp-path next-path-symbol
+                    insert/only temp-path :next-path-symbol
                 ]
 
                 ;
@@ -249,7 +253,7 @@ unmush: function [
             ]
 
             either 1 = length? result [
-                return result/1
+                return :result/1
             ] [
                 return result
             ]
@@ -263,16 +267,17 @@ unmush: function [
         any-block? value [
             result: make type? value []
             foreach elem value [
-                unmushed: unmush elem
+                unmushed: unmush :elem
                 either all [
-                    not block? elem
-                    block? unmushed
+                    not block? :elem
+                    block? :unmushed
                 ] [
-                    append result unmushed 
+                    append result :unmushed 
                 ] [
-                    append/only result unmushed
+                    append/only result :unmushed
                 ]
             ]
+
             return result
         ]
     ]
@@ -280,5 +285,5 @@ unmush: function [
     ;
     ; String literals and other types are currently returned as-is
     ;
-    return value
+    return :value
 ]
