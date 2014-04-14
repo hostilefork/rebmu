@@ -374,7 +374,7 @@ rebmu-context: [
     DD: :divide
     NG: :negate-mu
     Z?: :zero?
-    MO: :mod
+    MO: :mod ;-- would MD be better to distinguish from ML MOLD
     =~: :equal?
 
     ; LG was originally used for type naming in logic, which isn't technically
@@ -390,6 +390,10 @@ rebmu-context: [
     LG2: :log-2
     LGE: :log-e
     LG: :LG10
+
+    ; ** is the infix power operator, but infix is sometimes not what you
+    ; want so Rebol also has power as a prefix variant
+    PW: :power
 
     ; I'm not entirely sure about the fate of tokens ending in a single
     ; tilde.  Rebol's default AND/OR/XOR are infix, and the prefix versions
