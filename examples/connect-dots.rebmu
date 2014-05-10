@@ -76,13 +76,16 @@ Ca|[nxSKpcMscAbkFSa]
 
 ; k defaults to 0 in Rebmu.	 we loop through all the numbers up front and
 ; gather their coordinate pairs into a list called g
-w[Jd++K][rpnoG[xJyJ]]
+w[Jd++KrpnoG[xJyJ]]
 
 ; b is the (b)eginning coordinate pair for our stroke, we get it from g and
 ; advance g's iteration position (f+="first+")
 Bf+G
 
-wB[
+w[
+	; condition we are checking
+	b
+
 	; j is the iterator position of the beginning stroke
 	JcB
 	

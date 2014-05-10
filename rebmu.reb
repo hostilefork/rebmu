@@ -33,8 +33,7 @@ Rebol [
         were added in Rebol 3.  You can use these in your Rebmu programs
         but they will only work if using Rebmu with an r3 interpreter.
         Also did several name tweaks like instead of AA for AND~ it's
-        now A~ along with other consistencies (IT -> if-true,
-        WT -> while-true, UT -> unless true).}]
+        now A~ along with other consistencies.}]
 
         0.5.0 [16-Feb-2014 {Version bump to indicate growing maturity
         of the language.  Abandon Rebol 2 support.  Rebmu files now
@@ -220,7 +219,6 @@ rebmu-context: [
     RME: :remove-each-mu
     FA: :forall
     LP: :loop
-    WT: :while-true?-mu
     WG: :while-greater?-mu
     WL: :while-lesser?-mu
     WGE: :while-greater-or-equal?-mu
@@ -232,6 +230,8 @@ rebmu-context: [
     UT: :until
     RP: :repeat
     FV: :forever
+    WH: :while
+    WI: :whilst ;-- rethink all these while contractions (WS, whitespace?)
 
     ;----------------------------------------------------------------------
     ; DEFINING FUNCTIONS
@@ -654,7 +654,7 @@ rebmu-context: [
     t: :TO ; note that to can use example types, e.g. t "foo" 10 is "10"!
     u: :UT ; "until"
     v: copy [] ; "vector"
-    w: :WT ; "while-true?-mu"
+    w: :WI ; "whilst", single arity while
     ; decimal! values starting at 0.0 (common mathematical variables)
     x: 0.0
     y: 0.0

@@ -89,31 +89,13 @@ redefine-mu: func ['dest 'source] [
     set :dest get :source
 ]
 
-do-mu: function [
-    {Like Rebol's DO but does not interpret string literals as loadable code.}
-    value
-] [
-    switch/default type?/word :value [
-        block! [return do value]
-        word! [
-            temp: get value
-            either (function? temp) or (native? temp) [
-                return do temp
-            ] [
-                return temp
-            ]
-        ]
-    ] [
-        return :value
-    ]
-]
-
 if-greater?-mu: function [
     value1
     value2
     true-branch
 ] [
-    if greater? value1 value2 true-branch
+    if greater? value1 value2
+        true-branch
 ]
 
 if-unequal?-mu: function [
@@ -121,7 +103,8 @@ if-unequal?-mu: function [
     value2
     true-branch
 ] [
-    if not-equal? value1 value2 true-branch
+    if not-equal? value1 value2
+        true-branch
 ]
 
 if-equal?-mu: func [
@@ -129,14 +112,16 @@ if-equal?-mu: func [
     value2
     true-branch
 ] [
-    if equal? value1 value2 true-branch
+    if equal? value1 value2
+        true-branch
 ]
 
 if-zero?-mu: func [
     value
     true-branch
 ] [
-    if zero? value true-branch
+    if zero? value
+        true-branch
 ]
 
 if-lesser?-mu: func [
@@ -144,14 +129,16 @@ if-lesser?-mu: func [
     value2
     true-branch
 ] [
-    if lesser? value1 value2 true-branch
+    if lesser? value1 value2
+        true-branch
 ]
 
 unless-zero?-mu: func [
     value
     false-branch
 ] [
-    unless zero? value false-branch
+    unless zero? value
+        false-branch
 ]
 
 either-zero?-mu: func [
@@ -159,7 +146,9 @@ either-zero?-mu: func [
     true-branch
     false-branch
 ] [
-    either zero? value true-branch false-branch
+    either zero? value
+        true-branch
+        false-branch
 ]
 
 either-greater?-mu: func [
@@ -168,7 +157,9 @@ either-greater?-mu: func [
     true-branch
     false-branch
 ] [
-    either greater? value1 value2 true-branch false-branch
+    either greater? value1 value2
+        true-branch
+        false-branch
 ]
 
 either-lesser?-mu: func [
@@ -177,7 +168,9 @@ either-lesser?-mu: func [
     true-branch
     false-branch
 ] [
-    either lesser? value1 value2 true-branch false-branch
+    either lesser? value1 value2
+        true-branch
+        false-branch
 ]
 
 either-equal?-mu: func [
@@ -186,7 +179,9 @@ either-equal?-mu: func [
     true-branch
     false-branch
 ] [
-    either equal? value1 value2 true-branch false-branch
+    either equal? value1 value2
+        true-branch
+        false-branch
 ]
 
 either-unequal?-mu: func [
@@ -195,68 +190,63 @@ either-unequal?-mu: func [
     true-branch
     false-branch
 ] [
-    either not-equal? value1 value2 true-branch false-branch
-]
-
-while-true?-mu: function [
-    'cond-param
-    'body-param
-] [
-    while [do-mu cond-param] [do-mu body-param]
+    either not-equal? value1 value2
+        true-branch
+        false-branch
 ]
 
 while-greater?-mu: function [
     value1
     value2
-    'cond-param
-    'body-param
+    body-param
 ] [
-    while [greater? value1 value2 do-mu cond-param] [do-mu body-param]
+    while [greater? value1 value2]
+        body-param
 ]
 
 while-lesser-or-equal?-mu: function [
     value1
     value2
-    'cond-param
-    'body-param
+    body-param
 ] [
-    while-mu [lesser-or-equal? value1 value2 do-mu cond-param] [do-mu body-param]
+    while [lesser-or-equal? value1 value2]
+        body-param
 ]
 
 while-greater-or-equal?-mu: function [
     value1
     value2
-    'cond-param
-    'body-param
+    body-param
 ] [
-    while [greater-or-equal? value1 value2 do-mu cond-param] [do-mu body-param]
+    while [greater-or-equal? value1 value2]
+        body-param
 ]
 
 while-lesser?-mu: function [
     value1
     value2
-    'cond-param
-    'body-param
+    body-param
 ] [
-    while-mu [lesser? value1 value2 do-mu cond-param] [do-mu body-param]
+    while [lesser? value1 value2]
+        body-param
 ]
 
 while-equal?-mu: function [
     value1
     value2
-    'cond-param
-    'body-param
+    body-param
 ] [
-    while [equal? value1 value2 do-mu cond-param] [do-mu body-param]
+    while [equal? value1 value2 cond-param]
+        body-param
 ]
 
 while-unequal?-mu: function [
     value1
     value2
-    'cond-param
-    'body-param
+    body-param
 ] [
-    while [not-equal? value1 value2 do-mu cond-param] [do-mu body-param]
+    while [not-equal? value1 value2 cond-param]
+        body-param
 ]
 
 make-matrix-mu: function [columns value rows] [

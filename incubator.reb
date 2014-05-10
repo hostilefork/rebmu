@@ -49,3 +49,16 @@ combine: func [
         append (make block! length? block) flatten block
     ]
 ]
+
+; A single-arity while (analogue of UNTIL but where the condition is
+; checked before the rest of the code is executed).  A far better
+; option than the previous WHILE-MU, hopefully to be blessed by the
+; core as useful in its own right.  See CureCode:
+;
+; http://curecode.org/rebol3/ticket.rsp?id=2146&cursor=1
+;
+whilst: func [cond+code [block!] /local code] [
+    while [do/next cond+code 'code] [
+        do code
+    ]
+]
