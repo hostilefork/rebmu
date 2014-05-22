@@ -375,7 +375,7 @@ rebmu-context: [
     NG: :negate-mu
     Z?: :zero?
     MO: :mod ;-- would MD be better to distinguish from ML MOLD
-    =~: :equal?
+    E?: :equal?
 
     ; LG was originally used for type naming in logic, which isn't technically
     ; a conflict but a bit confusing; taking LC for that to avoid another
