@@ -176,6 +176,7 @@ rebmu-context: [
     ;----------------------------------------------------------------------
 
     TW: :to-word-mu
+    TSW: :to-set-word
     TS: :to-string-mu
     TC: :to-char-mu
     TB: :to-block
