@@ -8,22 +8,23 @@ Rebol [
     History: [
         0.1.0 [14-Jul-2014 {First pass at a Mushing function. Limited scope:
 
-        * Only takes a block! for an argument, returns a string
+        * Returns a string
         * Does not discern word structure e.g. for separate handling of
           words with numbers or symbols
         * Few special cases for minimizing space between two values
         * Uses MOLD and not MOLD/ALL
+        * Does not replace Rebol words with their RebMu counterpart
         * NOT RIGOROUSLY TESTED}]
     ]
 ]
 
 mush: function [
     {Applies Mushing to a Block}
-    source [block!] {Block to be Mushed}
+    source [any-type!] {Block to be Mushed}
     ; /local rule value space last-type lower? mark
 ][
     rejoin collect [
-        unless parse source rule: [
+        unless parse reduce [source] rule: [
             (
                 space: ""
                 last-type: none
@@ -87,10 +88,19 @@ mush: function [
                         unless any [
 
                             ; Exceptions
-                            all [
-                                last-type = set-word! any [
-                                    number? value
-                                    tag? value
+                            case [
+                                last-type = set-word! [
+                                    any [
+                                        number? value
+                                        string? value
+                                        tag? value
+                                    ]
+                                ]
+                                last-type = word! [
+                                    any [
+                                        string? value
+                                        tag? value
+                                    ]
                                 ]
                             ]
                         ][keep space]
