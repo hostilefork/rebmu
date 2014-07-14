@@ -50,15 +50,15 @@ mush: function [
                 |
                 words
                 |
-                set value skip (keep value)
+                set value skip (keep :value)
             ]
         ]
     ] make type? source length? source
 ]
 
 mold-compact: function [
-    {Applies Mushing to a Block}
-    source [any-type!] {Block to be Mushed}
+    {Converts a value to a Rebol-readable string (compact)}
+    source [any-type!] {The value to mold}
     /only {For a block value, mold only its contents, no outer []}
 ][
     rejoin collect [
@@ -122,7 +122,7 @@ mold-compact: function [
                             ]
                         ][keep space]
 
-                        keep mold value
+                        keep mold :value
                         space: either any [
 
                             ; Exceptions
