@@ -19,12 +19,50 @@ Rebol [
 ]
 
 mush: function [
+    {Mushes words in a block}
+    source [any-block!] {Block containing words to be mushed}
+][
+    head collect/into [
+        words: either any-path? source [
+            [set value [set-word! | word!] (keep value)]
+        ][
+            [
+                copy value [set-word! any word! | some word!] (
+                    lower?: true
+
+                    keep to word! rejoin collect [
+                        if set-word? value/1 [
+                            keep uppercase mold to word! take value
+                        ]
+
+                        foreach word value [
+                            keep either lower? [lowercase mold word][uppercase mold word]
+                            lower?: not lower?
+                        ]
+                    ]
+                )
+            ]
+        ]
+
+        parse source [
+            any [
+                set value any-block! (keep/only mush value)
+                |
+                words
+                |
+                set value skip (keep value)
+            ]
+        ]
+    ] make type? source length? source
+]
+
+mold-compact: function [
     {Applies Mushing to a Block}
     source [any-type!] {Block to be Mushed}
-    ; /local rule value space last-type lower? mark
+    /only {For a block value, mold only its contents, no outer []}
 ][
     rejoin collect [
-        unless parse reduce [source] rule: [
+        unless parse either only [source][reduce [source]] rule: [
             (
                 space: ""
                 last-type: none
@@ -58,27 +96,6 @@ mush: function [
                         keep ")"
                         space: ""
                         last-type: paren!
-                    )
-                ]
-
-                | ; Words and Set-Words: space before, space after, no space between
-                [
-                    copy value [set-word! any word! | some word!] (
-                        lower?: true
-                        keep space
-
-                        if set-word? value/1 [
-                            keep uppercase mold to word! take value
-                            last-type: set-word!
-                        ]
-
-                        foreach word value [
-                            keep either lower? [lowercase mold word][uppercase mold word]
-                            lower?: not lower?
-                            last-type: word!
-                        ]
-
-                        space: " "
                     )
                 ]
 
@@ -116,7 +133,11 @@ mush: function [
                 ]
             ]
         ][
-            keep "<< Mush Error"
+            keep "<< Mold-Compact Error"
         ]
     ]
+]
+
+mush-and-mold: function [value [any-block!] /only][
+    apply :mold-compact [mush value only]
 ]
