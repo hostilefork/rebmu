@@ -138,6 +138,6 @@ mold-compact: function [
     ]
 ]
 
-mush-and-mold: function [value [any-block!] /only][
+mush-and-mold-compact: function [value [any-block!] /only][
     apply :mold-compact [mush value only]
 ]

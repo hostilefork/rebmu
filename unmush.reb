@@ -1,5 +1,5 @@
 Rebol [
-    Title: "Mushing Routines"
+    Title: "Unmushing Routine"
 
     Author: "Dr. Rebmu"
     Home: http://rebmu.rebol.net/
@@ -9,19 +9,22 @@ Rebol [
     Version: 0.3.0
 
     ; Header conventions: http://www.rebol.org/one-click-submission-help.r
-    File: %mushing.reb
+    File: %unmush.reb
     Type: dialect
     Level: advanced
 
     Description: {
     See README.md in GitHub for the workings of mushing.
 
-    This file might be expanded to include an automatic mushing routine, so
-    that you could write ordinary Rebol code and have it mushed for you.
+    See mush.reb for an automatic musher (work in progress).  
+
     However, it is important to bear in mind that the point of Rebmu
     is to provide a language which despite achieving a low character
     count is still fairly feasible to code in without using an assistive
-    mechanical preprocessor or compiler.
+    mechanical preprocessor or compiler.  Err on the side of using 
+    mush as a runtime tool in the problem solution itself (such as for
+    writing quines)... *not* as a crutch to write your code as Rebol
+    first, then convert it!  You're missing out on the fun, then.  :-)
     }
 ]
 

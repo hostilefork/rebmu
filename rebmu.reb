@@ -46,15 +46,29 @@ Rebol [
     ]
 ]
 
-; Load the library implementing mush/unmush
-do %mushing.reb
+; Load the modules implementing mush/unmush
+
+do %mush.reb
+do %unmush.reb
+
 
 ; Helpful functions that aren't mainline Rebol/Red but may be slated to be
+
 do %incubator.reb
+
 
 ; Load the library of xxx-mu functions; tricks that are specific to Rebmu
 ; and would not seriously find their way into Rebol/Red mainline
+;
+; NOTE: While originally there was a tendency to be liberal with these,
+; they are being excised as they can sort of be seen as interfering with
+; Rebmu's main mission, which is to teach/evangelize Rebol and Red
+; dialecting.  A trick just for the sake of helping win code golf that
+; does not really assist with that (or worse, inhibits learning the 
+; languages proper) should be included sparingly--if at all
+
 do %mulibrary.reb
+
 
 rebmu-context: [
     ;----------------------------------------------------------------------
@@ -226,13 +240,17 @@ rebmu-context: [
     WLE: :while-lesser-or-equal?-mu
     WE: :while-equal?-mu
     WU: :while-unequal?-mu
-    CN: :continue
-    BR: :break
     UT: :until
     RP: :repeat
     FV: :forever
     WH: :while
     WI: :whilst ;-- rethink all these while contractions (WS, whitespace?)
+
+    CN: :continue
+    BR: :break
+    TY: :try
+    CC: :catch
+    AM: :attempt
 
     ;----------------------------------------------------------------------
     ; DEFINING FUNCTIONS
@@ -350,7 +368,7 @@ rebmu-context: [
 
     CO: :compose
     COD: rebmu-wrap 'compose/deep [value]
-    ML: :mold
+    MO: :mush-and-mold-compact
     DR: :rebmu ; "Do Rebmu"
     JN: :join
     RE: :reduce
@@ -359,6 +377,7 @@ rebmu-context: [
     RPNO: rebmu-wrap 'repend/only [series value]
     CT: :collect-mu
     LD: :load
+    LDA: rebmu-wrap 'load/all [source]
     CB: :combine
     CBW: rebmu-wrap 'combine/with [block delimiter]
     CBA: rebmu-wrap 'combine/all [block]
@@ -375,7 +394,7 @@ rebmu-context: [
     DD: :divide
     NG: :negate-mu
     Z?: :zero?
-    MO: :mod ;-- would MD be better to distinguish from ML MOLD
+    MD: :mod
     E?: :equal?
 
     ; LG was originally used for type naming in logic, which isn't technically
