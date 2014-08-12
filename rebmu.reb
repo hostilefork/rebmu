@@ -251,6 +251,8 @@ rebmu-context: [
     TY: :try
     CC: :catch
     AM: :attempt
+    QT: :quit
+    QTN: rebmu-wrap 'quit/now []
 
     ;----------------------------------------------------------------------
     ; DEFINING FUNCTIONS
@@ -768,22 +770,19 @@ rebmu: function [
         code: to-block code
     ]
 
+
+    code: unmush (code)
+
+    if debug [
+        print ["Executing:" mold code]
+    ]
+
     if stats [
         print [
             "Rebmu as mushed Rebol block molds to:"
             length? mold/only code
             "characters."
         ]
-    ]
-
-    code: unmush code
-
-    if stats [
-        print ["Unmushed Rebmu molds to:" length? mold/only code "characters."]
-    ]
-
-    if debug [
-        print ["Executing:" mold code]
     ]
 
     either inject [
