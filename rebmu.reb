@@ -69,8 +69,33 @@ do %incubator.reb
 
 do %mulibrary.reb
 
+; returns a block of definitions to include in the context
+remap-datatype: function [type [datatype!] shorter [string!] /noconvert] [
+    stem: head remove back tail to-string to-word type
+    result: reduce [
+        load rejoin [shorter "!" ":"] load rejoin [":" stem "!"]
+        load rejoin [shorter "?" ":"] load rejoin [":" stem "?"]
+    ]
+    unless noconvert [
+        append result reduce [
+            load rejoin [shorter "-" ":"] load rejoin [":" "to-" stem]
+        ]
+    ]
+    bind result system/contexts/user
+]
 
-rebmu-context: [
+
+; A rebmu wrapper lets you wrap a refinement
+; need to write generalization of spec capture with reflect, e.g.
+; spec: reflect :arg 'spec
+rebmu-wrap: function [refined [path!] args [block!]] [
+    func args compose [
+        (refined) (args)
+    ]
+]
+
+
+rebmu-base-context: object compose [
     ;----------------------------------------------------------------------
     ; WHAT REBOL DEFINES BY DEFAULT IN THE TWO-CHARACTER SPACE
     ;----------------------------------------------------------------------
@@ -251,8 +276,18 @@ rebmu-context: [
     TY: :try
     CC: :catch
     AM: :attempt
-    QT: :quit
-    QTN: rebmu-wrap 'quit/now []
+
+    ; There is debate on whether QUIT of a nested script should quit the
+    ; caller or not.  This debate seems to have been resolved with the
+    ; addition of CATCH/QUIT, which means that if you call a nested script
+    ; that quits and you don't want it to *actually* quit...that's the
+    ; caller's responsibility.  Also, the need for a "more quittier quit
+    ; than quit" called QUIT/NOW is suspect.  Hence Rebmu is leading the
+    ; way by making QT abbreviate what is known as QUIT/NOW and not
+    ; offering a non-now-version of QUIT.  Hopefully Rebol3 and Red will
+    ; follow suit and ditch NOW.
+
+    QT: rebmu-wrap 'quit/now []
 
     ;----------------------------------------------------------------------
     ; DEFINING FUNCTIONS
@@ -371,14 +406,12 @@ rebmu-context: [
     CO: :compose
     COD: rebmu-wrap 'compose/deep [value]
     MO: :mush-and-mold-compact
-    DR: :rebmu ; "Do Rebmu"
     JN: :join
     RE: :reduce
     RPN: :repend
     RJ: :rejoin
     RPNO: rebmu-wrap 'repend/only [series value]
     CT: :collect-mu
-    LD: :load
     LDA: rebmu-wrap 'load/all [source]
     CB: :combine
     CBW: rebmu-wrap 'combine/with [block delimiter]
@@ -683,28 +716,6 @@ rebmu-context: [
     z: 0.0
 ]
 
-remap-datatype: function [type [datatype!] shorter [string!] /noconvert] [
-    stem: head remove back tail to-string to-word type
-    do load rejoin [
-        shorter "!: :" stem "! "
-        shorter "?: :" stem "? "
-    ]
-    unless noconvert [
-        do load rejoin [
-            shorter "-: :to-" stem
-        ]
-    ]
-    none ; don't return do result
-]
-
-; A rebmu wrapper lets you wrap a refinement
-; need to write generalization of spec capture with reflect, e.g.
-; spec: reflect :arg 'spec
-rebmu-wrap: function [refined [path!] args [block!]] [
-    func args compose [
-        (refined) (args)
-    ]
-]
 
 rebmu: function [
     {Visit http://hostilefork.com/rebmu/}
@@ -723,6 +734,11 @@ rebmu: function [
     /inject injection [block! string!]
         {Run some test code in the environment after main function}
 ] [
+    ; block is sneaky way to make a "static" variable
+    statics: [
+        context: #[none] ;-- none would not be reduced...
+    ]
+
     case [
         string? code [
             if stats [
@@ -767,7 +783,7 @@ rebmu: function [
     ]
 
     unless block? code [
-        code: to-block code
+        code: compose/only [(code)]
     ]
 
 
@@ -811,16 +827,69 @@ rebmu: function [
         arg: copy []
     ]
 
-    ; if we were only targeting Rebol3 this could be "obj: object ..."
-    obj: make object! compose/deep [
-        (compose rebmu-context)
-        (arg)
-        main: func [] [(code)]
-        injection: func [] [(injection)]
-    ]
-    either env [
-        return obj
+    ; see https://github.com/hostilefork/rebmu/issues/7
+    ; We track the outermost Rebmu context via a variable in the user context.
+    ; This allows us to effectively create a "new" user context holding all
+    ; the Rebmu overrides.
+
+    outermost: none? statics/context
+
+    either outermost [
+        context: copy rebmu-base-context
+
+        args-reduced: reduce args
+        foreach key args-reduced [
+            extend context key args-reduced/(key)
+        ]
+
+        ; Rebmu's own behavior replaces DO, no /NEXT support yet
+        extend context 'do func [value] [
+            either string? value [
+                rebmu value
+            ] [
+                do value
+            ]
+        ]
+
+        ; When we load, we want default binding to override with this context
+        ; over system/contexts/user
+
+        rebmu-load: func [source] compose [
+            bind load source (context)
+        ]
+
+        extend context 'load :rebmu-load
+        extend context 'ld :rebmu-load
+
+        statics/context: context
     ] [
-        return also (do get in obj 'main) (do get in obj 'injection)
+        context: statics/context
     ]
+            
+    bind code context
+    bind injection context
+
+    if env [
+        return context
+    ]
+
+    set/any 'result try [
+        do injection
+        do code
+    ]
+    
+    ; If we exit the last "Rebmu user" context, then reset it to none
+    if outermost [
+        statics/context: none
+    ]
+
+    if unset? :result [
+        exit
+    ]
+
+    if error? :result [
+        do :result
+    ]
+
+    :result
 ]
