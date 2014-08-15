@@ -416,7 +416,6 @@ rebmu-base-context: object compose [
     CB: :combine
     CBW: rebmu-wrap 'combine/with [block delimiter]
     CBA: rebmu-wrap 'combine/all [block]
-    FL: :flatten
 
     ;----------------------------------------------------------------------
     ; MATH AND LOGIC OPERATIONS
