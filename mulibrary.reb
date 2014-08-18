@@ -403,24 +403,26 @@ increment-mu: func ['word-or-path] [
     ;-- Has to be a FUNC to set in callers environment...
     ;-- ...or could we leverage the caller's binding?
 
-    either path? :word-or-path [
-        old: get :word-or-path
-        set :word-or-path add-mu old 1
-    ] [
-        set word-or-path add-mu get :word-or-path 1 
-    ]
+    also get :word-or-path (
+        either path? :word-or-path [
+            set :word-or-path add-mu old 1
+        ] [
+            set word-or-path add-mu get :word-or-path 1 
+        ]
+    )
 ]
 
-decrement-mu: func ['word-or-path] [
+decrement-mu: func ['word-or-path ] [
     ;-- Has to be a FUNC to set in callers environment...
     ;-- ...or could we leverage the caller's binding?
 
-    either path? :word-or-path [
-        old: :word-or-path
-        set :word-or-path subtract-mu old 1
-    ] [
-        set word-or-path subtract-mu get :word-or-path 1
-    ]
+    also get :word-or-path (
+        either path? :word-or-path [
+            set :word-or-path subtract-mu old 1
+        ] [
+            set word-or-path subtract-mu get :word-or-path 1
+        ]
+    )
 ]
 
 readin-mu: func [
