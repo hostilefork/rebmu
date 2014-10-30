@@ -7,18 +7,12 @@ Rebol [
         "language", the intention is not to achieve a low symbol count at the
         cost of creating something that is incompatible with Rebol.
 
-        For instance: it might be expedient in Code Golf to have the conditonal
-        logic treat 0 as a "false" condition.  But since Rebol's IF treats 0
-        as true, we do too.  On the other hand, IT (if-true?-mu, aliased to I)
-        *does* accept words and constants in its true-clause block. Rebol would
-        throw an error on such constructs, so a Rebmu program which ascribes
-        meaning to that is forwards compatible with existing Rebol programming
-        knowledge.
-
-        Ultimately, Code Golf cannot be played with a language and library
-        set that is allowed to expand during a competition.  So the Rebmu
-        library will have to stabilize into a fixed set at some point - likely
-        including many matrix operations.
+        In Rebmu's development it has shifted away from "weird" single-
+        character tools designed specifically for code golf, and is focusing
+        more on balance and readability of good practices in Rebol and Red.
+        Items are being removed from the MU-library and turned into proper
+        proposals for the languages themselves when the function is genuinely
+        useful to have around.
     }
 ]
 
@@ -58,7 +52,6 @@ to-char-mu: function [
     ] [
         to-char value
     ]
-
 ]
 
 to-word-mu: function [value] [
@@ -275,29 +268,6 @@ make-integer-mu: function [value] [
     ]
 ]
 
-; helpful is a special routine that quotes its argument and lets you pick from
-; common values.  for instance helpful-mu d gives you a charaset of digits.
-; Passing an integer into helpful-mu will just call make-integer-mu.  This is
-; just an exploration of using this concept to shorten code.
-helpful-mu: function ['arg] [
-    switch/default type?/word :arg [
-        word! [
-            switch/default arg [
-                b: [0 1] ; binary digits
-                d: charset [#"0" - #"9"] ; digits charset
-                h: charset [#"0" - #"9" #"A" - "F" #"a" - #"f"] ; hex charset
-                u: charset [#"A" - #"Z"] ; uppercase
-                l: charset [#"a" - #"z"] ; lowercase
-            ]
-        ]
-        ; Are there better ways to handle this?
-        ; h2 for instance is no shorter than 20
-        integer! [make-integer-mu arg]
-        pair! [make-integer-mu arg]
-    ] [
-        throw "Unhandled parameter to helpful-mu"
-    ]
-]
 
 ; An "a|funct" is a function that takes a single parameter called a, you only
 ; need to supply the code block.  obvious extensions for other letters.  The
@@ -441,18 +411,6 @@ readin-mu: func [
     ] [
         throw "Unhandled type to readin-mu"
     ]
-]
-
-writeout-mu: function [
-    {Analogue to Rebol's print except tailored to Code Golf scenarios}
-    value
-] [
-    ; better implementation coming, maybe.  Have to think.
-    ; had a matrix printer but abandoned it for Rebol's default
-    ; starting to think that w should start as "while" as reading input
-    ; and writing it out is not something that necessarily needs a small
-    ; character space
-    print value
 ]
 
 ; Don't think want to call it not-mu because we probably want a more powerful

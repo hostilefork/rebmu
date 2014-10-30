@@ -28,11 +28,6 @@ Rebol [
     }
 ]
 
-upper: charset [#"A" - #"Z"]
-lower: charset [#"a" - #"z"]
-digit: charset [#"0" - #"9"]
-symbol: charset [#"!" #"?" #"^^" #"|" #"*" #"+" #"-" #"~" #"&" #"=" #"." #"`"]
-
 ;-- WARNING... until the LIT-WORD! value decay problem is fixed, you might
 ;-- get a LIT-WORD! back from this, and to prevent the decay you need to
 ;-- use a get-word! on the result.  :-/  This has been patched in Red but
@@ -44,6 +39,11 @@ unmush: function [
     characters inside a single symbol into separate symbols.}
     value [any-type!]
 ] [
+    upper: charset [#"A" - #"Z"]
+    lower: charset [#"a" - #"z"]
+    digit: charset [#"0" - #"9"]
+    symbol: charset [#"!" #"?" #"^^" #"|" #"*" #"+" #"-" #"~" #"&" #"=" #"." #"`"]
+
     case [
         any-word? :value [
             ;

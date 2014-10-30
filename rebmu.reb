@@ -69,6 +69,7 @@ do %incubator.reb
 
 do %mulibrary.reb
 
+
 ; returns a block of definitions to include in the context
 remap-datatype: function [type [datatype!] shorter [string!] /noconvert] [
     stem: head remove back tail to-string to-word type
@@ -205,6 +206,7 @@ rebmu-base-context: object compose [
 
     ; there is no "to-none" operation in Rebol, all other datatypes have it...
     (remap-datatype/noconvert none! "nn")
+    (remap-datatype/noconvert unset! "un")
 
     ;----------------------------------------------------------------------
     ; TYPE CONVERSION SHORTHANDS
@@ -334,12 +336,11 @@ rebmu-base-context: object compose [
     PO: :poke
     PC: :pick
     AP: :append
-    AO: rebmu-wrap 'append/only [series value] ; very useful
+    APO: rebmu-wrap 'append/only [series value]
     IS: :insert ; IN is a keyword
-    IA: :insert-at-mu ; "ISat" or "isAT" are long
-    IO: rebmu-wrap 'insert/only [series value]
-    IP: rebmu-wrap 'insert/part [series value length]
-    IPO: rebmu-wrap 'insert/part/only [series value length]
+    ISO: rebmu-wrap 'insert/only [series value]
+    ISP: rebmu-wrap 'insert/part [series value length]
+    ISPO: rebmu-wrap 'insert/part/only [series value length]
     TK: :take
     MNO: :minimum-of
     MXO: :maximum-of
@@ -382,6 +383,7 @@ rebmu-base-context: object compose [
     T?: :tail?
     H?: :head?
     M?: :empty?
+    V?: :value?
 
     FS: :first ; FR might be confused with fourth
     SC: :second
@@ -416,7 +418,8 @@ rebmu-base-context: object compose [
     LDA: rebmu-wrap 'load/all [source]
     CB: :combine
     CBW: rebmu-wrap 'combine/with [block delimiter]
-    CBA: rebmu-wrap 'combine/all [block]
+
+    QO: :quote
 
     ;----------------------------------------------------------------------
     ; MATH AND LOGIC OPERATIONS
@@ -483,7 +486,7 @@ rebmu-base-context: object compose [
     N?: func [val] [not true? val] ; can be useful
     MN: :min
     MX: :max
-    AN: :any
+    AY: :any
     AL: :all
 
     ; to-integer (TI) always rounds down.  A "CEIL" operator is useful,
@@ -509,10 +512,9 @@ rebmu-base-context: object compose [
     RD: :read
     WR: :write
     PR: :print
-    PN: :prin
+    PRO: rebmu-wrap 'print/only [value]
     PB: :probe
     RI: :readin-mu
-    WO: :writeout-mu
     RL: rebmu-wrap 'read/lines [source]
     NL: :newline
 
@@ -539,11 +541,11 @@ rebmu-base-context: object compose [
     ; tildes looked better.
     ;----------------------------------------------------------------------
 
-    CY: :copy
+    CP: :copy
     MK: :make
-    CYD: rebmu-wrap 'copy/deep [value]
-    CP: rebmu-wrap 'copy/part [value]
-    CPD: rebmu-wrap 'copy/part/deep [value]
+    CPD: rebmu-wrap 'copy/deep [value]
+    CPP: rebmu-wrap 'copy/part [value]
+    CPPD: rebmu-wrap 'copy/part/deep [value]
 
     A~: :array
     AI~: rebmu-wrap 'array/initial [size value]
@@ -561,15 +563,24 @@ rebmu-base-context: object compose [
 
     AS: :also
     NN: :none
-    HM: :helpful-mu
     ST: :set
     GT: :get
     RF: :redefine-mu
     EN: :encode
     SWP: :swap-exchange-mu
-    FR: :format
+    FM: :format
     OS: :onesigned-mu
     SP: :space
+
+    WS: :whitespace
+    DG: :digit
+    DGH: rebmu-wrap 'digit/hex []
+    DGHU: rebmu-wrap 'digit/hex/uppercase []
+    DGHL: rebmu-wrap 'digit/hex/lowercase []
+    DGB: rebmu-wrap 'digit/binary []
+    LT: :letter
+    LTU: rebmu-wrap 'letter/latin/uppercase []
+    LTL: rebmu-wrap 'letter/latin/lowercase []
 
     ;----------------------------------------------------------------------
     ; MICRO MATH
@@ -647,11 +658,15 @@ rebmu-base-context: object compose [
     ;----------------------------------------------------------------------
     ; SINGLE CHARACTER DEFINITIONS
     ;
-    ; For the values (e.g. S the empty string) it is expected that you
-    ; will overwrite them during the course of your program.  It's a
-    ; little less customary to redefine the functions like I for IF,
-    ; although you may do so if you feel the need.   They will still be
-    ; available in a two-character variation.
+    ; Originally Rebmu tried to define single characters as having values
+    ; so you could have "a value of that type around" (x, y, z as 0.0 to
+    ; have a float around, s to have an empty string, etc.)
+    ;
+    ; While helpful for golfing, it turned out to not be THAT helpful.
+    ; And it taught nothing that would be relevant to Rebol or Red, as
+    ; they would not be doing any such definitions by default.
+    ;
+    ; So the single character definitions were scaled back a bit.
     ;----------------------------------------------------------------------
 
     ; The dot operator is helpful for quickly redefining symbols used
@@ -673,49 +688,46 @@ rebmu-base-context: object compose [
     &: :DZ  ; "does" generator, can write context variables
     |: :DF  ; function generator w/no parameters, block always follows
     ~: none ; don't know yet
+    ?: none
 
     ; TODO: there is an issue where if an argument a is put into the block
     ; you can't overwrite its context if you're inside something like a
     ; while block.  How to resolve this?
 
-    a: copy [] ; "array"
-    b: to char! 0 ; "byte"
-    c: #"A" ; "char"
-    d: #"0" ; "digit"
+    ;a - usually a program argument or a-function variable
+    ;b
+    c: :CP
+    ;d
     e: :EI ; "either"
-    f: :FS ; "first"
-    g: copy [] ; "group"
-    h: :HM ; "helpful" constant declaration tool
+    f: :FR ; "for"
+    ;g
+    ;h
     i: :IF
-    j: 0
-    k: 0
+    ;j
+    ;k
     l: :LP ; "loop"
-    m: copy "" ; "message"
-    n: 1
+    ;m
+    ;n
     o: :OR ; "or"
     p: :PR ; this used to be "poke" and I'm not sure why; now "print"
 
     ; Q is tricky.  I've tried not to violate the meanings of any existing
     ; Rebol functions, but it seems like a waste to have an
     ; interpreter-only function like "quit" be taking up such a short
-    ; symbol by default.  I feel the same way about ? being help.  This
-    ; is an issue I have with Rebol's default definitions -Fork
+    ; symbol by default.
 
-    q: :quoth-mu ; "quoth" e.g. qABC => "ABC" and qA => #"A"
-    ?: none
+    q: :QO ; "quote"
 
     r: :RI ; "readin"
-    s: copy "" ; "string"
+    ;s
     t: :TO ; note that to can use example types, e.g. t "foo" 10 is "10"!
-    v: copy [] ; "vector"
-    ; decimal! values starting at 0.0 (common mathematical variables)
-    x: 0.0
-    y: 0.0
-    z: 0.0
     u: :UN ; "unless"
+    ;v
     w: :WH ; "while"
+    ;x
+    ;y
+    ;z
 ]
-
 
 rebmu: function [
     {Visit http://hostilefork.com/rebmu/}
@@ -836,11 +848,7 @@ rebmu: function [
 
     either outermost [
         context: copy rebmu-base-context
-
-        args-reduced: reduce args
-        foreach key args-reduced [
-            extend context key args-reduced/(key)
-        ]
+        append context arg
 
         ; Rebmu's own behavior replaces DO, no /NEXT support yet
         extend context 'do func [value] [
