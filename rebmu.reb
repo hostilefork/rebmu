@@ -253,23 +253,26 @@ rebmu-base-context: object compose [
     ; LOOPING CONSTRUCTS
     ;----------------------------------------------------------------------
 
-    FO: :for
+    FR: :for
     FE: :foreach
     ME: :map-each
     RME: :remove-each-mu
     FA: :forall
     LP: :loop
+    FV: :forever
+
+    WH: :while
+    WA: :rebmu-wrap 'while/after [cond-block body-block]
     WG: :while-greater?-mu
     WL: :while-lesser?-mu
     WGE: :while-greater-or-equal?-mu
     WLE: :while-lesser-or-equal?-mu
     WE: :while-equal?-mu
     WU: :while-unequal?-mu
+
+    ; single-character U taken for UNLESS 
     UT: :until
-    RP: :repeat
-    FV: :forever
-    WH: :while
-    WI: :whilst ;-- rethink all these while contractions (WS, whitespace?)
+    UTA: rebmu-wrap 'until/after [cond-block body-block]
 
     CN: :continue
     BR: :break
@@ -350,11 +353,11 @@ rebmu-base-context: object compose [
     ;--    --Dr. Rebmu
     RM: :remove
 
-    ;-- "rep" because replace as param name causes problem
-    RA: rebmu-wrap 'replace/all [target search rep]
-    RAC: rebmu-wrap 'replace/all/case [target search rep]
-    RAT: rebmu-wrap 'replace/all/tail [target search rep]
-    RACT: rebmu-wrap 'replace/all/case/tail [target search rep]
+    RP: :replace ;-- REPEND and REPEAT deprecated in Rebmu 
+    RPA: rebmu-wrap 'replace/all [target search rep]
+    RPAC: rebmu-wrap 'replace/all/case [target search rep]
+    RPAT: rebmu-wrap 'replace/all/tail [target search rep]
+    RPACT: rebmu-wrap 'replace/all/case/tail [target search rep]
 
     HD: :head
     TL: :tail
@@ -408,9 +411,7 @@ rebmu-base-context: object compose [
     MO: :mush-and-mold-compact
     JN: :join
     RE: :reduce
-    RPN: :repend
     RJ: :rejoin
-    RPNO: rebmu-wrap 'repend/only [series value]
     CT: :collect-mu
     LDA: rebmu-wrap 'load/all [source]
     CB: :combine
@@ -706,13 +707,13 @@ rebmu-base-context: object compose [
     r: :RI ; "readin"
     s: copy "" ; "string"
     t: :TO ; note that to can use example types, e.g. t "foo" 10 is "10"!
-    u: :UT ; "until"
     v: copy [] ; "vector"
-    w: :WI ; "whilst", single arity while
     ; decimal! values starting at 0.0 (common mathematical variables)
     x: 0.0
     y: 0.0
     z: 0.0
+    u: :UN ; "unless"
+    w: :WH ; "while"
 ]
 
 
