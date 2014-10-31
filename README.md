@@ -15,7 +15,9 @@ While it could be argued that Rebmu is a "Rebol library" and not an independent 
 
 Despite several shorthands defined for common Rebol operations (even as far as `I` for `IF`) the functions are true to their Rebol bretheren across all inputs that Rebol accepts.  Current exceptions to this are q and ?, due to controversy on whether these rare abbreviations (Q for QUIT and ? for HELP) should be in the console only and not allowed in written Rebol scripts.  *(Due to their relative lack of literacy in Rebol's otherwise full-English aesthetic.)*  Instead Q was retaken for QUOTE.
 
-P is a shortcut for PR, which is in turn a shortcut for PRINT.  This provides the ability to redefine P and use it as a variable if you are solving a problem that needs it while still having access to the abbreviated PR form if you must do so.  Currently all single letters have been given initial functions or values, so you can pick which ones you wish to overwrite at the point of initialization.
+P is a shortcut for PR, which is in turn a shortcut for PRINT.  This provides the ability to redefine P and use it as a variable if you are solving a problem that needs it while still having access to the abbreviated PR form if you must do so.  
+
+*(Note: At one time all single letters were given initial functions or values  This went as far as declaring B to be an empty block value, X Y Z as floating point values of 0.0, -1.0, and 1.0, etc.  Over the long run this somewhat contrived idea did not prove to make much of a dent in the ability for Rebmu to compete.  It was a small constant factor eclipsed by being able to choose any language.  So these were removed.)*
 
 A big goal for the project is serving as a teaching tool for the Rebol and Red languages, while being fun and a highly serious competitive tool in code golf.  So the philosophy of naming in Rebmu tries to strike a balance between the necessary brevity and fidelity to the naming patterns of the language.  It is also biased away from necessarily giving commands oddly abbreviated names just for the sake of fitting them into fewer characters.
 
