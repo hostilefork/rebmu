@@ -46,15 +46,16 @@ Rebol [
     ]
 ]
 
+; Functions that aren't mainline Rebol/Red at this point, but describe
+; proposals which Rebmu is being used to test.
+
+do %rebol-proposals/all-proposals.reb
+
+
 ; Load the modules implementing mush/unmush
 
 do %mush.reb
 do %unmush.reb
-
-
-; Helpful functions that aren't mainline Rebol/Red but may be slated to be
-
-do %incubator.reb
 
 
 ; Load the library of xxx-mu functions; tricks that are specific to Rebmu

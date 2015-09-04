@@ -1,0 +1,3 @@
+[submodule "rebol-proposals"]
+	path = rebol-proposals
+	url = https://github.com/hostilefork/rebol-proposals.git
