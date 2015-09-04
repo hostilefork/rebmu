@@ -297,12 +297,16 @@ rebmu-base-context: object compose [
 
     ;----------------------------------------------------------------------
     ; DEFINING FUNCTIONS
+    ;
+    ; The behavior of FUNCTION and FUNC vs. CLOSURE and CLOS has to do with
+    ; performance optimization, and ideally only the closure and clos
+    ; semantics would exist.  Since performance is not the axis of concern
+    ; for Rebmu, it goes with the more expressive construct (and so may
+    ; Rebol3 at some point)
     ;----------------------------------------------------------------------
 
-    FN: :function
-    FC: :func
-    CL: :closure
-    CS: :clos
+    FN: :closure
+    FC: :clos
     DZ: :does
     DF: :does-function-mu
     a|: :function-a-mu

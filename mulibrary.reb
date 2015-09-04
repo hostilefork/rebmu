@@ -272,61 +272,62 @@ make-integer-mu: function [value] [
 ; An "a|funct" is a function that takes a single parameter called a, you only
 ; need to supply the code block.  obvious extensions for other letters.  The
 ; "func|a" is the same for funcs
+; !!! closure is a superset of function, and should rightfully have the name
 
 function-a-mu: func [body [block!]] [
-    function [a] body
+    closure [a] body
 ]
 function-ab-mu: func [body [block!]] [
-    function [a b] body
+    closure [a b] body
 ]
 function-abc-mu: func [body [block!]] [
-    function [a b c] body
+    closure [a b c] body
 ]
 function-abcd-mu: func [body [block!]] [
-    function [a b c d] body
+    closure [a b c d] body
 ]
 
 function-z-mu: func [body [block!]] [
-    function [z] body
+    closure [z] body
 ]
 function-zy-mu: func [body [block!]] [
-    function [z y] body
+    closure [z y] body
 ]
 function-zyx-mu: func [body [block!]] [
-    function [z y x] body
+    closure [z y x] body
 ]
 function-zyxw-mu: func [body [block!]] [
-    function [z y x w] body
+    closure [z y x w] body
 ]
 
 func-a-mu: func [body [block!]] [
-    func [a] body
+    clos [a] body
 ]
 func-ab-mu: func [body [block!]] [
-    func [a b] body
+    clos [a b] body
 ]
 func-abc-mu: func [body [block!]] [
-    func [a b c] body
+    clos [a b c] body
 ]
 func-abcd-mu: func [body [block!]] [
-    func [a b c d] body
+    clos [a b c d] body
 ]
 
 func-z-mu: func [body [block!]] [
-    func [z] body
+    clos [z] body
 ]
 func-zy-mu: func [body [block!]] [
-    func [z y] body
+    clos [z y] body
 ]
 func-zyx-mu: func [body [block!]] [
-    func [z y x] body
+    clos [z y x] body
 ]
 func-zyxw-mu: func [body [block!]] [
-    func [z y x w] body
+    clos [z y x w] body
 ]
 
 does-function-mu: func [body [block!]] [
-    function [] body
+    closure [] body
 ]
 
 
