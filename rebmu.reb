@@ -170,9 +170,11 @@ rebmu-base-context: object compose [
     ;----------------------------------------------------------------------
     ; DATATYPE SHORTHANDS (3 CHARS)
     ; Though I considered giving the datatypes 2-character names, I decided
-    ; on 3 and saving the one-characters for things like INDEX? and OFFSET?
-    ; and LENGTH?.   Literal words for types will probably not be showing
-    ; up too often in Code Golf.
+    ; on 3 (so IN! for INTEGER! instead of I!, in order that the test will
+    ; be IN? with I? available for other purposes).  This is a decision
+    ; which may be worth revisiting for some types, as INDEX? has become
+    ; INDEX-OF in the language, so I? is free (for instance).  Not all
+    ; types will fit in that space, however.
     ;----------------------------------------------------------------------
 
 ; Shorcuts for datatypes.  Establishes both the type and the query functions.
@@ -257,7 +259,8 @@ rebmu-base-context: object compose [
     ;----------------------------------------------------------------------
 
     FR: :for
-    FE: :foreach
+    EV: :every
+    FE: :for-each
     ME: :map-each
     RME: :remove-each-mu
     FA: :forall
@@ -279,21 +282,13 @@ rebmu-base-context: object compose [
 
     CN: :continue
     BR: :break
-    TY: :try
-    CC: :catch
+    BRW: rebmu-wrap 'break/with [value]
+    TR: :trap
+    CT: :catch
     AM: :attempt
 
-    ; There is debate on whether QUIT of a nested script should quit the
-    ; caller or not.  This debate seems to have been resolved with the
-    ; addition of CATCH/QUIT, which means that if you call a nested script
-    ; that quits and you don't want it to *actually* quit...that's the
-    ; caller's responsibility.  Also, the need for a "more quittier quit
-    ; than quit" called QUIT/NOW is suspect.  Hence Rebmu is leading the
-    ; way by making QT abbreviate what is known as QUIT/NOW and not
-    ; offering a non-now-version of QUIT.  Hopefully Rebol3 and Red will
-    ; follow suit and ditch NOW.
-
-    QT: rebmu-wrap 'quit/now []
+    QT: :quit
+    QTW: rebmu-wrap 'quit/with [value]
 
     ;----------------------------------------------------------------------
     ; DEFINING FUNCTIONS
@@ -344,8 +339,8 @@ rebmu-base-context: object compose [
     APO: rebmu-wrap 'append/only [series value]
     IS: :insert ; IN is a keyword
     ISO: rebmu-wrap 'insert/only [series value]
-    ISP: rebmu-wrap 'insert/part [series value length]
-    ISPO: rebmu-wrap 'insert/part/only [series value length]
+    ISP: rebmu-wrap 'insert/part [series value limit]
+    ISPO: rebmu-wrap 'insert/part/only [series value limit]
     TK: :take
     MNO: :minimum-of
     MXO: :maximum-of
@@ -379,12 +374,12 @@ rebmu-base-context: object compose [
     PA: :parse-mu
     PP: :pre-parse-mu
 
-    L?: :length?
-    LN: :length? ;-- Reserved... LENGTH? => LENGTH is likely in Rebol3 final
+    LN: :length
 
     F?: :index?-find-mu
-    O?: :offset?
-    I?: :index?
+    OS: :offset-of ;-- being a real word, OF might get used in the language
+    IX: :index-of
+    TY: :type-of
     T?: :tail?
     H?: :head?
     M?: :empty?
@@ -419,7 +414,7 @@ rebmu-base-context: object compose [
     JN: :join
     RE: :reduce
     RJ: :rejoin
-    CT: :collect-mu
+    CL: :collect-mu
     LDA: rebmu-wrap 'load/all [source]
     CB: :combine
     CBW: rebmu-wrap 'combine/with [block delimiter]
@@ -486,7 +481,7 @@ rebmu-base-context: object compose [
     LE^: :lesser-or-equal?      ; <=~ is not a valid symbol in Rebol
     ==^: :strict-equal?
     NG?: :negative?
-    SG?: :sign?
+    SG: :sign-of
     Y?: :true?
     N?: func [val] [not true? val] ; can be useful
     MN: :min
@@ -526,10 +521,10 @@ rebmu-base-context: object compose [
     ;----------------------------------------------------------------------
     ; STRINGS
     ;----------------------------------------------------------------------
-    TR: :trim ; for true, use ON and for false use NO, test with Y? and N?
-    TRT: rebmu-wrap 'trim/tail [series]
-    TRH: rebmu-wrap 'trim/head [series]
-    TRA: rebmu-wrap 'trim/all [series]
+    TM: :trim
+    TMT: rebmu-wrap 'trim/tail [series]
+    TMH: rebmu-wrap 'trim/head [series]
+    TMA: rebmu-wrap 'trim/all [series]
     UP: :uppercase
     UPP: rebmu-wrap 'uppercase/part [string length]
     LW: :lowercase
@@ -574,7 +569,7 @@ rebmu-base-context: object compose [
     EN: :encode
     SWP: :swap-exchange-mu
     FM: :format
-    OS: :onesigned-mu
+    ;OS: :onesigned-mu
     SP: :space
 
     WS: :whitespace
@@ -759,7 +754,7 @@ rebmu: function [
     case [
         string? code [
             if stats [
-                print ["Original Rebmu string was:" length? code "characters."]
+                print ["Original Rebmu string was:" length code "characters."]
             ]
             code: load code
         ]
@@ -813,7 +808,7 @@ rebmu: function [
     if stats [
         print [
             "Rebmu as mushed Rebol block molds to:"
-            length? mold/only code
+            length mold/only code
             "characters."
         ]
     ]

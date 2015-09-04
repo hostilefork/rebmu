@@ -269,7 +269,7 @@ unmush: function [
         ;
         any-block? value [
             result: make type? value []
-            foreach elem value [
+            for-each elem value [
                 unmushed: unmush :elem
                 either all [
                     not block? :elem

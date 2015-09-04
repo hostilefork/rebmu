@@ -67,7 +67,7 @@ to-http-url-mu: function ['target [word! path! string!] /secure][
 ]
 
 caret-mu: function ['value] [
-    switch/default type?/word :value [
+    switch/default type-of/word :value [
         string! [return to-string debase value]
     ] [
         throw "caret mu needs to be thought out for non-strings, see rebmu.reb"
@@ -260,7 +260,7 @@ make-string-initial-mu: function [length value] [
 
 ; if a pair, then the first digit is the digit
 make-integer-mu: function [value] [
-    switch/default type?/word :value [
+    switch/default type-of/word :value [
         pair! [to-integer first value * (10 ** second value)]
         integer! [to-integer 10 ** value]
     ] [
@@ -334,7 +334,7 @@ does-function-mu: func [body [block!]] [
 quoth-mu: function [
     'arg
 ] [
-    switch/default type?/word :arg [
+    switch/default type-of/word :arg [
         word! [
             str: to-string arg
             either 1 == length? str [
@@ -403,7 +403,7 @@ readin-mu: func [
     ;-- Has to be a FUNC to set in callers environment...
     ;-- ...or could we leverage the caller's binding?
 
-    switch/default type?/word get value [
+    switch/default type-of/word get value [
         string! [prin "Input String: " set value input]
         integer! [set value to-integer ask "Input Integer: "]
         decimal! [set value to-integer ask "Input Float: "]
@@ -419,7 +419,7 @@ readin-mu: func [
 inversion-mu: function [
     value
 ] [
-    switch/default type?/word :value [
+    switch/default type-of/word :value [
         string! [empty? value]
         decimal!
         integer! [
@@ -431,7 +431,7 @@ inversion-mu: function [
 ]
 
 next-mu: function [arg] [
-    switch/default type?/word :arg [
+    switch/default type-of/word :arg [
         integer! [arg + 1]
     ] [
         next arg
@@ -439,7 +439,7 @@ next-mu: function [arg] [
 ]
 
 back-mu: function [arg] [
-    switch/default type?/word :arg [
+    switch/default type-of/word :arg [
         integer! [arg - 1]
     ] [
         back arg
@@ -476,7 +476,7 @@ swap-exchange-mu: func [
     ;-- Has to be a FUNC to set in callers environment...
     ;-- ...or could we leverage the caller's binding?
 
-    if not equal? type? a type? b [
+    if not equal? type-of a type-of b [
         throw "swap-mu must be used with common types"
     ]
     either word? a [
@@ -493,7 +493,7 @@ div-mu: function [value1 value2] [
 ]
 
 add-mu: function [value1 value2] [
-    switch/default type?/word :value1 [
+    switch/default type-of/word :value1 [
         string! [
             skip value1 value2
         ]
@@ -512,7 +512,7 @@ add-mu: function [value1 value2] [
 ]
 
 subtract-mu: function [value1 value2] [
-    switch/default type?/word :value1 [
+    switch/default type-of/word :value1 [
         block! [
             result: copy value1
             while [(not tail? value1) and (not tail? value2)] [
@@ -528,7 +528,7 @@ subtract-mu: function [value1 value2] [
 ]
 
 negate-mu: function [value] [
-    switch/default type?/word :value [
+    switch/default type-of/word :value [
         block! [
             result: copy value
             while [not tail? value] [
@@ -641,14 +641,6 @@ pre-parse-mu: use [digit lower-alpha upper-alpha hex-digit subs] [
 parse-mu: func [input [series!] rules [block! string! char! none!]] [
     if block? rules [rules: pre-parse-mu rules]
     parse/case input rules
-]
-
-; -1 is a particularly useful value, yet it presents complications to mushing
-; that ON does not have.  Also frequently, choosing 1 vs -1 depends on a logic.
-; Onesigned turns true into 1 and false into -1 (compared to to-integer which
-; treats false as zero)
-onesigned-mu: function [value] [
-    either to-boolean value [1] [-1]
 ]
 
 ceiling-mu: function [value] [

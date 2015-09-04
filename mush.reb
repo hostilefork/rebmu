@@ -35,7 +35,7 @@ mush: function [
                             keep uppercase mold to word! take value
                         ]
 
-                        foreach word value [
+                        for-each word value [
                             keep either lower? [lowercase mold word][uppercase mold word]
                             lower?: not lower?
                         ]

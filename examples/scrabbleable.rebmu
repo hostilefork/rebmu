@@ -38,10 +38,10 @@ Rebmu [
 Ssp
 
 ; N is the number of input strings
-Nl?A
+NlnA
    
 ; L is our longest string length
-L00feZa[LmxLl?Z]
+L00feZa[LmxLlnZ]
 
 ; V is our board size
 ; expression is v: 1 + (l - 1) * (ad eOD?n1[0] dv n 2)

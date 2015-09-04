@@ -35,11 +35,11 @@ Rebmu [
 ]
 
 ; 35 chars
-w[SfiTlfLPadLo?St[SisSc]TnxS]hd+T
+w[SfiTlfLPadLosSt[SisSc]TnxS]hd+T
 
 comment [
-; >> unmush [w[SfiTlfLPadLo?St[SisSc]TnxS]hd+T]
-; == [w [s: fi t lf lp ad l o? s t [s: is s c] t: nt s] hd t]
+; >> unmush [w[SfiTlfLPadLosSt[SisSc]TnxS]hd+T]
+; == [w [s: fi t lf lp ad l os s t [s: is s c] t: nt s] hd t]
 
 	whilst [
 		s: find t lf

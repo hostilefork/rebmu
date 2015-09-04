@@ -56,17 +56,17 @@ L{-|\/}
 
 ; q is a "b|function" (function that takes two parameters, a and b)
 ; it gives you the sign of subtracting b from a (+1, -1, or 0)
-Qb|[sg?SBaB]
+Qb|[sgSBaB]
 
 ; d finds you the iterator position of the first digit of a two digit
 ; number in the matrix
 Da|[feSm[TfiSrj[spAsp]iT[n+Tbr]]t]
 
 ; given an iterator position, this tells you the x coordinate of the cell
-Xa|[i?A]
+Xa|[ixA]
 
 ; given an iterator position, this tells you the y coordinate of the cell
-Ya|[i?FImHDa]
+Ya|[ixFImHDa]
 
 ; pass in a coordinate pair to C and it will give you the iterator position
 ; of that cell.  Note: this used to be effectively
