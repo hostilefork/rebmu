@@ -435,19 +435,12 @@ rebmu-base-context: object compose [
     MD: :mod
     E?: :equal?
 
-    ; LG was originally used for type naming in logic, which isn't technically
-    ; a conflict but a bit confusing; taking LC for that to avoid another
-    ; non-conflict (but confusing) with LOOP.  Given Rebol's "human" bias it
-    ; makes more sense to go with the base 10 default for logarithms, but lg10
-    ; is available also.  lge fits the pattern and lines up better with the
-    ; Rebol.  It might be tempting to abbreviate LN for natural log but it is
-    ; looking like LENGTH? is going to become finalized as LENGTH in Rebol3
-    ; because it does not yield a boolean result, while less common ? forms
-    ; that do not return booleans will be suffixed with -OF so LN is reserved. 
     LG10: :log-10
     LG2: :log-2
-    LGE: :log-e
-    LG: :LG10
+    ;-- is L2: LG2 worth it, or L+digit be used for something else?
+    LGE: :log-e ;-- can't do "(L)og (N)atural" as LN, due to LN: LENGTH-OF
+    ;-- is LE: LGE worth it, or is LE better used or something else? 
+    LG: :LG10 ;-- Rebmu's 10-fingered-human bias, also shortens LG10 more
 
     ; ** is the infix power operator, but infix is sometimes not what you
     ; want so Rebol also has power as a prefix variant
