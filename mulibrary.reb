@@ -647,9 +647,6 @@ ceiling-mu: function [value] [
     to-integer round/ceiling value
 ]
 
-not-mu: function [value] [
-    not true? value
-]
 
 only-first-true-mu: function [value1 value2] [
     all [
@@ -663,22 +660,4 @@ only-second-true-mu: function [value1 value2] [
         true? value2
         not true? value1
     ]
-]
-
-prefix-or-mu: function [value1 value2] [
-    any [
-        true? value1
-        true? value2
-    ]
-]
-
-prefix-and-mu: function [value1 value2] [
-    all [
-        true? value1
-        true? value2
-    ]
-]
-
-prefix-xor-mu: function [value1 value2] [
-    (true? value1) xor (true? value2)
 ]

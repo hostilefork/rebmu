@@ -41,7 +41,7 @@ Rebmu [
 ]
 
 ;-- Mushed version.
-ScyFSaFE[fCtU]scA[DfsAw[Kf+S Jf+D][iAL[==^Jk==^Kf][chBKsT]]hd+S]prS
+ScyFSaFE[fCtU]scA[DfsAw[Kf+S Jf+D][iAL[se?JkSE?kF][chBKsT]]hd+S]prS
 
 ;-- Unmushed version.
 comment [
@@ -65,7 +65,7 @@ comment [
 			; if all conditions of equality apply, namely that the character
 			; in this position from the original hasn't changed since the start
 			; and the current character is equal to the "from" character...
-			i al [==^ j k ==^ k f] [
+			i al [se? j k se? k f] [
 				; then change the last (back) character in the series S to the
 				; to character
 				ch bk s t

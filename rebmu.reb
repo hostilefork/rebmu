@@ -453,18 +453,18 @@ rebmu-base-context: object compose [
     ; want so Rebol also has power as a prefix variant
     PW: :power
 
-    ; I'm not entirely sure about the fate of tokens ending in a single
-    ; tilde.  Rebol's default AND/OR/XOR are infix, and the prefix versions
-    ; end in tildes.  That precedent guided my decision to create A~, O~,
-    ; etc. but Rebol's infix OR is special and unlikely to be used in code
-    ; golf... anyway, due to feedback that's now done with carets because
-    ; of the desire to use tilde for the constructors.  An aesthetic choice.
-    ; Will that feed back into the Rebol design?  Who knows...
+    ; CONDITIONAL LOGIC
+    ;
+    ; There may be a slight desire to use abbreviated infix logic, as it would
+    ; cause a different evaluation ordering which might be desirable to have
+    ; at no extra character cost.  But OR is already a 2-letter word, and XOR
+    ; and AND are only 3-letter.  So it's probably better to save AN/AD for
+    ; other purposes (XO/XR less useful...)
 
-    A^: :prefix-and-mu
-    O^: :prefix-or-mu
-    X^: :prefix-xor-mu
-    N^: :not-mu
+    ;-- NT is prefix NOT (itself an alias for NOT?), we took N? for NEGATIVE?
+    A?: :and?
+    O?: :or?
+    X?: :xor?
 
     ; Question: What other functions seem to fit in the theme of ending in
     ; carets?  These are just ideas
@@ -475,12 +475,13 @@ rebmu-base-context: object compose [
     OD?: :odd?
     ++: :increment-mu
     --: :decrement-mu
-    G^: :greater?           ; >~ is not a valid symbol in Rebol
-    GE^: :greater-or-equal?     ; >=~ is not a valid symbol in Rebol
-    L^: :lesser?            ; <~ is not a valid symbol in Rebol
-    LE^: :lesser-or-equal?      ; <=~ is not a valid symbol in Rebol
-    ==^: :strict-equal?
-    NG?: :negative?
+    G?: :greater?
+    GE?: :greater-or-equal?
+    L?: :lesser?
+    LE?: :lesser-or-equal?
+    SE?: :strict-equal?
+    N?: :negative?
+    P?: :positive?
     SG: :sign-of
     Y?: :true?
     N?: func [val] [not true? val] ; can be useful
