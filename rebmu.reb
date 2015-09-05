@@ -6,16 +6,181 @@ Rebol [
     }
 
     Author: {"Dr. Rebmu"}
-    Home: https://github.com/hostilefork/rebmu
-    License: 'bsd
+    Home: http://rebmu.hostilefork.com
+    License: 'mit
 
-    Date: 6-Apr-2014
-    Version: 0.6.0
+    Date: 15-Sep-2015
+    Version: 0.7.0
 
     ; Header conventions: http://www.rebol.org/one-click-submission-help.r
     File: %rebmu.reb
     Type: 'dialect
-    Level: 'advanced
+    Level: 'genius
+
+    Notes: {
+
+        ### SINGLE CHARACTER DEFINITIONS
+    
+        Originally Rebmu tried to define single characters as having values
+        so you could have "a value of that type around" (x, y, z as 0.0 to
+        have a float around, s as {} to have an empty string, etc.)
+    
+        Thought to be helpful for golfing, it turned out to not be THAT
+        helpful.  The trivial puzzles in which that count wasn't lost in the
+        noise were usually solvable in fewer characters by another language
+        that was a precise match for the domain of the question.  It was
+        difficult to remember and taught nothing that would be relevant to
+        Rebol or Red.
+    
+        So the single character definitions were scaled back drastically.
+        They are tracked here as an index and to-do list, while the actual
+        definitions are in the functional group in the code.
+    
+        . => redefine-mu
+        & => does/only (a.k.a. historical DOES with no locals gathering)
+        ~
+        ?
+        |
+        a ;-- usually a program argument or a-function variable
+        b 
+        c => copy
+        d
+        e => either
+        f => for-each
+        g
+        h
+        i => if
+        j
+        k
+        l => loop
+        m
+        n
+        o
+        p => print
+        q => quote ;-- Q is not QUIT in proposals, so not overriding
+        r => repeat
+        s
+        t => to ;-- note: can use example types, e.g. t "foo" 10 is "10"
+        u => unless (vs. IF NOT as iNT or Int)
+        v
+        w => while
+        x
+        y
+        z
+
+
+        ### EXISTING TWO-CHARACTER SPACE
+
+        Because there are only so many single characters (unless you start
+        using Unicode...) the majority of Rebmu function definitions live
+        in the two-character space.  However, refinements follow a system...
+        so even if it would be *possible* to do APPEND/ONLY => AO, such
+        compression tricks are seen as less consistent than if you have
+        APPEND => AP and APPEND/ONLY => APO.  So the two-character space
+        is the baseline for growing further in a systemic way.
+
+        Yet Rebol itself does define a few things already in the two character
+        space that should not be overridden, to reach Rebmu's goal of being
+        able to compatibly run any all-lowercase Rebol code in midstream.
+        Here's a short study of the space used.
+
+        Very Reasonable Use of English Words
+
+            TO    to conversion
+            OR    or operator (infix)
+            IN    word or block in the object's context
+            IF    conditional if
+            DO    evaluates a block, file, url, function word
+            AT    returns the series at the specified index
+            NO    logic false
+            ON    logic true
+
+        Reasonably non-controversial use of Symbolic Operators
+
+            ++    increment and return previous value
+            --    decrement and return previous value
+            >=    true if the first value is greater than the second (infix)
+            <=    true if the first value is less than the second (infix)
+            **    first number raised to the power of the second (infix)
+            !=    true if the values are not equal (infix)
+
+        More questionable Symbolic operator
+
+            =?    true if the values are identical, === seems more logical
+
+        Added by the rebol-proposals
+
+            ~=    infix loose-equal?
+
+        Maybe okay name for a debugging function
+
+            ??    Debug print a word, path, block or such
+
+        Unapplied in Rebol but used in Red for questionable benefit:
+
+            <<    infix version of prefix shift left (why not strict-lesser?)
+            >>    infix version of prefix shift right (why not strict-greater?)
+
+        Bad things taken out by the proposals that shouldn't be legal:
+
+            <>    same function as != yet is jarringly <tag>-like (infix)
+            //    MODULO, but natural words shouldn't have slashes (infix)
+
+        Deprecated shorthands for terms defined elsewhere, which have been
+        reclaimed for Rebmu as "free terms" by the rebol-proposals (and should
+        be removed from the language, existing only in console modes or
+        user-preferences)
+
+            RM    alias for DELETE
+            DP    alias for DELTA-PROFILE
+            DT    alias for DELTA-TIME
+            LS    print contents of a directory
+            CD    change directory
+            DS    temporary stack debug
+
+        It's worth pointing out that there is a proposal that would open up
+        several more options in two-character space.  It's hard to predict
+        how many of these might find meaningful default usaages in the box,
+        such as -> or >< or |>- ... but sticking to two-character space
+        these are what the proposals would define if they could:
+
+            ~<    loose-lesser?
+            ~>    loose-greater?
+
+
+        ### SINGLE CHARACTER PLUS QUESTION MARK
+
+        Several of these freed up with the requirement that ending in a ?
+        actually return a LOGIC!.  The useful function empty? doesn't fit
+        if E? is EQUAL? and EM? is EMAIL?
+        
+        A? => and?
+        B? ;-- could be... block?
+        C? ;-- could be... char?
+        D? => distinct?
+        E? => equal?
+        F?
+        G? => greater?
+        H? => head?
+        I? ;-- could be... integer?
+        J?
+        K?
+        L? => lesser?
+        M? => match? ;-- MM? is mismatch.
+        N? => negative?
+        O? => or?
+        P? => positive?
+        Q?
+        R?
+        S? => same?
+        T? => tail? ;-- can't be TRUE?, TAIL? is more important
+        U? => unequal?
+        V? => value?
+        W?
+        X? => xor?
+        Y? => true? ;-- (a.k.a. yes?)
+        Z? => zero?
+    }
 
     History: [
         0.1.0 [10-Jan-2010 {Sketchy prototype written to cover only the
@@ -43,6 +208,12 @@ Rebol [
         most all previous Rebmu code solutions.  Examples have been updated
         in GitHub.  Major theme was removing the custom IF/UNLESS/EITHER
         implementation and some clearer names.}]
+
+        0.7.0 [15-Sep-2015 {Project revisited to incorporate new ideas and
+        decisions from the Ren/C effort.  Incorporates the rebol-proposals
+        module to work with experimental language features instead of
+        having its own "incubator" project.  "Mu library" features removed
+        in favor of embracing the language default more closely.}]
     ]
 ]
 
@@ -98,74 +269,6 @@ rebmu-wrap: function [refined [path!] args [block!]] [
 
 
 rebmu-base-context: object compose [
-    ;----------------------------------------------------------------------
-    ; WHAT REBOL DEFINES BY DEFAULT IN THE TWO-CHARACTER SPACE
-    ;----------------------------------------------------------------------
-
-    ; Very Reasonable Use of English Words
-
-    ; TO    to conversion
-    ; OR    or operator
-    ; IN    word or block in the object's context
-    ; IF    conditional if
-    ; DO    evaluates a block, file, url, function word
-    ; AT    returns the series at the specified index
-    ; NO    logic false
-    ; ON    logic true
-
-    ; Reasonable use of Symbolic Operators
-
-    ; ++    increment and return previous value
-    ; --    decrement and return previous value
-    ; ??    Debug print a word, path, block or such
-    ; >=    true if the first value is greater than the second
-    ; <>    true if the values are not equal
-    ; <=    true if the first value is less than the second
-    ; =?    true if the values are identical
-    ; **    first number raised to the power of the second
-    ; !=    true if the values are not equal
-
-    ; The choice to take this prominent comment-to-end-of-line
-    ; marker and make it mean the same thing as MOD seems unwise.
-    ; There's nothing abstractly wrong with semicolon... it is one
-    ; fewer character for a to-end-of-line comment.  But semicolons
-    ; for comments is very "old-school" assembly and it gives the
-    ; language a dated look just how capitalizing REBOL looks like
-    ; COBOL.  I feel like if Rebol offered "//" as an alternative
-    ; comment choice to ";" it would be more amicable, considering
-    ; the rarity of modulus.  Rebol could be more popular if these
-    ; issues were taken seriously!
-
-    ; //    remainder of first value divided by second
-
-    ; Maybe reasonable use of abbreviation in the default.  Could be
-    ; carriage-return and line-feed and leave it to the user to
-    ; abbreviate.
-
-    ; CR    carraige return character
-    ; LF    line feed character
-
-    ; Questionable shorthands for terms defined elsewhere. Considering how
-    ; many things do not have shorthands by default...what metric proved
-    ; that *these four* were the ideal things to abbreviate?  They are
-    ; only in Rebol 3.
-
-    ; SP    alias for SPACE
-    ; RM    alias for DELETE
-    ; DP    alias for DELTA-PROFILE
-    ; DT    alias for DELTA-TIME
-
-    ; These are shell commands and it seems like there would be many more.
-    ; Could there be a shell dialect, in which for instance issue values
-    ; (#foo) could be environment variables, or something like that?  It
-    ; seems many other things would be nice, like pushing directories or
-    ; popping them, moving files from one place to another, etc.
-
-    ; LS    print contents of a directory
-    ; CD    change directory
-
-    ; Another abbreviation that seems better to leave out
-    ; DS    temporary stack debug
 
     ;----------------------------------------------------------------------
     ; DATATYPE SHORTHANDS (3 CHARS)
@@ -219,6 +322,7 @@ rebmu-base-context: object compose [
     ; by Rebol's operators.
     ;----------------------------------------------------------------------
 
+    T: :TO
     TW: :to-word-mu
     TSW: :to-set-word
     TS: :to-string-mu
@@ -231,9 +335,11 @@ rebmu-base-context: object compose [
     ;----------------------------------------------------------------------
 
     ;-- Rebol's IF is already two characters
+    I: :IF
     IO: rebmu-wrap 'if/only [condition true-branch]
 
     EI: :either
+    E: :EI
     EO: rebmu-wrap 'either/only [condition true-branch false-branch]
 
     SW: :switch
@@ -241,22 +347,28 @@ rebmu-base-context: object compose [
     CAA: rebmu-wrap 'case/all [block]
 
     UN: :unless
+    U: :UN
     UO: rebmu-wrap 'unless/only [condition false-branch]
 
     ;----------------------------------------------------------------------
     ; LOOPING CONSTRUCTS
     ;----------------------------------------------------------------------
 
+    LP: :loop
+    L: :LP
+
+    FE: :for-each
+    F: :FE
+
     FR: :for
     EV: :every
-    FE: :for-each
     ME: :map-each
     RME: :remove-each-mu
     FA: :forall
-    LP: :loop
     FV: :forever
 
     WH: :while
+    W: :WH
     WA: :rebmu-wrap 'while/after [cond-block body-block]
 
     ; single-character U taken for UNLESS 
@@ -285,8 +397,13 @@ rebmu-base-context: object compose [
 
     FN: :closure
     FC: :clos
+    
     DZ: :does
+    &: :DZ
+
     DF: :does-function-mu
+    |: :DF
+
     a|: :function-a-mu
     b|: :function-ab-mu
     c|: :function-abc-mu
@@ -402,6 +519,7 @@ rebmu-base-context: object compose [
     CBW: rebmu-wrap 'combine/with [block delimiter]
 
     QO: :quote
+    Q: :QO 
 
     ;----------------------------------------------------------------------
     ; MATH AND LOGIC OPERATIONS
@@ -480,12 +598,17 @@ rebmu-base-context: object compose [
     ; INPUT/OUTPUT
     ;----------------------------------------------------------------------
 
+    PR: :print
+    P: :PR 
+
     RD: :read
     WR: :write
-    PR: :print
     PRO: rebmu-wrap 'print/only [value]
     PB: :probe
+
     RI: :readin-mu
+    R: :RI
+
     RL: rebmu-wrap 'read/lines [source]
     NL: :newline
 
@@ -513,6 +636,8 @@ rebmu-base-context: object compose [
     ;----------------------------------------------------------------------
 
     CP: :copy
+    C: :CP
+
     MK: :make
     CPD: rebmu-wrap 'copy/deep [value]
     CPP: rebmu-wrap 'copy/part [value]
@@ -536,7 +661,7 @@ rebmu-base-context: object compose [
     NN: :none
     ST: :set
     GT: :get
-    RF: :redefine-mu
+
     EN: :encode
     SWP: :swap-exchange-mu
     FM: :format
@@ -626,78 +751,31 @@ rebmu-base-context: object compose [
     TL+: :tail-modify-mu
     SK+: :skip-modify-mu
 
-    ;----------------------------------------------------------------------
-    ; SINGLE CHARACTER DEFINITIONS
-    ;
-    ; Originally Rebmu tried to define single characters as having values
-    ; so you could have "a value of that type around" (x, y, z as 0.0 to
-    ; have a float around, s to have an empty string, etc.)
-    ;
-    ; While helpful for golfing, it turned out to not be THAT helpful.
-    ; And it taught nothing that would be relevant to Rebol or Red, as
-    ; they would not be doing any such definitions by default.
-    ;
-    ; So the single character definitions were scaled back a bit.
-    ;----------------------------------------------------------------------
 
-    ; The dot operator is helpful for quickly redefining symbols used
-    ; repeatedly .[aBCdEF] will unmush into .[a bc d ef] so you can
-    ; always use it without the dot sticking to another symbol that isn't
-    ; a digit
+    ;----------------------------------------------------------------------
+    ; REDEFINING HELPER
+    ;
+    ; While many of the original code-golf specific aspects of Rebmu that
+    ; were imagined were kicked out as useless (as say, compared to throwing
+    ; in a mushed matrix library etc.) this one is still around for study.
+    ; The idea was a dot operator to be helpful for quickly redefining symbols
+    ; used repeatedly.
+    ;
+    ;     .[aBCdEF] => .[a bc d ef] => a: :bc d: :ef
+    ;
+    ; If you noticed an unusual repeated need for a function you could throw
+    ; that in.  Considering the minimal case of .[aBC] it's 6 characters, which
+    ; is the same count as `A: :bc` would be.  However,  you wind up at a
+    ; close bracket that starts a new mushing point, so it saves on what would
+    ; be a necessary trailing space.  If it's the first thing in your program
+    ; you don't have to worry about the dot getting picked up as a word
+    ; character, despite its "stickiness" in words
 
+    RF: :redefine-mu
     .: :RF
 
-    ; This set needs to have thought given to them.
-    ; they breaks symbols; a^b becomes a^ b but A^b bcomes a: ^b
-    ; ^foo is therefore good for construction functions which are going
-    ; to target an assignment but little else.  getting a ^ in isolation
-    ; requires situations like coming in front of a block or a string
-    ; literal so it might make sense to define it as something that is
-    ; frequently applied to series literals.  decoding base-64 strings
-    ; might be an option as they are used a lot in code golf.
-    ^: :caret-mu
-    &: :DZ  ; "does" generator, can write context variables
-    |: :DF  ; function generator w/no parameters, block always follows
-    ~: none ; don't know yet
-    ?: none
 
-    ; TODO: there is an issue where if an argument a is put into the block
-    ; you can't overwrite its context if you're inside something like a
-    ; while block.  How to resolve this?
-
-    ;a - usually a program argument or a-function variable
-    ;b
-    c: :CP
-    ;d
-    e: :EI ; "either"
-    f: :FR ; "for"
-    ;g
-    ;h
-    i: :IF
-    ;j
-    ;k
-    l: :LP ; "loop"
-    ;m
-    ;n
-    o: :OR ; "or"
-    p: :PR ; this used to be "poke" and I'm not sure why; now "print"
-
-    ; Q is tricky.  I've tried not to violate the meanings of any existing
-    ; Rebol functions, but it seems like a waste to have an
-    ; interpreter-only function like "quit" be taking up such a short
-    ; symbol by default.
-
-    q: :QO ; "quote"
-
-    r: :RI ; "readin"
-    ;s
-    t: :TO ; note that to can use example types, e.g. t "foo" 10 is "10"!
-    u: :UN ; "unless"
-    ;v
-    w: :WH ; "while"
-    ;x
-    ;y
-    ;z
+    ; REVIEW: what kinds of meanings might be given to prefix question mark?
 ]
 
 rebmu: function [
