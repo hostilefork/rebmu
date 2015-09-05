@@ -188,19 +188,6 @@ quoth-mu: function [
     ]
 ]
 
-index?-find-mu: function [
-    {Same as index? find, but returns 0 if find returns none}
-    series [series! gob! port! bitset! typeset! object! none!]
-    value [any-type!]
-] [
-    pos: find series value
-    either none? pos [
-        0
-    ] [
-        index? pos
-    ]
-]
-
 insert-at-mu: function [
     {Just insert and at combined}
     series
@@ -485,19 +472,4 @@ parse-mu: func [input [series!] rules [block! string! char! none!]] [
 
 ceiling-mu: function [value] [
     to-integer round/ceiling value
-]
-
-
-only-first-true-mu: function [value1 value2] [
-    all [
-        true? value1
-        not true? value2
-    ]
-]
-
-only-second-true-mu: function [value1 value2] [
-    all [
-        true? value2
-        not true? value1
-    ]
 ]

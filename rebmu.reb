@@ -359,7 +359,6 @@ rebmu-base-context: object compose [
 
     LN: :length
 
-    F?: :index?-find-mu
     OS: :offset-of ;-- being a real word, OF might get used in the language
     IX: :index-of
     TY: :type-of
@@ -441,11 +440,6 @@ rebmu-base-context: object compose [
     A?: :and?
     O?: :or?
     X?: :xor?
-
-    ; Question: What other functions seem to fit in the theme of ending in
-    ; carets?  These are just ideas
-    F^: :only-first-true-mu
-    S^: :only-second-true-mu
 
     EV?: :even?
     OD?: :odd?
