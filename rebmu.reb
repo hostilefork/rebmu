@@ -335,20 +335,23 @@ rebmu-base-context: object compose [
     ;----------------------------------------------------------------------
 
     ;-- Rebol's IF is already two characters
-    I: :IF
-    IO: rebmu-wrap 'if/only [condition true-branch]
+    I: :if
+    IFO: rebmu-wrap 'if/only [condition true-branch]
+    IO: :IFO
 
     EI: :either
     E: :EI
-    EO: rebmu-wrap 'either/only [condition true-branch false-branch]
+    EIO: rebmu-wrap 'either/only [condition true-branch false-branch]
+    EO: :EIO
 
     SW: :switch
-    CA: :case
+    CA: :case ;-- should this be CS if CLOSURE is to be omitted?
     CAA: rebmu-wrap 'case/all [block]
 
-    UN: :unless
-    U: :UN
-    UO: rebmu-wrap 'unless/only [condition false-branch]
+    UL: :unless
+    U: :UL
+    ULO: :rebmu-wrap 'unless/only [condition false-branch]
+    UO: :ULO
 
     ;----------------------------------------------------------------------
     ; LOOPING CONSTRUCTS
@@ -558,6 +561,20 @@ rebmu-base-context: object compose [
     A?: :and?
     O?: :or?
     X?: :xor?
+
+
+    ; BITWISE
+    ;
+    ; These operators are the generalized ones, laid out for the day when
+    ; AND/OR/XOR become "conditional"...they work on bitsets etc.
+    ;
+    ; http://curecode.org/rebol3/ticket.rsp?id=1879
+
+    CM: :complement
+    IC: :intersect
+    UN: :union
+    DF: :difference
+
 
     EV?: :even?
     OD?: :odd?
