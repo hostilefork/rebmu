@@ -72,14 +72,14 @@ lpN[
     
     ; P is shorthand here for period since we use it twice
     ; LF is newline's shorthand ("LineFeed")
-    ; EZ is shorthand for either -- n == 0 (ez=either-zero)
+    ; Ez? is shorthand for either -- n == 0 (either zero?)
     ; the either statement is like an "if-else", and
     ; takes two blocks.  It evaluates the first if
     ; the condition is true and the second if it's 
     ; false.  The end result of evaluating a block is
     ; the last value in that block (like in Ruby)
 
-    P{.}lfEZ--n[      
+    P{.}lfEz?--N[      
       ; reset n to 99...
       Nm
 

@@ -232,19 +232,9 @@ rebmu-base-context: object compose [
 
     ;-- Rebol's IF is already two characters
     IO: rebmu-wrap 'if/only [condition true-branch]
-    IL: :if-lesser?-mu
-    IG: :if-greater?-mu
-    IE: :if-equal?-mu
-    IU: :if-unequal?-mu
-    IZ: :if-zero?-mu
 
     EI: :either
     EO: rebmu-wrap 'either/only [condition true-branch false-branch]
-    EL: :either-lesser?-mu
-    EG: :either-greater?-mu
-    EE: :either-equal?-mu
-    EU: :either-unequal?-mu  ; technically superflous, you can swap EE params
-    EZ: :either-zero?-mu
 
     SW: :switch
     CA: :case
@@ -252,7 +242,6 @@ rebmu-base-context: object compose [
 
     UN: :unless
     UO: rebmu-wrap 'unless/only [condition false-branch]
-    UZ: :unless-zero?-mu
 
     ;----------------------------------------------------------------------
     ; LOOPING CONSTRUCTS
@@ -269,12 +258,6 @@ rebmu-base-context: object compose [
 
     WH: :while
     WA: :rebmu-wrap 'while/after [cond-block body-block]
-    WG: :while-greater?-mu
-    WL: :while-lesser?-mu
-    WGE: :while-greater-or-equal?-mu
-    WLE: :while-lesser-or-equal?-mu
-    WE: :while-equal?-mu
-    WU: :while-unequal?-mu
 
     ; single-character U taken for UNLESS 
     UT: :until
