@@ -38,7 +38,7 @@ unmush: function [
     special handling for inserting spaces or converting runs of
     characters inside a single symbol into separate symbols.}
     value [any-type!]
-] [
+][
     upper: charset [#"A" - #"Z"]
     lower: charset [#"a" - #"z"]
     digit: charset [#"0" - #"9"]
@@ -65,7 +65,7 @@ unmush: function [
             target-type: type? :value
             caps-means-set: either target-type = word! [
                 found? find upper first value-string
-            ] [
+            ][
                 true
             ]
 
@@ -158,11 +158,11 @@ unmush: function [
                         target-type: word!
                     )
                 ]
-            ] ]
+            ]]
 
             either 1 = length? result [
                 return :result/1
-            ] [
+            ][
                 return result
             ]
         ]
@@ -214,7 +214,7 @@ unmush: function [
                     ; checks aren't parts of a path, so insert them as-is
                     ;
                     insert result :unmushed
-                ] [
+                ][
                     ;
                     ; If the unmush didn't return a block, then just consider its
                     ; symbol to be the next element for the path in progress
@@ -232,7 +232,7 @@ unmush: function [
                         either set-word? :next-path-symbol [
                             temp-path: make set-path! []
                             next-path-symbol: to word! :next-path-symbol
-                        ] [
+                        ][
                             temp-path: make path! []
                         ]
                     ]
@@ -257,7 +257,7 @@ unmush: function [
 
             either 1 = length? result [
                 return :result/1
-            ] [
+            ][
                 return result
             ]
         ]
@@ -274,9 +274,9 @@ unmush: function [
                 either all [
                     not block? :elem
                     block? :unmushed
-                ] [
+                ][
                     append result :unmushed
-                ] [
+                ][
                     append/only result :unmushed
                 ]
             ]

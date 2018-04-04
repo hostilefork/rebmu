@@ -811,7 +811,7 @@ rebmu: function [
         {Return runnable object plus environment without executing main}
     /inject injection [block! string!]
         {Run some test code in the environment after main function}
-] [
+][
     ; block is sneaky way to make a "static" variable
     statics: [
         context: #[none] ;-- none would not be reduced...
@@ -828,18 +828,18 @@ rebmu: function [
         any [
             file? code
             url? code
-        ] [
+        ][
             code: load code
 
             either all [
                 'Rebmu = first code
                 block? second code
-            ] [
+            ][
                 ;-- ignore the header for the moment... just pick offset
                 ;-- the first two values from code
                 take code
                 take code
-            ] [
+            ][
                 print "WARNING: Rebmu sources should start with Rebmu [...]"
                 print "(See: http://curecode.org/rebol3/ticket.rsp?id=2105)"
 
@@ -887,7 +887,7 @@ rebmu: function [
             code: to block! injection
         ]
         injection: unmush injection
-    ] [
+    ][
         injection: copy []
     ]
 
@@ -898,10 +898,10 @@ rebmu: function [
                 ; assign to a if the block doesn't start with a set-word
                 arg: compose/only [a: (arg)]
             ]
-        ] [
+        ][
             arg: compose/only [a: (arg)]
         ]
-    ] [
+    ][
         arg: copy []
     ]
 
@@ -920,7 +920,7 @@ rebmu: function [
         extend context 'do func [value] [
             either string? value [
                 rebmu value
-            ] [
+            ][
                 do value
             ]
         ]
@@ -936,7 +936,7 @@ rebmu: function [
         extend context 'ld :rebmu-load
 
         statics/context: context
-    ] [
+    ][
         context: statics/context
     ]
 

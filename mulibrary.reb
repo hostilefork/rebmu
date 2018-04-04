@@ -18,7 +18,7 @@ Rebol [
 
 to-string-mu: function [
     value
-] [
+][
     either any-word? value [
         ; This code comes from spelling? from an old version of Bindology
         ; Ladislav and Fork are hoping for this to be the functionality of
@@ -30,14 +30,14 @@ to-string-mu: function [
             set-word? :value [head remove back tail mold :value]
             true [next mold :value]
         ]
-    ] [
+    ][
         to-string value
     ]
 ]
 
 to-char-mu: function [
     value
-] [
+][
     either any-word? value [
         ; This code comes from spelling? from an old version of Bindology
         ; Ladislav and HostileFork are hoping for this to be the functionality
@@ -49,7 +49,7 @@ to-char-mu: function [
             set-word? :value [first head remove back tail mold :value]
             true [first next mold :value]
         ]
-    ] [
+    ][
         to-char value
     ]
 ]
@@ -57,7 +57,7 @@ to-char-mu: function [
 to-word-mu: function [value] [
     either char? value [
         to-word to-string value
-    ] [
+    ][
         to-word value
     ]
 ]
@@ -69,7 +69,7 @@ to-http-url-mu: function ['target [word! path! string!] /secure][
 caret-mu: function ['value] [
     switch/default type-of/word :value [
         string! [return to-string debase value]
-    ] [
+    ][
         throw "caret mu needs to be thought out for non-strings, see rebmu.reb"
     ]
 
@@ -103,7 +103,7 @@ make-integer-mu: function [value] [
     switch/default type-of/word :value [
         pair! [to-integer first value * (10 ** second value)]
         integer! [to-integer 10 ** value]
-    ] [
+    ][
         throw "Unhandled type to make-integer-mu"
     ]
 ]
@@ -173,17 +173,17 @@ does-function-mu: func [body [block!]] [
 
 quoth-mu: function [
     'arg
-] [
+][
     switch/default type-of/word :arg [
         word! [
             str: to-string arg
             either 1 == length? str [
                 first str
-            ] [
+            ][
                 str
             ]
         ]
-    ] [
+    ][
         throw "Unhandled type to quoth-mu"
     ]
 ]
@@ -193,7 +193,7 @@ insert-at-mu: function [
     series
     index
     value
-] [
+][
     insert at series index value
 ]
 
@@ -204,8 +204,8 @@ increment-mu: func ['word-or-path] [
     also get :word-or-path (
         either path? :word-or-path [
             set :word-or-path add-mu old 1
-        ] [
-            set word-or-path add-mu get :word-or-path 1 
+        ][
+            set word-or-path add-mu get :word-or-path 1
         ]
     )
 ]
@@ -217,7 +217,7 @@ decrement-mu: func ['word-or-path ] [
     also get :word-or-path (
         either path? :word-or-path [
             set :word-or-path subtract-mu old 1
-        ] [
+        ][
             set word-or-path subtract-mu get :word-or-path 1
         ]
     )
@@ -226,7 +226,7 @@ decrement-mu: func ['word-or-path ] [
 readin-mu: func [
     {Use data type after getting the quoted argument to determine input coercion}
     'value
-] [
+][
     ;-- Has to be a FUNC to set in callers environment...
     ;-- ...or could we leverage the caller's binding?
 
@@ -236,7 +236,7 @@ readin-mu: func [
         decimal! [set value to-integer ask "Input Float: "]
         block! [set value to-block ask "Input Series of Items: "]
         percent! [set value to-percent ask "Input Percent: "]
-    ] [
+    ][
         throw "Unhandled type to readin-mu"
     ]
 ]
@@ -245,14 +245,14 @@ readin-mu: func [
 ; operator defined as ~ in order to compete with GolfScript/etc, rethink this.
 inversion-mu: function [
     value
-] [
+][
     switch/default type-of/word :value [
         string! [empty? value]
         decimal!
         integer! [
             zero? value
         ]
-    ] [
+    ][
         not value
     ]
 ]
@@ -260,7 +260,7 @@ inversion-mu: function [
 next-mu: function [arg] [
     switch/default type-of/word :arg [
         integer! [arg + 1]
-    ] [
+    ][
         next arg
     ]
 ]
@@ -268,7 +268,7 @@ next-mu: function [arg] [
 back-mu: function [arg] [
     switch/default type-of/word :arg [
         integer! [arg - 1]
-    ] [
+    ][
         back arg
     ]
 ]
@@ -286,7 +286,7 @@ remove-each-mu: function [
     'word [get-word! word! block!]
     data [series!]
     body [block!]
-] [
+][
     remove-each :word data body
     data
 ]
@@ -310,7 +310,7 @@ swap-exchange-mu: func [
         x: get a
         set a get b
         set b x
-    ] [
+    ][
         swap a b
     ]
 ]
@@ -333,7 +333,7 @@ add-mu: function [value1 value2] [
             ]
             head result
         ]
-    ] [
+    ][
         add value1 value2
     ]
 ]
@@ -349,7 +349,7 @@ subtract-mu: function [value1 value2] [
             ]
             head result
         ]
-    ] [
+    ][
         subtract value1 value2
     ]
 ]
@@ -365,7 +365,7 @@ negate-mu: function [value] [
             ]
             head result
         ]
-    ] [
+    ][
         negate value
     ]
 ]
