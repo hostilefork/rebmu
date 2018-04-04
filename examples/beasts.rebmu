@@ -1,15 +1,15 @@
 Rebmu [
-	Title: {aHHHH!  The Beasts are HHHHere!}
+    Title: {aHHHH!  The Beasts are HHHHere!}
 
-	Home: http://codegolf.stackexchange.com/questions/25557/ahhhh-the-beasts-are-hhhhere/
+    Home: http://codegolf.stackexchange.com/questions/25557/ahhhh-the-beasts-are-hhhhere/
 
-	Purpose: {
-		Play a reduced version of the IBM PC/AT game "Beast".
-	}
+    Purpose: {
+        Play a reduced version of the IBM PC/AT game "Beast".
+    }
 
-	Usage: {
-		rebmu/args %beasts.rebmu %beasts-data/big-map-win.txt
-	}
+    Usage: {
+        rebmu/args %beasts.rebmu %beasts-data/big-map-win.txt
+    }
 ]
 
 
@@ -17,49 +17,49 @@ Rebmu [
 
 ;-- Beast direction preferences from problem statement
 matrix: [
-	[1 3 4]
-	[2 h 5]
-	[6 8 7]
+    [1 3 4]
+    [2 h 5]
+    [6 8 7]
 ]
 
 ;-- Moves translated into offsets on map
 offsets: [
-	u [0 -1]
-	d [0 1]
-	r [1 0]
-	l [-1 0]
-	w [0 0]
+    u [0 -1]
+    d [0 1]
+    r [1 0]
+    l [-1 0]
+    w [0 0]
 ]
 
 ;-- Parse the input to get cols, rows, map, beast locations, player location
 map: []
 beasts: []
 parse read/lines a [
-	pos: (set [cols rows] load first pos)
-	skip
+    pos: (set [cols rows] load first pos)
+    skip
 
-	(row: 1 col: 1)
-	rows [
-		pos:
-		into [
-			cols [
-				[
-					"O" (player: reduce [col row])
-				|
-					"H" (append/only beasts reduce [col row])
-				|
-					skip
-				]
-				(++ col)
-			]
-		] (
-			append map first pos
-			col: 1
-			++ row
-		)
-	]
+    (row: 1 col: 1)
+    rows [
+        pos:
+        into [
+            cols [
+                [
+                    "O" (player: reduce [col row])
+                |
+                    "H" (append/only beasts reduce [col row])
+                |
+                    skip
+                ]
+                (++ col)
+            ]
+        ] (
+            append map first pos
+            col: 1
+            ++ row
+        )
+    ]
 
-	into [copy moves to end]
+    into [copy moves to end]
 ]
 
 score: 0
@@ -72,127 +72,127 @@ probe beasts
 
 do does [
 
-	until [
-		;-- Move player
+    until [
+        ;-- Move player
 
-		move: to-word take moves
-		offset: offsets/(move)
-		test: copy player
-		orig: none
+        move: to-word take moves
+        offset: offsets/(move)
+        test: copy player
+        orig: none
 
-		player-initial: copy player
-		map/(player/2)/(player/1): space
-		if move <> 'w [
-			forever [
-				test/1: test/1 + offset/1
-				test/2: test/2 + offset/2
+        player-initial: copy player
+        map/(player/2)/(player/1): space
+        if move <> 'w [
+            forever [
+                test/1: test/1 + offset/1
+                test/2: test/2 + offset/2
 
-				cell: map/(test/2)/(test/1)
-				unless orig [
-					if cell == #"H" [ ;-- stepped directly on a Beast!
-						player: none
-						exit
-					]
-					orig: cell
-				]
+                cell: map/(test/2)/(test/1)
+                unless orig [
+                    if cell == #"H" [ ;-- stepped directly on a Beast!
+                        player: none
+                        exit
+                    ]
+                    orig: cell
+                ]
 
-				switch cell [
-					#"#" [
-						;-- blocked
-						offset/1: offset/2: 0
-						break
-					]
-					;-- #"~" ;-- okay
-					#" " [
-						map/(test/2)/(test/1): orig
-						break
-					]
-					#"H" [
-						next-cell: map/(test/2 + offset/2)/(test/1 + offset/1)
-						either find [#"~" #"#"] next-cell [
-							score: score + 2
-							take find/only beasts reduce [test/1 test/2]
-							map/(test/2)/(test/1): #"~"
-							break
-						] [
-							offset/1: offset/2: 0
-							break
-						]
-					]
-				]
-			]
-		]
-		player/1: player/1 + offset/1
-		player/2: player/2 + offset/2
-		map/(player/2)/(player/1): #"O"
+                switch cell [
+                    #"#" [
+                        ;-- blocked
+                        offset/1: offset/2: 0
+                        break
+                    ]
+                    ;-- #"~" ;-- okay
+                    #" " [
+                        map/(test/2)/(test/1): orig
+                        break
+                    ]
+                    #"H" [
+                        next-cell: map/(test/2 + offset/2)/(test/1 + offset/1)
+                        either find [#"~" #"#"] next-cell [
+                            score: score + 2
+                            take find/only beasts reduce [test/1 test/2]
+                            map/(test/2)/(test/1): #"~"
+                            break
+                        ] [
+                            offset/1: offset/2: 0
+                            break
+                        ]
+                    ]
+                ]
+            ]
+        ]
+        player/1: player/1 + offset/1
+        player/2: player/2 + offset/2
+        map/(player/2)/(player/1): #"O"
 
-		;-- move beasts if it's an even turn
+        ;-- move beasts if it's an even turn
 
-		if beast-turn [
+        if beast-turn [
 
-			forall beasts [
-				best-offset: copy [0 0]
-				best-distance: none
-				best-priority: none
+            forall beasts [
+                best-offset: copy [0 0]
+                best-distance: none
+                best-priority: none
 
-				location: first beasts
-				map/(location/2)/(location/1): space
-				distances: copy/deep matrix
-				for col-offset -1 1 1 [
-					for row-offset -1 1 1 [
-						offset: reduce [col-offset row-offset]
+                location: first beasts
+                map/(location/2)/(location/1): space
+                distances: copy/deep matrix
+                for col-offset -1 1 1 [
+                    for row-offset -1 1 1 [
+                        offset: reduce [col-offset row-offset]
 
-						if all [zero? offset/1 zero? offset/2] [
-							continue
-						]
+                        if all [zero? offset/1 zero? offset/2] [
+                            continue
+                        ]
 
-						test: copy first beasts 
-						test/1: test/1 + offset/1
-						test/2: test/2 + offset/2
+                        test: copy first beasts
+                        test/1: test/1 + offset/1
+                        test/2: test/2 + offset/2
 
-						if test == player [
-							map/(player/2)/(player/1): #"H"
-							player: none
-							exit
-						]
+                        if test == player [
+                            map/(player/2)/(player/1): #"H"
+                            player: none
+                            exit
+                        ]
 
-						if map/(test/2)/(test/1) <> space [
-							continue
-						]
+                        if map/(test/2)/(test/1) <> space [
+                            continue
+                        ]
 
-						priority: matrix/(offset/2 + 2)/(offset/1 + 2)
-						distance: square-root ((test/1 - player-initial/1) ** 2) + ((test/2 - player-initial/2) ** 2)
+                        priority: matrix/(offset/2 + 2)/(offset/1 + 2)
+                        distance: square-root ((test/1 - player-initial/1) ** 2) + ((test/2 - player-initial/2) ** 2)
 
-						if any [
-							none? best-priority
-							distance < best-distance
-							all [
-								distance == best-distance
-								priority < best-priority
-							]
-						] [
-							best-offset: offset 
-							best-priority: priority
-							best-distance: distance
-						]
-					]
-				]
-				beasts/1/1: beasts/1/1 + best-offset/1
-				beasts/1/2: beasts/1/2 + best-offset/2
-				map/(beasts/1/2)/(beasts/1/1): #"H"
-			]
-		]
+                        if any [
+                            none? best-priority
+                            distance < best-distance
+                            all [
+                                distance == best-distance
+                                priority < best-priority
+                            ]
+                        ] [
+                            best-offset: offset
+                            best-priority: priority
+                            best-distance: distance
+                        ]
+                    ]
+                ]
+                beasts/1/1: beasts/1/1 + best-offset/1
+                beasts/1/2: beasts/1/2 + best-offset/2
+                map/(beasts/1/2)/(beasts/1/1): #"H"
+            ]
+        ]
 
-		beast-turn: not beast-turn
+        beast-turn: not beast-turn
 
-		probe map
-		prin newline
+        probe map
+        prin newline
 
-		any [
-			empty? moves
-			empty? beasts
-		]
-	]
+        any [
+            empty? moves
+            empty? beasts
+        ]
+    ]
 ]
 
 unless player [print "aHHHH!"]

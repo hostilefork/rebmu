@@ -15,7 +15,7 @@ While it could be argued that Rebmu is a "Rebol library" and not an independent 
 
 Despite several shorthands defined for common Rebol operations (even as far as `I` for `IF`) the functions are true to their Rebol bretheren across all inputs that Rebol accepts.  Current exceptions to this are q and ?, due to controversy on whether these rare abbreviations (Q for QUIT and ? for HELP) should be in the console only and not allowed in written Rebol scripts.  *(Due to their relative lack of literacy in Rebol's otherwise full-English aesthetic.)*  Instead Q was retaken for QUOTE.
 
-P is a shortcut for PR, which is in turn a shortcut for PRINT.  This provides the ability to redefine P and use it as a variable if you are solving a problem that needs it while still having access to the abbreviated PR form if you must do so.  
+P is a shortcut for PR, which is in turn a shortcut for PRINT.  This provides the ability to redefine P and use it as a variable if you are solving a problem that needs it while still having access to the abbreviated PR form if you must do so.
 
 *(Note: At one time all single letters were given initial functions or values  This went as far as declaring B to be an empty block value, X Y Z as floating point values of 0.0, -1.0, and 1.0, etc.  Over the long run this somewhat contrived idea did not prove to make much of a dent in the ability for Rebmu to compete.  It was a small constant factor eclipsed by being able to choose any language.  So these were removed.)*
 
@@ -109,7 +109,7 @@ There is a difference from symbol, when you switch from upper to lowercase acros
 
 Again, mushing is optional, and lowercase-code-with-spaces runs as normal.  So it's important to realize an implication of that.  *Unless there is an uppercase letter **somewhere** in a word or path sequence, nothing will unmush.*  That's why it doesn't apply in this case, for instance:
 
-	[a00] => [a00]
+    [a00] => [a00]
 
 The number of spaces and colons this can save on in Rebol code is significant, and it is easy to read and write once the rules are understood.  If you know Rebol, that is :)
 
@@ -173,7 +173,7 @@ Note that if you pass your code in as a block, you'll get a warning since the st
 
 It can help to find errors by using the feature that shows you the unmushed version of the code before it's executed:
 
-    >> rebmu/debug {A10pApApA} 
+    >> rebmu/debug {A10pApApA}
     Executing: [a: 10 p a p a p a]
     10
     10

@@ -20,29 +20,29 @@ Rebol [
     Notes: {
 
         ### SINGLE CHARACTER DEFINITIONS
-    
+
         Originally Rebmu tried to define single characters as having values
         so you could have "a value of that type around" (x, y, z as 0.0 to
         have a float around, s as {} to have an empty string, etc.)
-    
+
         Thought to be helpful for golfing, it turned out to not be THAT
         helpful.  The trivial puzzles in which that count wasn't lost in the
         noise were usually solvable in fewer characters by another language
         that was a precise match for the domain of the question.  It was
         difficult to remember and taught nothing that would be relevant to
         Rebol or Red.
-    
+
         So the single character definitions were scaled back drastically.
         They are tracked here as an index and to-do list, while the actual
         definitions are in the functional group in the code.
-    
+
         . => redefine-mu
         & => does/only (a.k.a. historical DOES with no locals gathering)
         ~
         ?
         |
         a ;-- usually a program argument or a-function variable
-        b 
+        b
         c => copy
         d
         e => either
@@ -153,7 +153,7 @@ Rebol [
         Several of these freed up with the requirement that ending in a ?
         actually return a LOGIC!.  The useful function empty? doesn't fit
         if E? is EQUAL? and EM? is EMAIL?
-        
+
         A? => and?
         B? ;-- could be... block?
         C? ;-- could be... char?
@@ -236,7 +236,7 @@ do %unmush.reb
 ; they are being excised as they can sort of be seen as interfering with
 ; Rebmu's main mission, which is to teach/evangelize Rebol and Red
 ; dialecting.  A trick just for the sake of helping win code golf that
-; does not really assist with that (or worse, inhibits learning the 
+; does not really assist with that (or worse, inhibits learning the
 ; languages proper) should be included sparingly--if at all
 
 do %mulibrary.reb
@@ -374,7 +374,7 @@ rebmu-base-context: object compose [
     W: :WH
     WA: :rebmu-wrap 'while/after [cond-block body-block]
 
-    ; single-character U taken for UNLESS 
+    ; single-character U taken for UNLESS
     UT: :until
     UTA: rebmu-wrap 'until/after [cond-block body-block]
 
@@ -400,7 +400,7 @@ rebmu-base-context: object compose [
 
     FN: :closure
     FC: :clos
-    
+
     DZ: :does
     &: :DZ
 
@@ -457,7 +457,7 @@ rebmu-base-context: object compose [
     ;--    --Dr. Rebmu
     RM: :remove
 
-    RP: :replace ;-- REPEND and REPEAT deprecated in Rebmu 
+    RP: :replace ;-- REPEND and REPEAT deprecated in Rebmu
     RPA: rebmu-wrap 'replace/all [target search rep]
     RPAC: rebmu-wrap 'replace/all/case [target search rep]
     RPAT: rebmu-wrap 'replace/all/tail [target search rep]
@@ -522,7 +522,7 @@ rebmu-base-context: object compose [
     CBW: rebmu-wrap 'combine/with [block delimiter]
 
     QO: :quote
-    Q: :QO 
+    Q: :QO
 
     ;----------------------------------------------------------------------
     ; MATH AND LOGIC OPERATIONS
@@ -542,7 +542,7 @@ rebmu-base-context: object compose [
     LG2: :log-2
     ;-- is L2: LG2 worth it, or L+digit be used for something else?
     LGE: :log-e ;-- can't do "(L)og (N)atural" as LN, due to LN: LENGTH-OF
-    ;-- is LE: LGE worth it, or is LE better used or something else? 
+    ;-- is LE: LGE worth it, or is LE better used or something else?
     LG: :LG10 ;-- Rebmu's 10-fingered-human bias, also shortens LG10 more
 
     ; ** is the infix power operator, but infix is sometimes not what you
@@ -616,7 +616,7 @@ rebmu-base-context: object compose [
     ;----------------------------------------------------------------------
 
     PR: :print
-    P: :PR 
+    P: :PR
 
     RD: :read
     WR: :write
@@ -647,7 +647,7 @@ rebmu-base-context: object compose [
     ; but I thought that even if AR and AI were available for ARRAY and
     ; ARRAY/INITIAL the use of the tilde would allow the pattern to
     ; continue for some other things which *would* collide.
-    ; 
+    ;
     ; This used to be done with carets, but Christopher Ross-Gill thought
     ; tildes looked better.
     ;----------------------------------------------------------------------
@@ -797,7 +797,7 @@ rebmu-base-context: object compose [
 
 rebmu: function [
     {Visit http://hostilefork.com/rebmu/}
-    code [file! url! block! string!] 
+    code [file! url! block! string!]
         {The Rebmu or Rebol code}
     /args arg [any-type!]
         {argument A, unless a block w/set-words; can be Rebmu format [X10Y20]}
@@ -939,7 +939,7 @@ rebmu: function [
     ] [
         context: statics/context
     ]
-            
+
     bind code context
     bind injection context
 
@@ -951,7 +951,7 @@ rebmu: function [
         do injection
         do code
     ]
-    
+
     ; If we exit the last "Rebmu user" context, then reset it to none
     if outermost [
         statics/context: none

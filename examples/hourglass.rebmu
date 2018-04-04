@@ -1,33 +1,33 @@
 Rebmu [
-	Description: {Hourglass}
-	Home: http://stackoverflow.com/a/3110684/211160
+    Description: {Hourglass}
+    Home: http://stackoverflow.com/a/3110684/211160
 
-	Purpose: {
-		Input is composed of two numbers: First number is a greater than 1
-		integer that represents the height of the bulbs, second number is a
-		percentage (0 - 100) of the hourglass' capacity.
+    Purpose: {
+        Input is composed of two numbers: First number is a greater than 1
+        integer that represents the height of the bulbs, second number is a
+        percentage (0 - 100) of the hourglass' capacity.
 
-		The hourglass' height is made by adding more lines to the hourglass'
-		bulbs, so size 2 (the minimal accepted size) would be:
+        The hourglass' height is made by adding more lines to the hourglass'
+        bulbs, so size 2 (the minimal accepted size) would be:
 
-			_____
-			\   /
-			 \ /
-			 / \
-			/___\
+            _____
+            \   /
+             \ /
+             / \
+            /___\
 
-		Size 3 will add more lines making the bulbs be able to fit more 'sand'.
+        Size 3 will add more lines making the bulbs be able to fit more 'sand'.
 
-		Sand will be drawn using the character x. The top bulb will contain N
-		percent 'sand' while the bottom bulb will contain (100 - N) percent
-		sand, where N is the second variable.
+        Sand will be drawn using the character x. The top bulb will contain N
+        percent 'sand' while the bottom bulb will contain (100 - N) percent
+        sand, where N is the second variable.
 
-		'Capacity' is measured by the amount of spaces () the hourglass
-		contains. Where percentage is not exact, it should be rounded up.
+        'Capacity' is measured by the amount of spaces () the hourglass
+        contains. Where percentage is not exact, it should be rounded up.
 
-		Sand is drawn from outside in, giving the right side precedence in case
-		percentage result is even.
-	}
+        Sand is drawn from outside in, giving the right side precedence in case
+        percentage result is even.
+    }
 ]
 
 ; read J from the user, this is our height which will be greater than 1
@@ -43,14 +43,14 @@ N 0% rN
 ; the middle of Rebmu.
 
 comment [
-	; Caution: Using PAREN! inside of COMMENT causes the Pygments
-	; syntax highlighter, used by GitHub, to hang... as of 14-Oct-2010
-	birthday: to-date ask "When were you born? "
-	
-	; Note: use DIFFERENCE function for more precise result than days
-	numerator: 21-dec-2012 - now/date
-	denominator: 21-dec-2012 - birthday
-	n: numerator / denominator
+    ; Caution: Using PAREN! inside of COMMENT causes the Pygments
+    ; syntax highlighter, used by GitHub, to hang... as of 14-Oct-2010
+    birthday: to-date ask "When were you born? "
+
+    ; Note: use DIFFERENCE function for more precise result than days
+    numerator: 21-dec-2012 - now/date
+    denominator: 21-dec-2012 - birthday
+    n: numerator / denominator
 ]
 
 ; top line width is what we get when add 1 to the result of multiplying j * 2
@@ -64,7 +64,7 @@ Wa1m2j
 ; 4: right boundary of hourglass
 ; 5: what to print when there is no volume and it's not the last row
 ;
-; Reversing it makes it work for the bottom half when you change the first 
+; Reversing it makes it work for the bottom half when you change the first
 ; character to an underscore
 S{ \x/ }
 
@@ -76,22 +76,22 @@ D00
 ; B counts the volume of spaces to draw before we start drawing X characters
 ; C is our offset (-1 for top half, 1 for bottom)
 Hc&[
-	u[
-		; z says are we on the last line we are to print?
-		Ze?Wa
-		
-		; start Q as an empty string, and then fill it using "sand physics"
-		; dropping on the sides using alternating append/insert (if top) or
-		; repeatedly inserting at midpoint (if bottom)
-		Qs~rpKw[isEL00c[skQd2k][eEV?kQ[tlQ]]pcSeg--b00[eZ 1 5]3]
-		
-		; rejoin a string composed of an indentation of length d, the left
-		; hourglass side, the Q string, and the right hourglass side.
-		prRJ[si~dSPscSqFHs]
+    u[
+        ; z says are we on the last line we are to print?
+        Ze?Wa
 
-		; loop termination condition and continuation
-		eZ 1[s+dCa+wM2cNO]
-	]
+        ; start Q as an empty string, and then fill it using "sand physics"
+        ; dropping on the sides using alternating append/insert (if top) or
+        ; repeatedly inserting at midpoint (if bottom)
+        Qs~rpKw[isEL00c[skQd2k][eEV?kQ[tlQ]]pcSeg--b00[eZ 1 5]3]
+
+        ; rejoin a string composed of an indentation of length d, the left
+        ; hourglass side, the Q string, and the right hourglass side.
+        prRJ[si~dSPscSqFHs]
+
+        ; loop termination condition and continuation
+        eZ 1[s+dCa+wM2cNO]
+    ]
 ]
 
 ; V is the volume function, pass it a percentage and it will tell you

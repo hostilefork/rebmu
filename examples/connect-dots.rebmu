@@ -1,50 +1,50 @@
 Rebmu [
-	Title: {Connect the Dots}
-	Home: http://stackoverflow.com/a/3066878/211160
+    Title: {Connect the Dots}
+    Home: http://stackoverflow.com/a/3066878/211160
 
-	Purpose: {
-		The input are multiple lines (terminated by a newline) which describe
-		a 'field'. There are 'numbers' scattered across this field (seperated
-		by whitespace). All lines can be considered to be the same length (you
-		can pad spaces to the end).
+    Purpose: {
+        The input are multiple lines (terminated by a newline) which describe
+        a 'field'. There are 'numbers' scattered across this field (seperated
+        by whitespace). All lines can be considered to be the same length (you
+        can pad spaces to the end).
 
-			* the numbers always start at 1
+            * the numbers always start at 1
 
-			* they follow the ordering of the natural numbers: every
-			  'next number' is incremented with 1
+            * they follow the ordering of the natural numbers: every
+              'next number' is incremented with 1
 
-			* every number is surrounded by (at least) one whitespace on
-			  its left and right
+            * every number is surrounded by (at least) one whitespace on
+              its left and right
 
-		Draw lines between these numbers in their natural order
-		(1 -> 2 -> 3 -> ...N) (assume N <= 99) with the following
-		characteristics:
+        Draw lines between these numbers in their natural order
+        (1 -> 2 -> 3 -> ...N) (assume N <= 99) with the following
+        characteristics:
 
-			* replace a number with a '+' character
+            * replace a number with a '+' character
 
-			* for horizontal lines: use '-'
+            * for horizontal lines: use '-'
 
-			* for vertical lines: use '|'
+            * for vertical lines: use '|'
 
-			* going left and down or right and up: /
+            * going left and down or right and up: /
 
-			* going left and up or right and down: \
+            * going left and up or right and down: \
 
-		When drawing lines of type 4 and 5 you can assume (given the points to
-		connect with coordinates x1, y1 and x2, y2) that
-		distance(x1,x2) == distance(y1,y2). Or in other words:
-		"consecutive elements that are not horizontally or vertically aligned
-		always align to the slope of the slash or backslash".
+        When drawing lines of type 4 and 5 you can assume (given the points to
+        connect with coordinates x1, y1 and x2, y2) that
+        distance(x1,x2) == distance(y1,y2). Or in other words:
+        "consecutive elements that are not horizontally or vertically aligned
+        always align to the slope of the slash or backslash".
 
-		It is important to follow the order in which the dots are connected
-		(newer lines can strike out older lines).
-	}
+        It is important to follow the order in which the dots are connected
+        (newer lines can strike out older lines).
+    }
 
-	Notes: {
-		Pass in the filename containing the input like this:
+    Notes: {
+        Pass in the filename containing the input like this:
 
-			rebmu/args %connect-dots.rebmu %connect-dots-data/unicorn.txt
-	}
+            rebmu/args %connect-dots.rebmu %connect-dots-data/unicorn.txt
+    }
 ]
 
 ; copy program argument into variable (m)atrix
@@ -74,7 +74,7 @@ Ya|[ixFImHDa]
 ; somehow so there's a NEXT on here that is probably not needed)
 Ca|[nxSKpcMscAbkFSa]
 
-; k defaults to 0 in Rebmu.	 we loop through all the numbers up front and
+; k defaults to 0 in Rebmu.  we loop through all the numbers up front and
 ; gather their coordinate pairs into a list called g
 w[Jd++KrpnoG[xJyJ]]
 
@@ -83,45 +83,45 @@ w[Jd++KrpnoG[xJyJ]]
 Bf+G
 
 w[
-	; condition we are checking
-	b
+    ; condition we are checking
+    b
 
-	; j is the iterator position of the beginning stroke
-	JcB
-	
-	; f is the (f)inishing coordinate pair for our stroke
-	Ff+G
-	
-	; if there is a finishing pair, we need to draw a line 
-	iF[
-		; k is the iterator position of the end of the stroke
-		KcF
-		
-		; the (h)orizontal and (v)ertical offsets we'll step by (-1,0,1)
-		HqXkXj
-		VqYkYj
-		
-		u[
-			; change the character at iterator location for b (now our
-			; current location) based on an index into the letters list
-			; that we figure out based on whether v is zero, h is zero,
-			; v equals h, or v doesn't equal h.
-			chCbPClEZv01[ezH02[eeHv03 4]]
-			
-			; if we update the coordinate pair by the offset and it 
-			; equals finish, then we're done with the stroke
-			=~A+bRE[hV]f
-		]
-	]
-	
-	; whether we overwrite the number with a + or a plus and space
-	; depends on whether we detect one of our wall "letters" already
-	; one step to the right of the iterator position
-	chJeFIlSCj{+}{+ }
-	
-	; update from finish pair to be new begin pair for next loop iteration
-	Jk
-	Bf
+    ; j is the iterator position of the beginning stroke
+    JcB
+
+    ; f is the (f)inishing coordinate pair for our stroke
+    Ff+G
+
+    ; if there is a finishing pair, we need to draw a line
+    iF[
+        ; k is the iterator position of the end of the stroke
+        KcF
+
+        ; the (h)orizontal and (v)ertical offsets we'll step by (-1,0,1)
+        HqXkXj
+        VqYkYj
+
+        u[
+            ; change the character at iterator location for b (now our
+            ; current location) based on an index into the letters list
+            ; that we figure out based on whether v is zero, h is zero,
+            ; v equals h, or v doesn't equal h.
+            chCbPClEZv01[ezH02[eeHv03 4]]
+
+            ; if we update the coordinate pair by the offset and it
+            ; equals finish, then we're done with the stroke
+            =~A+bRE[hV]f
+        ]
+    ]
+
+    ; whether we overwrite the number with a + or a plus and space
+    ; depends on whether we detect one of our wall "letters" already
+    ; one step to the right of the iterator position
+    chJeFIlSCj{+}{+ }
+
+    ; update from finish pair to be new begin pair for next loop iteration
+    Jk
+    Bf
 ]
 
 ; write out m

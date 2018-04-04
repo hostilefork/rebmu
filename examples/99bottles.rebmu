@@ -2,42 +2,42 @@ Rebmu [
 	Title: {99 Bottles of Beer}
 	Home: http://codegolf.stackexchange.com/a/413/57
 	Purpose: {
-		Recreate '99 bottles of beers on the wall'.
+        Recreate '99 bottles of beers on the wall'.
 
 		The desired output is this:
 
-			99 bottles of beer on the wall, 99 bottles of beer.
-			Take one down and pass it around, 98 bottles of beer on the wall.
+  			99 bottles of beer on the wall, 99 bottles of beer.
+  			Take one down and pass it around, 98 bottles of beer on the wall.
 
-			98 bottles of beer on the wall, 98 bottles of beer.
-			Take one down and pass it around, 97 bottles of beer on the wall.
+  			98 bottles of beer on the wall, 98 bottles of beer.
+  			Take one down and pass it around, 97 bottles of beer on the wall.
 
-			97 bottles of beer on the wall, 97 bottles of beer.
-			Take one down and pass it around, 96 bottles of beer on the wall.
+  			97 bottles of beer on the wall, 97 bottles of beer.
+  			Take one down and pass it around, 96 bottles of beer on the wall.
 
-			96 bottles of beer on the wall, 96 bottles of beer.
-			Take one down and pass it around, 95 bottles of beer on the wall.
+  			96 bottles of beer on the wall, 96 bottles of beer.
+  			Take one down and pass it around, 95 bottles of beer on the wall.
 
-			95 bottles of beer on the wall, 95 bottles of beer.
-			Take one down and pass it around, 94 bottles of beer on the wall.
+  			95 bottles of beer on the wall, 95 bottles of beer.
+  			Take one down and pass it around, 94 bottles of beer on the wall.
 
-			....
+  			....
 
-			3 bottles of beer on the wall, 3 bottles of beer.
-			Take one down and pass it around, 2 bottles of beer on the wall.
+  			3 bottles of beer on the wall, 3 bottles of beer.
+  			Take one down and pass it around, 2 bottles of beer on the wall.
 
-			2 bottles of beer on the wall, 2 bottles of beer.
-			Take one down and pass it around, 1 bottle of beer on the wall.
+  			2 bottles of beer on the wall, 2 bottles of beer.
+  			Take one down and pass it around, 1 bottle of beer on the wall.
 
-			1 bottle of beer on the wall, 1 bottle of beer.
-			Go to the store and buy some more, 99 bottles of beer on the wall.
+  			1 bottle of beer on the wall, 1 bottle of beer.
+  			Go to the store and buy some more, 99 bottles of beer on the wall.
 
 		Show me how you would solve this with your favorite programming
 		language.  Most creative use of a language wins.
 	}
 ]
 
-; b is a parameterless "func" that returns a string 
+; b is a parameterless "func" that returns a string
 ; "N bottle(s) of beer on the wall" with correct
 ; pluralization.  CB is "COMBINE"
 ; http://blog.hostilefork.com/combine-alternative-rebol-red-rejoin/
@@ -50,47 +50,47 @@ M99Nm
 ; loop n times (99)
 lpN[
 
-  ; "print rejoin"
-  ; rejoin is an operation which REduces ("evals")
-  ; expressions in a block, and then JOINs them into
-  ; a string.  So rejoin [{Hello } 1 + 2 { world.}]
-  ; gives back the string {Hello 3 world.}
-  prCB[
-  
-    ; invoke b, returns the N bottles of beer string
-    b
-    
-    ; sets w to the string " on the wall" and also
-    ; evaluates to " on the wall"
-    W{ on the wall}
-    
-    ; same set/return except now it's c for comma-space
-    C{, }
-    
-    ; invoke b again
-    b
-    
-    ; P is shorthand here for period since we use it twice
-    ; LF is newline's shorthand ("LineFeed")
-    ; Ez? is shorthand for either -- n == 0 (either zero?)
-    ; the either statement is like an "if-else", and
-    ; takes two blocks.  It evaluates the first if
-    ; the condition is true and the second if it's 
-    ; false.  The end result of evaluating a block is
-    ; the last value in that block (like in Ruby)
+    ; "print rejoin"
+    ; rejoin is an operation which REduces ("evals")
+    ; expressions in a block, and then JOINs them into
+    ; a string.  So rejoin [{Hello } 1 + 2 { world.}]
+    ; gives back the string {Hello 3 world.}
+    prCB[
 
-    P{.}lfEz?--N[      
-      ; reset n to 99...
-      Nm
+        ; invoke b, returns the N bottles of beer string
+        b
 
-      ; ...but evaluate this else clause to a string
-      {Go to the store and buy some more}
-    ]{Take one down and pass it around}
+        ; sets w to the string " on the wall" and also
+        ; evaluates to " on the wall"
+        W{ on the wall}
 
-    ; invoking the comma-period value we stored (c)
-    ; call b, with new # of bottles of beer in effect
-    ; using the " on the wall" string we stored (w)
-    ; finally the period-linefeed (p)
-    cBwPlf
-  ]
+        ; same set/return except now it's c for comma-space
+        C{, }
+
+        ; invoke b again
+        b
+
+        ; P is shorthand here for period since we use it twice
+        ; LF is newline's shorthand ("LineFeed")
+        ; Ez? is shorthand for either -- n == 0 (either zero?)
+        ; the either statement is like an "if-else", and
+        ; takes two blocks.  It evaluates the first if
+        ; the condition is true and the second if it's
+        ; false.  The end result of evaluating a block is
+        ; the last value in that block (like in Ruby)
+
+        P{.}lfEz?--N[
+            ; reset n to 99...
+            Nm
+
+            ; ...but evaluate this else clause to a string
+            {Go to the store and buy some more}
+        ]{Take one down and pass it around}
+
+        ; invoking the comma-period value we stored (c)
+        ; call b, with new # of bottles of beer in effect
+        ; using the " on the wall" string we stored (w)
+        ; finally the period-linefeed (p)
+        cBwPlf
+    ]
 ]

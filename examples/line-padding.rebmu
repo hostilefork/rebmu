@@ -1,37 +1,37 @@
 Rebmu [
-	Title {Line Padding Challenge from AltME Chat}
-	Purpose: {
-		Modify a text, so that all lines have the same length
-		(by adding trailing spaces)
+    Title {Line Padding Challenge from AltME Chat}
+    Purpose: {
+        Modify a text, so that all lines have the same length
+        (by adding trailing spaces)
 
-		Input: 
-			- a multi-lines string
-			- the expected length of lines (minus LF)
+        Input:
+            - a multi-lines string
+            - the expected length of lines (minus LF)
 
-		Goal:
-			- The shortest function win (not the fastest).
-	}
+        Goal:
+            - The shortest function win (not the fastest).
+    }
 
-	Notes: {
-		Invoke using named inputs and injecting a code to print the result.
-		(the problem did not specify having to print)
-		
-		rebmu/args/inject %examples/line-padding.rebmu [
-			t: {^/1^/22^/333^/4444^/55555^/666666} c: #"#" l: 4
-		] [print t]
+    Notes: {
+        Invoke using named inputs and injecting a code to print the result.
+        (the problem did not specify having to print)
 
-		Outputs:
+        rebmu/args/inject %examples/line-padding.rebmu [
+            t: {^/1^/22^/333^/4444^/55555^/666666} c: #"#" l: 4
+        ] [print t]
 
-		####
-		1###
-		22##
-		333#
-		4444
-		55555
-		666666
-		
-		could bracket in us's[ ... ] for a use block that protected s
-	}
+        Outputs:
+
+        ####
+        1###
+        22##
+        333#
+        4444
+        55555
+        666666
+
+        could bracket in us's[ ... ] for a use block that protected s
+    }
 ]
 
 ; 35 chars
@@ -41,14 +41,14 @@ comment [
 ; >> unmush [w[SfiTlfLPadLosSt[SisSc]TnxS]hd+T]
 ; == [w [s: fi t lf lp ad l os s t [s: is s c] t: nt s] hd t]
 
-	whilst [
-		s: find t lf
-		loop add l offset? s t [
-			s: insert s c
-		]
-		t: next s
-		
-		; head+ is "head and modify", sets T to head and returns the head too
-		head-modify-mu t
-	]
+    whilst [
+        s: find t lf
+        loop add l offset? s t [
+            s: insert s c
+        ]
+        t: next s
+
+        ; head+ is "head and modify", sets T to head and returns the head too
+        head-modify-mu t
+    ]
 ]

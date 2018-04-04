@@ -1,37 +1,37 @@
 Rebmu [
-	Title: {Scrabble-able}
-	Home: http://stackoverflow.com/a/3088746/211160
+    Title: {Scrabble-able}
+    Home: http://stackoverflow.com/a/3088746/211160
 
-	Purpose: {
-		Input: a list of words
+    Purpose: {
+        Input: a list of words
 
-		Output: a legal arrangement for the words on a scrabble board (or
-		false if impossible). Format of output is entirely up to you, as long
-		as it is comprehensible. Bonus points for pretty printing. Scrabble
-		board size is unbounded, no un-listed words should be found in solution.
+        Output: a legal arrangement for the words on a scrabble board (or
+        false if impossible). Format of output is entirely up to you, as long
+        as it is comprehensible. Bonus points for pretty printing. Scrabble
+        board size is unbounded, no un-listed words should be found in solution.
 
-		Examples:
+        Examples:
 
-			input: {"alice", "bob", "eve"}
-			output: false
+            input: {"alice", "bob", "eve"}
+            output: false
 
-			input: {"alice", "eve", "victoria"}
-			output: a|l|i|c|e
-			                v|i|c|t|o|r|i|a
-			                e
+            input: {"alice", "eve", "victoria"}
+            output: a|l|i|c|e
+                            v|i|c|t|o|r|i|a
+                            e
 
-		Invoke with:
+        Invoke with:
 
-			rebmu/args %scrabbleable.rebmu ["alice" "bob" "eve"]
+            rebmu/args %scrabbleable.rebmu ["alice" "bob" "eve"]
 
-		NOTE: This example appeared to work at one time, although I found
-		some test data it couldn't solve.  So it was already broken somewhere.
-		The Rebmu language update which removed Rebmu-specific IF/UNLESS/EITHER
-		behaviors broke it.  If you want to see it sort-of-working, revert back
-		to Rebmu before the IF/UNLESS/EITHER commit.  The best idea I think
-		would probably be a fresh take now that Rebmu has evolved a bit; but
-		it wasn't worth holding up the important alignment change with Rebol.
-	}
+        NOTE: This example appeared to work at one time, although I found
+        some test data it couldn't solve.  So it was already broken somewhere.
+        The Rebmu language update which removed Rebmu-specific IF/UNLESS/EITHER
+        behaviors broke it.  If you want to see it sort-of-working, revert back
+        to Rebmu before the IF/UNLESS/EITHER commit.  The best idea I think
+        would probably be a fresh take now that Rebmu has evolved a bit; but
+        it wasn't worth holding up the important alignment change with Rebol.
+    }
 ]
 
 ; we use the space constant a lot, so it's worth it to define s to be space
@@ -39,7 +39,7 @@ Ssp
 
 ; N is the number of input strings
 NlnA
-   
+
 ; L is our longest string length
 L00feZa[LmxLlnZ]
 
@@ -48,17 +48,17 @@ L00feZa[LmxLlnZ]
 ; we add one because our loop doesn't do the theoretical minimum ++ v
 Va2mpBKlADeOD?n01[0]dvN02
 
-; M is our VxV board matrix, initially set to spaces 
+; M is our VxV board matrix, initially set to spaces
 Mai~Vsi~Vs
 
-; G is a "func" (not a "function") thus can write to the global variable M 
-; it takes a matrix to replace the matrix with and returns the old one 
+; G is a "func" (not a "function") thus can write to the global variable M
+; it takes a matrix to replace the matrix with and returns the old one
 Ga&[ZcydM MaZ]
-	
+
 ; F is the now common iterator finder for coordinates in a matrix
 ; modified so if you ask about out of range it always returns space
 Fa|[ZpcMscA XfsA ZigX00[iZ[skZbkX]] iZ[iT?z[Zno]]eZz{ }]
-	
+
 ; T is a "c|function", meaning it takes parameters A B C
 ;
 ; it tries to put the string A into the matrix at coordinates B with step
@@ -76,48 +76,48 @@ Fa|[ZpcMscA XfsA ZigX00[iZ[skZbkX]] iZ[iT?z[Zno]]eZz{ }]
 ; points opposite a collision may be occupied on the other axis, but if there's
 ; not a collision then those points must be spaces
 Tc|[
-	Xno
-	Q&[Z01br]
-	ieSfsFsbBc[w[Zf+A][
-		JfB KfsJeeSk[OrvCYcEEsFSfADbO[eeSfsFadBngO[chJz]q]q][X01iuKzQ]BadBc
-	]
-	ieSfsFb[a?XntZ]]
+    Xno
+    Q&[Z01br]
+    ieSfsFsbBc[w[Zf+A][
+        JfB KfsJeeSk[OrvCYcEEsFSfADbO[eeSfsFadBngO[chJz]q]q][X01iuKzQ]BadBc
+    ]
+    ieSfsFb[a?XntZ]]
 ]
-	
+
 ; R recursively applies itself for placing the words in A
 ; returns true if it succeeds
 Ra|[
-	Q&[iU[br]]
-	eT?aON[
-		ZnxSBvL
-		rpXz[
-			rpYz[
-				O[0 1]
-				lp 2[
-					JgM ; save matrix copy
-					UeTfsAre[xY]o[rNXa][eH?a[rNXa]no]
-					eU00[gJ]
-					rvO
-					q
-				]
-				q
-			]
-			q
-		]
-		u
-	]
+    Q&[iU[br]]
+    eT?aON[
+        ZnxSBvL
+        rpXz[
+            rpYz[
+                O[0 1]
+                lp 2[
+                    JgM ; save matrix copy
+                    UeTfsAre[xY]o[rNXa][eH?a[rNXa]no]
+                    eU00[gJ]
+                    rvO
+                    q
+                ]
+                q
+            ]
+            q
+        ]
+        u
+    ]
 ]
 
 ; Print the result
 eRa[
-	; if r(a) returned true... then
-	
-	; clean up the unneccessary whitespace on the board
-	JmW[Kf+J][iM?trtK[JbkJtkJ]]
-	
-	; and injects i|n|t|e|r|m|e|d|i|a|t|e pipe characters as per problem spec
-	feZm[Kf+Zw[Jf+Z][ZnxISbkZegKs[egJs{|}s]s Kj]prHDz]
+    ; if r(a) returned true... then
+
+    ; clean up the unneccessary whitespace on the board
+    JmW[Kf+J][iM?trtK[JbkJtkJ]]
+
+    ; and injects i|n|t|e|r|m|e|d|i|a|t|e pipe characters as per problem spec
+    feZm[Kf+Zw[Jf+Z][ZnxISbkZegKs[egJs{|}s]s Kj]prHDz]
 ][
-	; otherwise print false
-	pr{false}
+    ; otherwise print false
+    pr{false}
 ]

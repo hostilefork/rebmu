@@ -16,12 +16,12 @@ Rebol [
     Description: {
     See README.md in GitHub for the workings of mushing.
 
-    See mush.reb for an automatic musher (work in progress).  
+    See mush.reb for an automatic musher (work in progress).
 
     However, it is important to bear in mind that the point of Rebmu
     is to provide a language which despite achieving a low character
     count is still fairly feasible to code in without using an assistive
-    mechanical preprocessor or compiler.  Err on the side of using 
+    mechanical preprocessor or compiler.  Err on the side of using
     mush as a runtime tool in the problem solution itself (such as for
     writing quines)... *not* as a crutch to write your code as Rebol
     first, then convert it!  You're missing out on the fun, then.  :-)
@@ -208,17 +208,17 @@ unmush: function [
                         ; and their first element is the last element of some path
                         ;
                         next-path-symbol: take :unmushed
-                    ] 
+                    ]
                     ;
                     ; any symbols left over in the block after the above two
                     ; checks aren't parts of a path, so insert them as-is
-                    ; 
+                    ;
                     insert result :unmushed
                 ] [
                     ;
                     ; If the unmush didn't return a block, then just consider its
                     ; symbol to be the next element for the path in progress
-                    ; 
+                    ;
                     next-path-symbol: :unmushed
                 ]
 
@@ -275,7 +275,7 @@ unmush: function [
                     not block? :elem
                     block? :unmushed
                 ] [
-                    append result :unmushed 
+                    append result :unmushed
                 ] [
                     append/only result :unmushed
                 ]
