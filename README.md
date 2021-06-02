@@ -1,3 +1,5 @@
+> **2021 UPDATE:** Rebmu was written for an early version of the open-sourced R3-Alpha.  It is pending a redesign for the radically redesigned Ren-C, which will be undertaken when time permits.  In the meantime, please see [these talks from the Rebol 2019 Conference](https://2019.reb4.me/talks/), the [Ren-C GitHub Repository](https://github.com/metaeducation/ren-c), and [forum.rebol.info](https://forum.rebol.info).
+
 ![Rebmu logo](https://raw.github.com/hostilefork/rebmu/master/rebmu-logo.png)
 
 The Rebmu language is a dialect of Rebol which uses some unusual tricks to achieve smaller character counts in source code.  The goal is to make it easier to participate in programming challenges where the goal is to achieve a given task in as few characters as possible.
@@ -182,7 +184,7 @@ It can help to find errors by using the feature that shows you the unmushed vers
 
 ### DISCUSSION ###
 
-A prerequisite to using Rebmu is to know some Rebol or [Red](http://red-lang.org).  If you're looking for help on golfing with Rebmu, please join the [Rebol and Red StackOverflow chat room](http://chat.stackoverflow.com/rooms/291/rebol-and-red)!  You might also want to refer to the [Rebol Bookmarks](https://trello.com/b/PtKS3RfJ/rebol-bookmarks) Trello board, which is a new community project to assemble articles and resources on the language.
+A prerequisite to using Rebmu is to know some Rebol (or Red).  If you're looking for help on golfing with Rebmu, please bring it up on [forum.rebol.info](https://forum.rebol.info).
 
 The main place where the Code Golf problems are studied are on the [Code Golf StackExchange](http://codegolf.stackexchange.com/).  As a general rule, if you are going to post a Rebmu solution that is not substantially different from your Rebol answer (or an existing one) then just put it in the same answer...and present both counts in the header.  *(For instance **Rebmu: 20 chars, Rebol: 80 chars**)*  If it's someone else's Rebol answer, then add the Rebmu form as a comment or suggested edit.
 
