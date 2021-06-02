@@ -1,4 +1,6 @@
-> **2021 UPDATE:** Rebmu was written for an early version of the open-sourced R3-Alpha.  It is pending a redesign for the radically redesigned Ren-C, which will be undertaken when time permits.  In the meantime, please see [these talks from the Rebol 2019 Conference](https://2019.reb4.me/talks), the [Ren-C GitHub Repository](https://github.com/metaeducation/ren-c), and [forum.rebol.info](https://forum.rebol.info).
+> **2013 VIDEO:** For a lighthearted introduction to Rebmu, see the [2013 Montreal Conference Video on YouTube](https://www.youtube.com/watch?v=iDKaz1iB9wQ).
+>
+> **2021 UPDATE:** Rebmu was written for an early version of the open-sourced R3-Alpha.  A reworking is pending to leverage the radically redesigned Ren-C (which runs in the browser via Wasm)...and will be undertaken when time permits.  In the meantime, please see [some talks from the Rebol 2019 Conference](https://2019.reb4.me/talks), the [Ren-C GitHub Repository](https://github.com/metaeducation/ren-c), and [forum.rebol.info](https://forum.rebol.info).
 
 ![Rebmu logo](https://raw.github.com/hostilefork/rebmu/master/rebmu-logo.png)
 
