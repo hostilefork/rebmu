@@ -16,6 +16,24 @@ Rebol [
     }
 ]
 
+; FN aims to be a fully compatible superset of Rebol's FUNCTION.  This means
+; the spec and body parameters must be evaluative.
+;
+; !!! Technically, once those arguments are evaluated, it could do something
+; with types Rebol considers invalid.  INTEGER! would be a good example,
+; perhaps just create a function with that many args.
+;
+; !!! Should FUNCTION-MU be revised e.g. to make all "normal" parameters be
+; meta and then pass through isotopes (non ~null~ ones, anyway?)  Or might that
+; be disruptive enough to the interface to be something different (e.g. FX?)
+;
+function-mu: adapt :function [
+    body: compose [
+        let rt: :return  ; can't `R: RETURN` globally, alias per function
+        let r: :rt
+        (as group! body)
+    ]
+]
 
 to-text-mu: function [
     value
@@ -108,69 +126,6 @@ make-integer-mu: function [value] [
         throw "Unhandled type to make-integer-mu"
     ]
 ]
-
-
-; An "a|funct" is a function that takes a single parameter called a, you only
-; need to supply the code block.  obvious extensions for other letters.  The
-; "func|a" is the same for funcs
-; !!! closure is a superset of function, and should rightfully have the name
-
-function-a-mu: func [body [block!]] [
-    closure [a] body
-]
-function-ab-mu: func [body [block!]] [
-    closure [a b] body
-]
-function-abc-mu: func [body [block!]] [
-    closure [a b c] body
-]
-function-abcd-mu: func [body [block!]] [
-    closure [a b c d] body
-]
-
-function-z-mu: func [body [block!]] [
-    closure [z] body
-]
-function-zy-mu: func [body [block!]] [
-    closure [z y] body
-]
-function-zyx-mu: func [body [block!]] [
-    closure [z y x] body
-]
-function-zyxw-mu: func [body [block!]] [
-    closure [z y x w] body
-]
-
-func-a-mu: func [body [block!]] [
-    clos [a] body
-]
-func-ab-mu: func [body [block!]] [
-    clos [a b] body
-]
-func-abc-mu: func [body [block!]] [
-    clos [a b c] body
-]
-func-abcd-mu: func [body [block!]] [
-    clos [a b c d] body
-]
-
-func-z-mu: func [body [block!]] [
-    clos [z] body
-]
-func-zy-mu: func [body [block!]] [
-    clos [z y] body
-]
-func-zyx-mu: func [body [block!]] [
-    clos [z y x] body
-]
-func-zyxw-mu: func [body [block!]] [
-    clos [z y x w] body
-]
-
-does-function-mu: func [body [block!]] [
-    closure [] body
-]
-
 
 quoth-mu: function [
     'arg

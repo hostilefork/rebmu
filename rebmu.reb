@@ -388,33 +388,9 @@ rebmu-base-context: make object! compose [
     ; Rebol3 at some point)
     ;----------------------------------------------------------------------
 
-    FN: :closure
-    FC: :clos
+    FN: :function-mu
 
     DZ: :does
-    &: :DZ
-
-    DF: :does-function-mu
-    |: :DF
-
-    a|: :function-a-mu
-    b|: :function-ab-mu
-    c|: :function-abc-mu
-    d|: :function-abcd-mu
-    z|: :function-z-mu
-    y|: :function-zy-mu
-    x|: :function-zyx-mu
-    w|: :function-zyxw-mu
-    ; TODO: Write generator?
-    a&: :func-a-mu
-    b&: :func-ab-mu
-    c&: :func-abc-mu
-    d&: :func-abcd-mu
-    z&: :func-z-mu
-    y&: :func-zy-mu
-    x&: :func-zyx-mu
-    w&: :func-zyxw-mu
-    RT: :return
 
     ;----------------------------------------------------------------------
     ; OBJECTS AND CONTEXTS
