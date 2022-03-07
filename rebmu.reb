@@ -278,58 +278,58 @@ rebmu-base-context: make object! compose [
     ; by Rebol's operators.
     ;----------------------------------------------------------------------
 
-    T: :TO
-    TW: :to-word-mu
-    TSW: :to-set-word
-    TS: :to-string-mu
-    TC: :to-char-mu
-    TB: :to-block
-    TI: :to-integer
+    t: :to
+    tw: :to-word-mu
+    tsw: :to-set-word
+    ts: :to-string-mu
+    tc: :to-char-mu
+    tb: :to-block
+    ti: :to-integer
 
     ;----------------------------------------------------------------------
     ; CONDITIONALS
     ;----------------------------------------------------------------------
 
     ;-- Rebol's IF is already two characters
-    I: :if
+    i: :if
 
-    EI: :either
-    E: :EI
+    ei: :either
+    e: :ei
 
-    SW: :switch
-    CA: :case ;-- should this be CS if CLOSURE is to be omitted?
-    CAA: :case/all
+    sw: :switch
+    ca: :case ;-- should this be CS if CLOSURE is to be omitted?
+    caa: :case/all
 
     ;----------------------------------------------------------------------
     ; LOOPING CONSTRUCTS
     ;----------------------------------------------------------------------
 
-    LP: :loop
-    L: :LP
+    lp: :loop
+    l: :lp
 
-    FE: :for-each
-    F: :FE
+    fe: :for-each
+    f: :fe
 
-    FR: :for
-    EV: :every
-    ME: :map-each
-    RME: :remove-each-mu
-    FA: :forall
-    FV: :forever
+    fr: :for
+    ev: :every
+    me: :map-each
+    rme: :remove-each-mu
+    fa: :forall
+    fv: :forever
 
-    WH: :while
-    W: :WH
+    wh: :while
+    w: :wh
 
-    UT: :until
-    U: :ut
+    ut: :until
+    u: :ut
 
-    CN: :continue
-    BR: :break
-    TR: :trap
-    CT: :catch
-    AM: :attempt
+    cn: :continue
+    br: :break
+    tr: :trap
+    ct: :catch
+    am: :attempt
 
-    QT: :quit
+    qt: :quit
 
     ;----------------------------------------------------------------------
     ; DEFINING FUNCTIONS
@@ -341,130 +341,130 @@ rebmu-base-context: make object! compose [
     ; Rebol3 at some point)
     ;----------------------------------------------------------------------
 
-    FN: :function-mu
+    fn: :function-mu
 
-    DZ: :does
+    dz: :does
 
     ;----------------------------------------------------------------------
     ; OBJECTS AND CONTEXTS
     ;----------------------------------------------------------------------
-    US: :use
-    OB: :object
+    us: :use
+    ob: :object
 
     ;----------------------------------------------------------------------
     ; SERIES OPERATIONS
     ;----------------------------------------------------------------------
 
-    PO: :poke
-    PC: :pick
-    AP: :append
-    APO: :append/only
-    IS: :insert ; IN is a keyword
-    ISO: :insert/only
-    ISP: :insert/part
-    ISPO: :insert/part/only
-    TK: :take
-    MNO: :minimum-of
-    MXO: :maximum-of
-    SE: :select
-    RV: :reverse
-    SL: :split
+    po: :poke
+    pc: :pick
+    ap: :append
+    apo: :append/only
+    is: :insert ; IN is a keyword
+    iso: :insert/only
+    isp: :insert/part
+    ispo: :insert/part/only
+    tk: :take
+    mno: :minimum-of
+    mxo: :maximum-of
+    se: :select
+    rv: :reverse
+    sl: :split
 
     ;-- note that Rebol uses RM for a DELETE alias, that's not very useful
     ;-- if anything in the box RM should be a shorthand for it's Rebol's
     ;-- notion of REMOVE, not Unix's.  Overriding in an act of protest...
     ;--    --Dr. Rebmu
-    RM: :remove
+    rm: :remove
 
-    RP: :replace ;-- REPEND and REPEAT deprecated in Rebmu
-    RPA: :replace/all
-    RPAC: :replace/all/case
-    RPAT: :replace/all/tail
-    RPACT: :replace/all/case/tail
+    rp: :replace ;-- REPEND and REPEAT deprecated in Rebmu
+    rpa: :replace/all
+    rpac: :replace/all/case
+    rpat: :replace/all/tail
+    rpact: :replace/all/case/tail
 
-    HD: :head
-    TL: :tail
-    BK: :back-mu
-    NX: :next-mu
-    CH: :change
-    CHP: :change/part
-    SK: :skip
-    FI: :find
-    FIO: :find/only
-    FIS: :find/skip
-    UQ: :unique
-    PA: :parse-mu
-    PP: :pre-parse-mu
+    hd: :head
+    tl: :tail
+    bk: :back-mu
+    nx: :next-mu
+    ch: :change
+    chp: :change/part
+    sk: :skip
+    fi: :find
+    fio: :find/only
+    fis: :find/skip
+    uq: :unique
+    pa: :parse-mu
+    pp: :pre-parse-mu
 
-    LN: :length
+    ln: :length
 
-    OS: :offset-of ;-- being a real word, OF might get used in the language
-    IX: :index-of
-    TY: :type-of
-    T?: :tail?
-    H?: :head?
-    M?: :empty?
-    V?: :value?
+    os: :offset-of ;-- being a real word, OF might get used in the language
+    ix: :index-of
+    ty: :type-of
+    t?: :tail?
+    h?: :head?
+    m?: :empty?
+    v?: :value?
 
-    FS: :first ; FR might be confused with fourth
-    SC: :second
-    TH: :third
-    FH: :fourth ; FR might be confused with first
-    FF: :fifth
-    SX: :sixth
-    SV: :seventh
-    EH: :eighth ; EI is either, and EG is either-greater
-    NH: :ninth
-    TT: :tenth
-    LS: :last ; override LS list directory?  We need shell dialect
+    fs: :first ; FR might be confused with fourth
+    sc: :second
+    th: :third
+    fh: :fourth ; FR might be confused with first
+    ff: :fifth
+    sx: :sixth
+    sv: :seventh
+    eh: :eighth ; EI is either, and EG is either-greater
+    nh: :ninth
+    tt: :tenth
+    ls: :last ; override LS list directory?  We need shell dialect
 
     ;----------------------------------------------------------------------
     ; PORTS
     ;----------------------------------------------------------------------
 
-    DEL: :delete ; If shipping in console, why not use the matching term?
-    DL: :delete ; Corresponding to the act of protest of changing RM
+    del: :delete ; If shipping in console, why not use the matching term?
+    dl: :delete ; Corresponding to the act of protest of changing RM
 
     ;----------------------------------------------------------------------
     ; METAPROGRAMMING
     ;----------------------------------------------------------------------
 
-    CO: :compose
-    COD: :compose/deep
-    MO: :mush-and-mold-compact
-    JN: :join
-    RE: :reduce
-    RJ: :rejoin
-    CL: :collect-mu
-    LDA: :load/all
+    co: :compose
+    cod: :compose/deep
+    mo: :mush-and-mold-compact
+    jn: :join
+    re: :reduce
+    rj: :rejoin
+    cl: :collect-mu
+    lda: :load/all
 
-    QO: :quote
-    Q: :QO
+    qo: :quote
+    q: :qo
 
     ;----------------------------------------------------------------------
     ; MATH AND LOGIC OPERATIONS
     ;----------------------------------------------------------------------
 
-    AD: :add-mu
-    SB: :subtract-mu
-    MP: :multiply
-    DV: :div-mu
-    DD: :divide
-    NG: :negate-mu
-    Z?: :zero?
-    MD: :mod
-    E?: :equal?
+    ad: :add-mu
+    sb: :subtract-mu
+    mp: :multiply
+    dv: :div-mu
+    dd: :divide
+    ng: :negate-mu
+    z?: :zero?
+    md: :mod
+    e?: :equal?
 
-    LG10: :log-10
-    LG2: :log-2
+    lg10: :log-10
+    lg2: :log-2
     ;-- is L2: LG2 worth it, or L+digit be used for something else?
-    LGE: :log-e ;-- can't do "(L)og (N)atural" as LN, due to LN: LENGTH-OF
+    lge: :log-e ;-- can't do "(L)og (N)atural" as LN, due to LN: LENGTH-OF
     ;-- is LE: LGE worth it, or is LE better used or something else?
-    LG: :LG10 ;-- Rebmu's 10-fingered-human bias, also shortens LG10 more
+    lg: :lg10 ;-- Rebmu's 10-fingered-human bias, also shortens LG10 more
 
     ; ** is the infix power operator, but infix is sometimes not what you
     ; want so Rebol also has power as a prefix variant
-    PW: :power
+    pw: :power
 
     ; CONDITIONAL LOGIC
     ;
@@ -475,9 +475,9 @@ rebmu-base-context: make object! compose [
     ; other purposes (XO/XR less useful...)
 
     ;-- NT is prefix NOT (itself an alias for NOT?), we took N? for NEGATIVE?
-    A?: :and?
-    O?: :or?
-    X?: :xor?
+    a?: :and?
+    o?: :or?
+    x?: :xor?
 
 
     ; BITWISE
@@ -487,35 +487,35 @@ rebmu-base-context: make object! compose [
     ;
     ; http://curecode.org/rebol3/ticket.rsp?id=1879
 
-    CM: :complement
-    IC: :intersect
-    UN: :union
-    DF: :difference
+    cm: :complement
+    ic: :intersect
+    un: :union
+    df: :difference
 
 
-    EV?: :even?
-    OD?: :odd?
+    ev?: :even?
+    op?: :odd?
     ++: :increment-mu
     --: :decrement-mu
-    G?: :greater?
-    GE?: :greater-or-equal?
-    L?: :lesser?
-    LE?: :lesser-or-equal?
-    SE?: :strict-equal?
-    N?: :negative?
-    P?: :positive?
-    SG: :sign-of
-    Y?: :true?
-    N?: func [val] [not true? val] ; can be useful
-    MN: :min
-    MX: :max
-    AY: :any
-    AL: :all
+    g?: :greater?
+    ge?: :greater-or-equal?
+    l?: :lesser?
+    le?: :lesser-or-equal?
+    se?: :strict-equal?
+    n?: :negative?
+    p?: :positive?
+    sg: :sign-of
+    y?: :true?
+    n?: func [val] [not true? val] ; can be useful
+    mn: :min
+    mx: :max
+    ay: :any
+    al: :all
 
     ; to-integer (TI) always rounds down.  A "CEIL" operator is useful,
     ; though it's a bit verbose in Rebol as TO-INTEGER ROUND/CEILING VALUE.
     ; May be common enough in Code Golf math to warrant inclusion.
-    CE: :ceiling-mu
+    ce: :ceiling-mu
 
     ;----------------------------------------------------------------------
     ; CONVERTERS
@@ -532,30 +532,30 @@ rebmu-base-context: make object! compose [
     ; INPUT/OUTPUT
     ;----------------------------------------------------------------------
 
-    PR: :print
-    P: :PR
+    pr: :print
+    p: :pr
 
-    RD: :read
-    WR: :write
-    PB: :probe
+    rd: :read
+    wr: :write
+    pb: :probe
 
-    RI: :readin-mu
-    R: :RI
+    ri: :readin-mu
+    r: :ri
 
-    RL: :read/lines
-    NL: :newline
+    rl: :read/lines
+    nl: :newline
 
     ;----------------------------------------------------------------------
     ; STRINGS
     ;----------------------------------------------------------------------
-    TM: :trim
-    TMT: :trim/tail
-    TMH: :trim/head
-    TMA: :trim/all
-    UP: :uppercase
-    UPP: :uppercase/part
-    LW: :lowercase
-    LWP: :lowercase/part
+    tm: :trim
+    tmt: :trim/tail
+    tmh: :trim/head
+    tma: :trim/all
+    up: :uppercase
+    upp: :uppercase/part
+    lw: :lowercase
+    lwp: :lowercase/part
 
     ;----------------------------------------------------------------------
     ; CONSTRUCTION FUNCTIONS
@@ -568,48 +568,48 @@ rebmu-base-context: make object! compose [
     ; tildes looked better.
     ;----------------------------------------------------------------------
 
-    CP: :copy
-    C: :CP
+    cp: :copy
+    c: :CP
 
-    MK: :make
-    CPD: :copy/deep
-    CPP: :copy/part
-    CPPD: :copy/part/deep
+    mk: :make
+    cpd: :copy/deep
+    cpp: :copy/part
+    cppd: :copy/part/deep
 
-    A~: :array
-    AI~: :array/initial
-    B~: does [copy []] ; two chars cheaper than cp[]
-    H~: :to-http-url-mu
-    HS~: :to-http-url-mu/secure
-    I~: :make-integer-mu
-    M~: :make-matrix-mu
-    S~: does [copy ""] ; two chars cheaper than cp""
-    SI~: :make-string-initial-mu
+    a~: :array
+    ai~: :array/initial
+    b~: does [copy []] ; two chars cheaper than cp[]
+    h~: :to-http-url-mu
+    hs~: :to-http-url-mu/secure
+    i~: :make-integer-mu
+    m~: :make-matrix-mu
+    s~: does [copy ""] ; two chars cheaper than cp""
+    si~: :make-string-initial-mu
 
     ;----------------------------------------------------------------------
     ; MISC
     ;----------------------------------------------------------------------
 
-    AS: :also
-    NN: :none
-    ST: :set
-    GT: :get
+    as: :also
+    nn: :none
+    st: :set
+    gt: :get
 
-    EN: :encode
-    SWP: :swap-exchange-mu
-    FM: :format
-    ;OS: :onesigned-mu
-    SP: :space
+    en: :encode
+    swp: :swap-exchange-mu
+    fm: :format
+    ;os: :onesigned-mu
+    sp: :space
 
-    WS: :whitespace
-    DG: :digit
-    DGH: :digit/hex
-    DGHU: :digit/hex/uppercase
-    DGHL: :digit/hex/lowercase
-    DGB: :digit/binary
-    LT: :letter
-    LTU: :letter/latin/uppercase
-    LTL: :letter/latin/lowercase
+    ws: :whitespace
+    dg: :digit
+    dgh: :digit/hex
+    dghu: :digit/hex/uppercase
+    dghl: :digit/hex/lowercase
+    dgb: :digit/binary
+    lt: :letter
+    ltu: :letter/latin/uppercase
+    ltl: :letter/latin/lowercase
 
     ;----------------------------------------------------------------------
     ; MICRO MATH
@@ -666,11 +666,11 @@ rebmu-base-context: make object! compose [
     ; mean "advance" or "add" in this context, LAST+ is actually an
     ; operator which traverses the series backwards.
 
-    A+: :add-modify-mu
-    F+: :first+
-    S+: :subtract-modify-mu
-    N+: :next-modify-mu
-    B+: :back-modify-mu
+    a+: :add-modify-mu
+    f+: :first+
+    s+: :subtract-modify-mu
+    n+: :next-modify-mu
+    b+: :back-modify-mu
 
     ; How strange could we get?  Is it useful to do [Z: EQUALS? Z 3] on any
     ; kind of regular basis?  Maybe if you do that test often after but
@@ -679,10 +679,10 @@ rebmu-base-context: make object! compose [
 
     ; what about two character functions?  can they return different
     ; things than their non-modifier counterparts?
-    CH+: :change-modify-mu
-    HD+: :head-modify-mu
-    TL+: :tail-modify-mu
-    SK+: :skip-modify-mu
+    ch+: :change-modify-mu
+    hd+: :head-modify-mu
+    tl+: :tail-modify-mu
+    sk+: :skip-modify-mu
 
 
     ;----------------------------------------------------------------------
@@ -704,8 +704,8 @@ rebmu-base-context: make object! compose [
     ; you don't have to worry about the dot getting picked up as a word
     ; character, despite its "stickiness" in words
 
-    RF: :redefine-mu
-    .: :RF
+    rf: :redefine-mu
+    .: :rf
 
 
     ; REVIEW: what kinds of meanings might be given to prefix question mark?
