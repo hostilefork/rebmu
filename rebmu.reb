@@ -326,22 +326,13 @@ rebmu-base-context: make object! compose [
 
     ;-- Rebol's IF is already two characters
     I: :if
-    IFO: :if/only
-    IO: :IFO
 
     EI: :either
     E: :EI
-    EIO: :either/only
-    EO: :EIO
 
     SW: :switch
     CA: :case ;-- should this be CS if CLOSURE is to be omitted?
     CAA: :case/all
-
-    UL: :unless
-    U: :UL
-    ULO: :unless/only
-    UO: :ULO
 
     ;----------------------------------------------------------------------
     ; LOOPING CONSTRUCTS
@@ -362,21 +353,17 @@ rebmu-base-context: make object! compose [
 
     WH: :while
     W: :WH
-    WA: :while/after
 
-    ; single-character U taken for UNLESS
     UT: :until
-    UTA: :until/after
+    U: :ut
 
     CN: :continue
     BR: :break
-    BRW: :break/with
     TR: :trap
     CT: :catch
     AM: :attempt
 
     QT: :quit
-    QTW: :quit/with
 
     ;----------------------------------------------------------------------
     ; DEFINING FUNCTIONS
@@ -484,8 +471,6 @@ rebmu-base-context: make object! compose [
     RJ: :rejoin
     CL: :collect-mu
     LDA: :load/all
-    CB: :combine
-    CBW: :combine/with
 
     QO: :quote
     Q: :QO
