@@ -181,40 +181,6 @@ Rebol [
         Y? => true? ;-- (a.k.a. yes?)
         Z? => zero?
     }
-
-    History: [
-        0.1.0 [10-Jan-2010 {Sketchy prototype written to cover only the
-        Roman Numeral example I worked through when coming up with the
-        idea.  So very incomplete, more a proof of concept.}]
-
-        0.2.0 [22-Jun-2010 {Language more complete, includes examples.
-        Ditched concept of mushing symbols like + and - into single
-        character operators is removed due to realization that A+
-        B+ C+ etc. are more valuable in the symbol space than one
-        character for AD.}]
-
-        0.3.0 [24-Jun-2010 {Made backwards compatible with Rebol 2.
-        Note that things like CN for continue or PERCENTAGE! datatype
-        were added in Rebol 3.  You can use these in your Rebmu programs
-        but they will only work if using Rebmu with an r3 interpreter.
-        Also did several name tweaks like instead of AA for AND~ it's
-        now A~ along with other consistencies.}]
-
-        0.5.0 [16-Feb-2014 {Version bump to indicate growing maturity
-        of the language.  Abandon Rebol 2 support.  Rebmu files now
-        have proper Rebol ecology headers.}]
-
-        0.6.0 [6-Apr-2014 {Large cleanup creating incompatibility with
-        most all previous Rebmu code solutions.  Examples have been updated
-        in GitHub.  Major theme was removing the custom IF/UNLESS/EITHER
-        implementation and some clearer names.}]
-
-        0.7.0 [15-Sep-2015 {Project revisited to incorporate new ideas and
-        decisions from the Ren/C effort.  Incorporates the rebol-proposals
-        module to work with experimental language features instead of
-        having its own "incubator" project.  "Mu library" features removed
-        in favor of embracing the language default more closely.}]
-    ]
 ]
 
 ; Functions that aren't mainline Rebol/Red at this point, but describe
@@ -571,7 +537,6 @@ rebmu-base-context: make object! compose [
 
     RD: :read
     WR: :write
-    PRO: :print/only
     PB: :probe
 
     RI: :readin-mu
