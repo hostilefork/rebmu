@@ -691,21 +691,18 @@ rebmu-base-context: make object! compose [
     ; While many of the original code-golf specific aspects of Rebmu that
     ; were imagined were kicked out as useless (as say, compared to throwing
     ; in a mushed matrix library etc.) this one is still around for study.
-    ; The idea was a dot operator to be helpful for quickly redefining symbols
+    ; The idea was an operator to be helpful for quickly redefining symbols
     ; used repeatedly.
     ;
-    ;     .[aBCdEF] => .[a bc d ef] => a: :bc d: :ef
+    ;     rf[aBCdEF] => rf[a bc d ef] => a: :bc d: :ef
     ;
     ; If you noticed an unusual repeated need for a function you could throw
-    ; that in.  Considering the minimal case of .[aBC] it's 6 characters, which
-    ; is the same count as `A: :bc` would be.  However,  you wind up at a
+    ; that in.  Considering the minimal case of rf[aBC] it's 7 characters, which
+    ; is one more than `A: :bc` would be.  However, you wind up at a
     ; close bracket that starts a new mushing point, so it saves on what would
-    ; be a necessary trailing space.  If it's the first thing in your program
-    ; you don't have to worry about the dot getting picked up as a word
-    ; character, despite its "stickiness" in words
+    ; be a necessary trailing space.
 
     rf: :redefine-mu
-    .: :rf
 
 
     ; REVIEW: what kinds of meanings might be given to prefix question mark?
