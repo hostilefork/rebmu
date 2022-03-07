@@ -19,8 +19,8 @@ Rebol [
 ]
 
 mush: function [
-    {Mushes words in a block}
-    source [any-block!] {Block containing words to be mushed}
+    {Mushes words in an array}
+    source [any-array!] {Array containing words to be mushed}
 ][
     head collect/into [
         words: either any-path? source [
@@ -46,23 +46,26 @@ mush: function [
 
         parse source [
             any [
-                set value any-block! (keep/only mush value)
+                set value any-array! (keep/only mush value)
                 |
                 words
                 |
                 set value skip (keep :value)
             ]
         ]
-    ] make type? source length? source
+    ] make type of source length of source
 ]
 
 mold-compact: function [
     {Converts a value to a Rebol-readable string (compact)}
-    source [any-type!] {The value to mold}
-    /only {For a block value, mold only its contents, no outer []}
+    source "The value to mold"
+        [any-value!]
+    /only "For a block value, mold only its contents, no outer []"
 ][
+    if not only [source: reduce source]
+
     rejoin collect [
-        unless parse either only [source][reduce [source]] rule: [
+        rule: [
             (
                 space: ""
                 last-type: none
@@ -102,8 +105,7 @@ mold-compact: function [
                 | ; Other Values: space before, space after (unless where exceptions)
                 [
                     set value skip (
-                        unless any [
-
+                        any [
                             ; Exceptions
                             case [
                                 last-type = set-word! [
@@ -120,24 +122,28 @@ mold-compact: function [
                                     ]
                                 ]
                             ]
-                        ][keep space]
+                        ] else [
+                            keep space
+                        ]
 
                         keep mold :value
                         space: either any [
 
                             ; Exceptions
-                            find [tag! string!] type?/word value
+                            match [tag! text!] type of value
                         ][""][" "]
-                        last-type: type? value
+                        last-type: type of value
                     )
                 ]
             ]
-        ][
+        ]
+
+        parse source rule else [
             keep "<< Mold-Compact Error"
         ]
     ]
 ]
 
-mush-and-mold-compact: function [value [any-block!] /only][
-    apply :mold-compact [mush value only]
+mush-and-mold-compact: adapt :mold-compact [
+    value: mush :value
 ]

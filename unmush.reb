@@ -33,11 +33,8 @@ Rebol [
 ;-- use a get-word! on the result.  :-/  This has been patched in Red but
 ;-- yet to be integrated into Rebol.
 unmush: function [
-    {Take any Rebol symbol or structure, and recursively apply a decoding
-    known as "unmushing" on it...where the usage of capital letters cues
-    special handling for inserting spaces or converting runs of
-    characters inside a single symbol into separate symbols.}
-    value [any-type!]
+    {Decode packed Rebmu data like "AxBy" into blocks like [a: x b: y]}
+    value [any-value!]
 ][
     upper: charset [#"A" - #"Z"]
     lower: charset [#"a" - #"z"]
@@ -50,8 +47,8 @@ unmush: function [
             ; If there's no capitalization used, we want to remain compatible
             ; with Rebol code
             ;
-            value-string: to string! :value
-            unless find/case value-string upper [
+            value-string: to text! :value
+            if not find/case value-string upper [
                 return :value
             ]
 
@@ -62,11 +59,10 @@ unmush: function [
             ; the capitalization of the second run determines whether the
             ; *second* word is to be a SET-WORD! or not.
             ;
-            target-type: type? :value
-            caps-means-set: either target-type = word! [
-                found? find upper first value-string
-            ][
-                true
+            target-type: type of value
+            caps-means-set: did any [
+                target-type = word!
+                find upper first value-string
             ]
 
             make-lone-rule: func [rule] [
@@ -147,11 +143,10 @@ unmush: function [
                             target-type = get-word! [insert run-string {:}]
                             target-type = word! []
                             target-type = integer! []
-                            true [
-                                print target-type
-                                throw "Not implemented."
-                            ]
+                        ] else [
+                            fail [target-type "Not implemented."]
                         ]
+
                         target: load run-string
 
                         append result :target
@@ -160,7 +155,7 @@ unmush: function [
                 ]
             ]]
 
-            either 1 = length? result [
+            either length of result = 1 [
                 return :result/1
             ][
                 return result
@@ -267,8 +262,8 @@ unmush: function [
         ; But if the result of the unmushing is a block of symbols and the original
         ; value was not a block, then the elements are spliced into the series
         ;
-        any-block? value [
-            result: make type? value []
+        any-array? value [
+            result: as (type of value) copy []
             for-each elem value [
                 unmushed: unmush :elem
                 either all [

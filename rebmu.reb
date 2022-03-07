@@ -243,18 +243,18 @@ do %mulibrary.reb
 
 
 ; returns a block of definitions to include in the context
-remap-datatype: function [type [datatype!] shorter [string!] /noconvert] [
-    stem: head remove back tail to-string to-word type
+remap-datatype: function [type [datatype!] shorter [text!] /noconvert] [
+    stem: head remove back tail to-text to-word type
     result: reduce [
-        load rejoin [shorter "!" ":"] load rejoin [":" stem "!"]
-        load rejoin [shorter "?" ":"] load rejoin [":" stem "?"]
+        load-value rejoin [shorter "!" ":"] load-value rejoin [":" stem "!"]
+        load-value rejoin [shorter "?" ":"] load-value rejoin [":" stem "?"]
     ]
-    unless noconvert [
+    if not noconvert [
         append result reduce [
-            load rejoin [shorter "-" ":"] load rejoin [":" "to-" stem]
+            load-value rejoin [shorter "-" ":"] load-value rejoin [":" "to-" stem]
         ]
     ]
-    bind result system/contexts/user
+    bind result system.contexts.user
 ]
 
 
@@ -268,7 +268,7 @@ rebmu-wrap: function [refined [path!] args [block!]] [
 ]
 
 
-rebmu-base-context: object compose [
+rebmu-base-context: make object! compose [
 
     ;----------------------------------------------------------------------
     ; DATATYPE SHORTHANDS (3 CHARS)
@@ -797,30 +797,25 @@ rebmu-base-context: object compose [
 
 rebmu: function [
     {Visit http://hostilefork.com/rebmu/}
-    code [file! url! block! string!]
-        {The Rebmu or Rebol code}
-    /args arg [any-type!]
-        {argument A, unless a block w/set-words; can be Rebmu format [X10Y20]}
-    /nocopy
-        {Disable the default copy/deep of arguments for safety}
-    /stats
-        {Print out some statistical information}
-    /debug
-        {Output debugging information}
-    /env
-        {Return runnable object plus environment without executing main}
-    /inject injection [block! string!]
-        {Run some test code in the environment after main function}
-][
-    ; block is sneaky way to make a "static" variable
-    statics: [
-        context: #[none] ;-- none would not be reduced...
-    ]
 
+    code "The Rebmu or Rebol code"
+        [text! block! file! url!]
+    /args "argument A, unless block w/set-words; can be Rebmu format [X10Y20]"
+        [any-value!]
+    /nocopy "Disable the default copy/deep of arguments for safety"
+    /stats "Print out some statistical information"
+    /debug "Output debugging information"
+    /env "Return runnable object plus environment without executing main"
+    /inject "Run some test code in the environment after main function"
+        [block! text!]
+
+    <static>
+    context (~unset~)
+][
     case [
-        string? code [
+        text? code [
             if stats [
-                print ["Original Rebmu string was:" length code "characters."]
+                print ["Input Rebmu string was:" length of code "characters."]
             ]
             code: load code
         ]
@@ -831,19 +826,18 @@ rebmu: function [
         ][
             code: load code
 
-            either all [
+            all [
                 'Rebmu = first code
                 block? second code
-            ][
-                ;-- ignore the header for the moment... just pick offset
-                ;-- the first two values from code
+            ] then [
+                ; ignore the header for the moment... just pick offset
+                ; the first two values from code
                 take code
                 take code
-            ][
+            ] else [
                 print "WARNING: Rebmu sources should start with Rebmu [...]"
-                print "(See: http://curecode.org/rebol3/ticket.rsp?id=2105)"
 
-                ;-- Keep running, hope the file was valid Rebmu anyway
+                ; Keep running, hope the file was valid Rebmu anyway
             ]
         ]
 
@@ -853,19 +847,13 @@ rebmu: function [
                 print "(That will give you a canonical character count.)"
             ]
         ]
-
-        true [
-            print "Bad code parameter."
-            quit
-        ]
+    ] else [
+        fail "Bad code parameter."
     ]
 
-    unless block? code [
-        code: compose/only [(code)]
-    ]
+    ensure block! code
 
-
-    code: unmush (code)
+    code: my unmush
 
     if debug [
         print ["Executing:" mold code]
@@ -874,35 +862,36 @@ rebmu: function [
     if stats [
         print [
             "Rebmu as mushed Rebol block molds to:"
-            length mold/only code
+            length of mold/only code
             "characters."
         ]
     ]
 
-    either inject [
-        if string? injection [
-            injection: load injection
-        ]
-        unless block? injection [
-            code: to block! injection
-        ]
-        injection: unmush injection
-    ][
-        injection: copy []
+    === UNMUSH CODE INJECTION, DEFAULT TO EMPTY BLOCK ===
+
+    inject: default [copy []]
+    if text? inject [
+        inject: load inject
     ]
+    if not block? inject [
+        code: to block! inject
+    ]
+    inject: my unmush
+
+    === UNMUSH ARGUMENT FOR ARGUMENT CODE INJECTION, DEFAULT TO EMPTY BLOCK ===
 
     either args [
-        either block? arg [
-            arg: unmush either nocopy [arg] [copy/deep arg]
-            unless set-word? first arg [
+        either block? args [
+            args: unmush either nocopy [args] [copy/deep args]
+            if not set-word? first args [
                 ; assign to a if the block doesn't start with a set-word
-                arg: compose/only [a: (arg)]
+                args: compose [a: (args)]
             ]
         ][
-            arg: compose/only [a: (arg)]
+            args: compose [a: (args)]
         ]
     ][
-        arg: copy []
+        args: copy []
     ]
 
     ; see https://github.com/hostilefork/rebmu/issues/7
@@ -910,11 +899,11 @@ rebmu: function [
     ; This allows us to effectively create a "new" user context holding all
     ; the Rebmu overrides.
 
-    outermost: none? statics/context
+    outermost: unset? 'context
 
-    either outermost [
+    if outermost [
         context: copy rebmu-base-context
-        append context arg
+        append context args
 
         ; Rebmu's own behavior replaces DO, no /NEXT support yet
         extend context 'do func [value] [
@@ -926,44 +915,38 @@ rebmu: function [
         ]
 
         ; When we load, we want default binding to override with this context
-        ; over system/contexts/user
+        ; over system.contexts.user
 
-        rebmu-load: func [source] compose [
-            bind load source (context)
+        rebmu-load: func [source] [
+            bind load source context
         ]
 
         extend context 'load :rebmu-load
         extend context 'ld :rebmu-load
 
-        statics/context: context
-    ][
-        context: statics/context
+        ; Add LOAD-VALUE (LV) ?
     ]
 
     bind code context
-    bind injection context
+    bind inject context
 
-    if env [
+    if env [  ; only asked for the environment (e.g. to debug it)
         return context
     ]
 
-    set/any 'result try [
-        do injection
+    let [error result]: trap [
+        do inject
         do code
     ]
 
-    ; If we exit the last "Rebmu user" context, then reset it to none
+    ; If we exit the last "Rebmu user" context, then clear it
     if outermost [
-        statics/context: none
+        context: ~unset~
     ]
 
-    if unset? :result [
-        exit
+    if error [
+        fail error
     ]
 
-    if error? :result [
-        do :result
-    ]
-
-    :result
+    return get/any 'result
 ]

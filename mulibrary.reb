@@ -16,7 +16,8 @@ Rebol [
     }
 ]
 
-to-string-mu: function [
+
+to-text-mu: function [
     value
 ][
     either any-word? value [
@@ -31,7 +32,7 @@ to-string-mu: function [
             true [next mold :value]
         ]
     ][
-        to-string value
+        to-text value
     ]
 ]
 
@@ -56,19 +57,19 @@ to-char-mu: function [
 
 to-word-mu: function [value] [
     either char? value [
-        to-word to-string value
+        to-word to-text value
     ][
         to-word value
     ]
 ]
 
-to-http-url-mu: function ['target [word! path! string!] /secure][
+to-http-url-mu: function ['target [word! path! text!] /secure][
 	join either secure [https://][http://] target
 ]
 
 caret-mu: function ['value] [
     switch/default type-of/word :value [
-        string! [return to-string debase value]
+        text! [return to-text debase value]
     ][
         throw "caret mu needs to be thought out for non-strings, see rebmu.reb"
     ]
@@ -176,7 +177,7 @@ quoth-mu: function [
 ][
     switch/default type-of/word :arg [
         word! [
-            str: to-string arg
+            str: to-text arg
             either 1 == length? str [
                 first str
             ][
@@ -231,7 +232,7 @@ readin-mu: func [
     ;-- ...or could we leverage the caller's binding?
 
     switch/default type-of/word get value [
-        string! [prin "Input String: " set value input]
+        text! [prin "Input String: " set value input]
         integer! [set value to-integer ask "Input Integer: "]
         decimal! [set value to-integer ask "Input Float: "]
         block! [set value to-block ask "Input Series of Items: "]
@@ -247,7 +248,7 @@ inversion-mu: function [
     value
 ][
     switch/default type-of/word :value [
-        string! [empty? value]
+        text! [empty? value]
         decimal!
         integer! [
             zero? value
@@ -273,18 +274,16 @@ back-mu: function [arg] [
     ]
 ]
 
-collect-mu: function [body [block!] /into output [series!]] [
-    unless output [output: make block! 16]
-    do func [kp] body func [value [any-type!] /only] [
-        output: apply :insert [output :value none none only]
-        :value
+collect-mu: adapt :collect [  ; like COLLECT but K and KP shorthands for KEEP
+    body: compose [
+        k: kp: :keep
+        (as group! body)
     ]
-    either into [output] [head output]
 ]
 
 remove-each-mu: function [
     'word [get-word! word! block!]
-    data [series!]
+    data [any-series!]
     body [block!]
 ][
     remove-each :word data body
@@ -293,10 +292,10 @@ remove-each-mu: function [
 
 swap-exchange-mu: func [
     "Swap contents of variables."
-    a [word! series!
+    a [word! any-series!
         ; gob! is in r3 only
     ]
-    b [word! series!
+    b [word! any-series!
         ; gob! is in r3 only
     ]
 ][
@@ -321,7 +320,7 @@ div-mu: function [value1 value2] [
 
 add-mu: function [value1 value2] [
     switch/default type-of/word :value1 [
-        string! [
+        text! [
             skip value1 value2
         ]
         block! [
@@ -465,7 +464,7 @@ pre-parse-mu: use [digit lower-alpha upper-alpha hex-digit subs] [
     ]
 ]
 
-parse-mu: func [input [series!] rules [block! string! char! none!]] [
+parse-mu: func [input [any-series!] rules [block! text! char! blank!]] [
     if block? rules [rules: pre-parse-mu rules]
     parse/case input rules
 ]
