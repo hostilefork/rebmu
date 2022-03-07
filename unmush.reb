@@ -14,24 +14,21 @@ Rebol [
     Level: advanced
 
     Description: {
-    See README.md in GitHub for the workings of mushing.
+        See README.md in GitHub for the workings of mushing.
 
-    See mush.reb for an automatic musher (work in progress).
+        See mush.reb for an automatic musher (work in progress).
 
-    However, it is important to bear in mind that the point of Rebmu
-    is to provide a language which despite achieving a low character
-    count is still fairly feasible to code in without using an assistive
-    mechanical preprocessor or compiler.  Err on the side of using
-    mush as a runtime tool in the problem solution itself (such as for
-    writing quines)... *not* as a crutch to write your code as Rebol
-    first, then convert it!  You're missing out on the fun, then.  :-)
+        However, it is important to bear in mind that the point of Rebmu
+        is to provide a language which despite achieving a low character
+        count is still fairly feasible to code in without using an assistive
+        mechanical preprocessor or compiler.  Err on the side of using
+        mush as a runtime tool in the problem solution itself (such as for
+        writing quines)... *not* as a crutch to write your code as Rebol
+        first, then convert it!  You're missing out on the fun, then.  :-)
     }
 ]
 
-;-- WARNING... until the LIT-WORD! value decay problem is fixed, you might
-;-- get a LIT-WORD! back from this, and to prevent the decay you need to
-;-- use a get-word! on the result.  :-/  This has been patched in Red but
-;-- yet to be integrated into Rebol.
+
 unmush: function [
     {Decode packed Rebmu data like "AxBy" into blocks like [a: x b: y]}
     value [any-value!]
