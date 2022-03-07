@@ -258,16 +258,6 @@ remap-datatype: function [type [datatype!] shorter [text!] /noconvert] [
 ]
 
 
-; A rebmu wrapper lets you wrap a refinement
-; need to write generalization of spec capture with reflect, e.g.
-; spec: reflect :arg 'spec
-rebmu-wrap: function [refined [path!] args [block!]] [
-    func args compose [
-        (refined) (args)
-    ]
-]
-
-
 rebmu-base-context: make object! compose [
 
     ;----------------------------------------------------------------------
@@ -336,21 +326,21 @@ rebmu-base-context: make object! compose [
 
     ;-- Rebol's IF is already two characters
     I: :if
-    IFO: rebmu-wrap 'if/only [condition true-branch]
+    IFO: :if/only
     IO: :IFO
 
     EI: :either
     E: :EI
-    EIO: rebmu-wrap 'either/only [condition true-branch false-branch]
+    EIO: :either/only
     EO: :EIO
 
     SW: :switch
     CA: :case ;-- should this be CS if CLOSURE is to be omitted?
-    CAA: rebmu-wrap 'case/all [block]
+    CAA: :case/all
 
     UL: :unless
     U: :UL
-    ULO: :rebmu-wrap 'unless/only [condition false-branch]
+    ULO: :unless/only
     UO: :ULO
 
     ;----------------------------------------------------------------------
@@ -372,21 +362,21 @@ rebmu-base-context: make object! compose [
 
     WH: :while
     W: :WH
-    WA: :rebmu-wrap 'while/after [cond-block body-block]
+    WA: :while/after
 
     ; single-character U taken for UNLESS
     UT: :until
-    UTA: rebmu-wrap 'until/after [cond-block body-block]
+    UTA: :until/after
 
     CN: :continue
     BR: :break
-    BRW: rebmu-wrap 'break/with [value]
+    BRW: :break/with
     TR: :trap
     CT: :catch
     AM: :attempt
 
     QT: :quit
-    QTW: rebmu-wrap 'quit/with [value]
+    QTW: :quit/with
 
     ;----------------------------------------------------------------------
     ; DEFINING FUNCTIONS
@@ -439,11 +429,11 @@ rebmu-base-context: make object! compose [
     PO: :poke
     PC: :pick
     AP: :append
-    APO: rebmu-wrap 'append/only [series value]
+    APO: :append/only
     IS: :insert ; IN is a keyword
-    ISO: rebmu-wrap 'insert/only [series value]
-    ISP: rebmu-wrap 'insert/part [series value limit]
-    ISPO: rebmu-wrap 'insert/part/only [series value limit]
+    ISO: :insert/only
+    ISP: :insert/part
+    ISPO: :insert/part/only
     TK: :take
     MNO: :minimum-of
     MXO: :maximum-of
@@ -458,21 +448,21 @@ rebmu-base-context: make object! compose [
     RM: :remove
 
     RP: :replace ;-- REPEND and REPEAT deprecated in Rebmu
-    RPA: rebmu-wrap 'replace/all [target search rep]
-    RPAC: rebmu-wrap 'replace/all/case [target search rep]
-    RPAT: rebmu-wrap 'replace/all/tail [target search rep]
-    RPACT: rebmu-wrap 'replace/all/case/tail [target search rep]
+    RPA: :replace/all
+    RPAC: :replace/all/case
+    RPAT: :replace/all/tail
+    RPACT: :replace/all/case/tail
 
     HD: :head
     TL: :tail
     BK: :back-mu
     NX: :next-mu
     CH: :change
-    CHP: rebmu-wrap 'change/part [series value size]
+    CHP: :change/part
     SK: :skip
     FI: :find
-    FIO: rebmu-wrap 'find/only [series value]
-    FIS: rebmu-wrap 'find/skip [series value size]
+    FIO: :find/only
+    FIS: :find/skip
     UQ: :unique
     PA: :parse-mu
     PP: :pre-parse-mu
@@ -511,15 +501,15 @@ rebmu-base-context: make object! compose [
     ;----------------------------------------------------------------------
 
     CO: :compose
-    COD: rebmu-wrap 'compose/deep [value]
+    COD: :compose/deep
     MO: :mush-and-mold-compact
     JN: :join
     RE: :reduce
     RJ: :rejoin
     CL: :collect-mu
-    LDA: rebmu-wrap 'load/all [source]
+    LDA: :load/all
     CB: :combine
-    CBW: rebmu-wrap 'combine/with [block delimiter]
+    CBW: :combine/with
 
     QO: :quote
     Q: :QO
@@ -620,26 +610,26 @@ rebmu-base-context: make object! compose [
 
     RD: :read
     WR: :write
-    PRO: rebmu-wrap 'print/only [value]
+    PRO: :print/only
     PB: :probe
 
     RI: :readin-mu
     R: :RI
 
-    RL: rebmu-wrap 'read/lines [source]
+    RL: :read/lines
     NL: :newline
 
     ;----------------------------------------------------------------------
     ; STRINGS
     ;----------------------------------------------------------------------
     TM: :trim
-    TMT: rebmu-wrap 'trim/tail [series]
-    TMH: rebmu-wrap 'trim/head [series]
-    TMA: rebmu-wrap 'trim/all [series]
+    TMT: :trim/tail
+    TMH: :trim/head
+    TMA: :trim/all
     UP: :uppercase
-    UPP: rebmu-wrap 'uppercase/part [string length]
+    UPP: :uppercase/part
     LW: :lowercase
-    LWP: rebmu-wrap 'lowercase/part [string length]
+    LWP: :lowercase/part
 
     ;----------------------------------------------------------------------
     ; CONSTRUCTION FUNCTIONS
@@ -656,15 +646,15 @@ rebmu-base-context: make object! compose [
     C: :CP
 
     MK: :make
-    CPD: rebmu-wrap 'copy/deep [value]
-    CPP: rebmu-wrap 'copy/part [value]
-    CPPD: rebmu-wrap 'copy/part/deep [value]
+    CPD: :copy/deep
+    CPP: :copy/part
+    CPPD: :copy/part/deep
 
     A~: :array
-    AI~: rebmu-wrap 'array/initial [size value]
+    AI~: :array/initial
     B~: does [copy []] ; two chars cheaper than cp[]
     H~: :to-http-url-mu
-    HS~: rebmu-wrap 'to-http-url-mu/secure [:url]
+    HS~: :to-http-url-mu/secure
     I~: :make-integer-mu
     M~: :make-matrix-mu
     S~: does [copy ""] ; two chars cheaper than cp""
@@ -687,13 +677,13 @@ rebmu-base-context: make object! compose [
 
     WS: :whitespace
     DG: :digit
-    DGH: rebmu-wrap 'digit/hex []
-    DGHU: rebmu-wrap 'digit/hex/uppercase []
-    DGHL: rebmu-wrap 'digit/hex/lowercase []
-    DGB: rebmu-wrap 'digit/binary []
+    DGH: :digit/hex
+    DGHU: :digit/hex/uppercase
+    DGHL: :digit/hex/lowercase
+    DGB: :digit/binary
     LT: :letter
-    LTU: rebmu-wrap 'letter/latin/uppercase []
-    LTL: rebmu-wrap 'letter/latin/lowercase []
+    LTU: :letter/latin/uppercase
+    LTL: :letter/latin/lowercase
 
     ;----------------------------------------------------------------------
     ; MICRO MATH
