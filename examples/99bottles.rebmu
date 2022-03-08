@@ -1,40 +1,40 @@
 Rebmu [
-	Title: {99 Bottles of Beer}
-	Home: http://codegolf.stackexchange.com/a/413/57
-	Purpose: {
+    Title: {99 Bottles of Beer}
+    Home: http://codegolf.stackexchange.com/a/413/57
+    Purpose: {
         Recreate '99 bottles of beers on the wall'.
 
-		The desired output is this:
+        The desired output is this:
 
-  			99 bottles of beer on the wall, 99 bottles of beer.
-  			Take one down and pass it around, 98 bottles of beer on the wall.
+            99 bottles of beer on the wall, 99 bottles of beer.
+            Take one down and pass it around, 98 bottles of beer on the wall.
 
-  			98 bottles of beer on the wall, 98 bottles of beer.
-  			Take one down and pass it around, 97 bottles of beer on the wall.
+            98 bottles of beer on the wall, 98 bottles of beer.
+            Take one down and pass it around, 97 bottles of beer on the wall.
 
-  			97 bottles of beer on the wall, 97 bottles of beer.
-  			Take one down and pass it around, 96 bottles of beer on the wall.
+            97 bottles of beer on the wall, 97 bottles of beer.
+            Take one down and pass it around, 96 bottles of beer on the wall.
 
-  			96 bottles of beer on the wall, 96 bottles of beer.
-  			Take one down and pass it around, 95 bottles of beer on the wall.
+            96 bottles of beer on the wall, 96 bottles of beer.
+            Take one down and pass it around, 95 bottles of beer on the wall.
 
-  			95 bottles of beer on the wall, 95 bottles of beer.
-  			Take one down and pass it around, 94 bottles of beer on the wall.
+            95 bottles of beer on the wall, 95 bottles of beer.
+            Take one down and pass it around, 94 bottles of beer on the wall.
 
-  			....
+            ....
 
-  			3 bottles of beer on the wall, 3 bottles of beer.
-  			Take one down and pass it around, 2 bottles of beer on the wall.
+            3 bottles of beer on the wall, 3 bottles of beer.
+            Take one down and pass it around, 2 bottles of beer on the wall.
 
-  			2 bottles of beer on the wall, 2 bottles of beer.
-  			Take one down and pass it around, 1 bottle of beer on the wall.
+            2 bottles of beer on the wall, 2 bottles of beer.
+            Take one down and pass it around, 1 bottle of beer on the wall.
 
-  			1 bottle of beer on the wall, 1 bottle of beer.
-  			Go to the store and buy some more, 99 bottles of beer on the wall.
+            1 bottle of beer on the wall, 1 bottle of beer.
+            Go to the store and buy some more, 99 bottles of beer on the wall.
 
-		Show me how you would solve this with your favorite programming
-		language.  Most creative use of a language wins.
-	}
+        Show me how you would solve this with your favorite programming
+        language.  Most creative use of a language wins.
+    }
 ]
 
 ; b is a parameterless "func" that returns a string

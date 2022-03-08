@@ -1,34 +1,35 @@
 Rebmu [
-	Title: {Collatz Conjecture}
-	Home: http://codegolf.stackexchange.com/a/12301/57
+    Title: {Collatz Conjecture}
+    Home: http://codegolf.stackexchange.com/a/12301/57
 
-	Purpose: {
-		This is the Collatz Conjecture:
+    Purpose: {
+        This is the Collatz Conjecture:
 
-		* Start with an integer n > 1.
-		* Repeat the following steps:
-			* If n is even, divide it by 2.
-			* If n is odd, multiply it by 3 and add 1.
+        * Start with an integer n > 1.
+        * Repeat the following steps:
+        * If n is even, divide it by 2.
+        * If n is odd, multiply it by 3 and add 1.
 
-		It is proven that for all positive integers up to 5 * 260, or about 5764000000000000000, n will eventually become 1.
+        It is proven that for all positive integers up to 5 * 260, or about
+        5764000000000000000, n will eventually become 1.
 
-		Your task is to find out how many iterations it takes (of halfing or
-		tripling-plus-one) to reach 1.
+        Your task is to find out how many iterations it takes (of halfing or
+        tripling-plus-one) to reach 1.
 
-		If a number < 2 is input, or a non-integer, or a non-number, output
-		does not matter.
+        If a number < 2 is input, or a non-integer, or a non-number, output
+        does not matter.
 
-		Test cases:
+        Test cases:
 
-			2  -> 1
-			16 -> 4
-			5  -> 5
-			7  -> 16
+            2  -> 1
+            16 -> 4
+            5  -> 5
+            7  -> 16
 
-		Invocation is for instance:
+        Invocation is for instance:
 
-			rebmu/args %examples/collatz-conjecture.rebmu 16
-	}
+            rebmu/args %examples/collatz-conjecture.rebmu 16
+    }
 ]
 
 ;-- Explained on StackOverflow page
