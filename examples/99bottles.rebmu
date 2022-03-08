@@ -39,10 +39,9 @@ Rebmu [
 
 ; b is a parameterless "func" that returns a string
 ; "N bottle(s) of beer on the wall" with correct
-; pluralization.  CB is "COMBINE"
-; http://blog.hostilefork.com/combine-alternative-rebol-red-rejoin/
+; pluralization.  USP is "UNSPACED"
 
-Bdz[cb[n{ bottle}egN 1{s}{}{ of beer}]]
+Bdz[usp[n{ bottle}egN 1{s}{}{ of beer}]]
 
 ; start both m and n at 99
 M99Nm
@@ -50,12 +49,12 @@ M99Nm
 ; loop n times (99)
 lpN[
 
-    ; "print rejoin"
-    ; rejoin is an operation which REduces ("evals")
+    ; "print unspaced"
+    ; unspaced is an operation which ("evals")
     ; expressions in a block, and then JOINs them into
-    ; a string.  So rejoin [{Hello } 1 + 2 { world.}]
+    ; a string.  So unspaced [{Hello } 1 + 2 { world.}]
     ; gives back the string {Hello 3 world.}
-    prCB[
+    prUSP[
 
         ; invoke b, returns the N bottles of beer string
         b

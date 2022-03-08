@@ -85,9 +85,9 @@ Hc&[
         ; repeatedly inserting at midpoint (if bottom)
         Qs~rpKw[isEL00c[skQd2k][eEV?kQ[tlQ]]pcSeg--b00[eZ 1 5]3]
 
-        ; rejoin a string composed of an indentation of length d, the left
+        ; unspaced a string composed of an indentation of length d, the left
         ; hourglass side, the Q string, and the right hourglass side.
-        prRJ[si~dSPscSqFHs]
+        prUSP[si~dSPscSqFHs]
 
         ; loop termination condition and continuation
         eZ 1[s+dCa+wM2cNO]

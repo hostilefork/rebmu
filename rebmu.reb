@@ -215,12 +215,12 @@ import %mulibrary.reb
 remap-datatype: function [type [datatype!] shorter [text!] /noconvert] [
     stem: head remove back tail to-text to-word type
     result: reduce [
-        load-value rejoin [shorter "!" ":"] load-value rejoin [":" stem "!"]
-        load-value rejoin [shorter "?" ":"] load-value rejoin [":" stem "?"]
+        load-value unspaced [shorter "!" ":"] load-value unspaced [":" stem "!"]
+        load-value unspaced [shorter "?" ":"] load-value unspaced [":" stem "?"]
     ]
     if not noconvert [
         append result reduce [
-            load-value rejoin [shorter "-" ":"] load-value rejoin [":" "to-" stem]
+            load-value unspaced [shorter "-" ":"] load-value unspaced [":" "to-" stem]
         ]
     ]
     bind result system.contexts.user
@@ -489,7 +489,7 @@ rebmu-base-context: make object! compose [
     mo: :mush-and-mold-compact
     jn: :join
     re: :reduce
-    rj: :rejoin
+    usp: :unspaced
     cl: :collect-mu
 
     qo: :quote  ; QU is QUIT

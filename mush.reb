@@ -32,7 +32,7 @@ export mush: function [
                 copy value [set-word! any word! | some word!] (
                     lower?: true
 
-                    keep to word! rejoin collect [
+                    keep to word! unspaced collect [
                         if set-word? value/1 [
                             keep uppercase mold to word! take value
                         ]
@@ -66,7 +66,7 @@ export mold-compact: function [
 ][
     if not only [source: reduce source]
 
-    rejoin collect [
+    unspaced collect [
         rule: [
             (
                 space: ""
