@@ -1,5 +1,7 @@
 Rebol [
     Title: "The Mu Rebol Library"
+    Type: module
+    Name: MuLib
 
     Description: {
         This is a library generally designed to be used with abbreviated
@@ -27,7 +29,7 @@ Rebol [
 ; meta and then pass through isotopes (non ~null~ ones, anyway?)  Or might that
 ; be disruptive enough to the interface to be something different (e.g. FX?)
 ;
-function-mu: adapt :function [
+export function-mu: adapt :function [
     body: compose [
         let rt: :return  ; can't `R: RETURN` globally, alias per function
         let r: :rt
@@ -35,7 +37,7 @@ function-mu: adapt :function [
     ]
 ]
 
-to-text-mu: function [
+export to-text-mu: function [
     value
 ][
     either any-word? value [
@@ -54,7 +56,7 @@ to-text-mu: function [
     ]
 ]
 
-to-char-mu: function [
+export to-char-mu: function [
     value
 ][
     either any-word? value [
@@ -73,7 +75,7 @@ to-char-mu: function [
     ]
 ]
 
-to-word-mu: function [value] [
+export to-word-mu: function [value] [
     either char? value [
         to-word to-text value
     ][
@@ -81,11 +83,11 @@ to-word-mu: function [value] [
     ]
 ]
 
-to-http-url-mu: function ['target [word! path! text!] /secure][
-	join either secure [https://][http://] target
+export to-http-url-mu: function ['target [word! path! text!] /secure][
+    join either secure [https://][http://] target
 ]
 
-caret-mu: function ['value] [
+export caret-mu: function ['value] [
     switch/default type-of/word :value [
         text! [return to-text debase value]
     ][
@@ -94,14 +96,14 @@ caret-mu: function ['value] [
 
 ]
 
-redefine-mu: func ['dest 'source] [
+export redefine-mu: func ['dest 'source] [
     ;-- Has to be a FUNC to set in caller's environment...
     ;-- or does it?  Look into that.
 
     set :dest get :source
 ]
 
-make-matrix-mu: function [columns value rows] [
+export make-matrix-mu: function [columns value rows] [
     result: copy []
     loop rows [
         append/only result array/initial columns value
@@ -109,7 +111,7 @@ make-matrix-mu: function [columns value rows] [
     result
 ]
 
-make-string-initial-mu: function [length value] [
+export make-string-initial-mu: function [length value] [
     result: copy ""
     loop length [
         append result value
@@ -118,7 +120,7 @@ make-string-initial-mu: function [length value] [
 ]
 
 ; if a pair, then the first digit is the digit
-make-integer-mu: function [value] [
+export make-integer-mu: function [value] [
     switch/default type-of/word :value [
         pair! [to-integer first value * (10 ** second value)]
         integer! [to-integer 10 ** value]
@@ -127,7 +129,7 @@ make-integer-mu: function [value] [
     ]
 ]
 
-quoth-mu: function [
+export quoth-mu: function [
     'arg
 ][
     switch/default type-of/word :arg [
@@ -144,7 +146,7 @@ quoth-mu: function [
     ]
 ]
 
-insert-at-mu: function [
+export insert-at-mu: function [
     {Just insert and at combined}
     series
     index
@@ -153,7 +155,7 @@ insert-at-mu: function [
     insert at series index value
 ]
 
-increment-mu: func ['word-or-path] [
+export increment-mu: func ['word-or-path] [
     ;-- Has to be a FUNC to set in callers environment...
     ;-- ...or could we leverage the caller's binding?
 
@@ -166,7 +168,7 @@ increment-mu: func ['word-or-path] [
     )
 ]
 
-decrement-mu: func ['word-or-path ] [
+export decrement-mu: func ['word-or-path ] [
     ;-- Has to be a FUNC to set in callers environment...
     ;-- ...or could we leverage the caller's binding?
 
@@ -179,7 +181,7 @@ decrement-mu: func ['word-or-path ] [
     )
 ]
 
-readin-mu: func [
+export readin-mu: func [
     {Use data type after getting the quoted argument to determine input coercion}
     'value
 ][
@@ -199,7 +201,7 @@ readin-mu: func [
 
 ; Don't think want to call it not-mu because we probably want a more powerful
 ; operator defined as ~ in order to compete with GolfScript/etc, rethink this.
-inversion-mu: function [
+export inversion-mu: function [
     value
 ][
     switch/default type-of/word :value [
@@ -213,7 +215,7 @@ inversion-mu: function [
     ]
 ]
 
-next-mu: function [arg] [
+export next-mu: function [arg] [
     switch/default type-of/word :arg [
         integer! [arg + 1]
     ][
@@ -221,7 +223,7 @@ next-mu: function [arg] [
     ]
 ]
 
-back-mu: function [arg] [
+export back-mu: function [arg] [
     switch/default type-of/word :arg [
         integer! [arg - 1]
     ][
@@ -229,14 +231,14 @@ back-mu: function [arg] [
     ]
 ]
 
-collect-mu: adapt :collect [  ; like COLLECT but K and KP shorthands for KEEP
+export collect-mu: adapt :collect [  ; like COLLECT but K and KP shorthands for KEEP
     body: compose [
         k: kp: :keep
         (as group! body)
     ]
 ]
 
-remove-each-mu: function [
+export remove-each-mu: function [
     'word [get-word! word! block!]
     data [any-series!]
     body [block!]
@@ -245,7 +247,7 @@ remove-each-mu: function [
     data
 ]
 
-swap-exchange-mu: func [
+export swap-exchange-mu: func [
     "Swap contents of variables."
     a [word! any-series!
         ; gob! is in r3 only
@@ -269,11 +271,11 @@ swap-exchange-mu: func [
     ]
 ]
 
-div-mu: function [value1 value2] [
+export div-mu: function [value1 value2] [
     to-integer divide value1 value2
 ]
 
-add-mu: function [value1 value2] [
+export add-mu: function [value1 value2] [
     switch/default type-of/word :value1 [
         text! [
             skip value1 value2
@@ -292,7 +294,7 @@ add-mu: function [value1 value2] [
     ]
 ]
 
-subtract-mu: function [value1 value2] [
+export subtract-mu: function [value1 value2] [
     switch/default type-of/word :value1 [
         block! [
             result: copy value1
@@ -308,7 +310,7 @@ subtract-mu: function [value1 value2] [
     ]
 ]
 
-negate-mu: function [value] [
+export negate-mu: function [value] [
     switch/default type-of/word :value [
         block! [
             result: copy value
@@ -324,70 +326,70 @@ negate-mu: function [value] [
     ]
 ]
 
-add-modify-mu: func ['value value2] [
+export add-modify-mu: func ['value value2] [
     ;-- Has to be a FUNC to set in callers environment...
     ;-- ...or could we leverage the caller's binding?
 
     set :value add-mu get :value value2
 ]
 
-subtract-modify-mu: func ['value value2] [
+export subtract-modify-mu: func ['value value2] [
     ;-- Has to be a FUNC to set in callers environment...
     ;-- ...or could we leverage the caller's binding?
 
     set :value subtract-mu get :value value2
 ]
 
-equal-modify-mu: func ['value value2] [
+export equal-modify-mu: func ['value value2] [
     ;-- Has to be a FUNC to set in callers environment...
     ;-- ...or could we leverage the caller's binding?
 
     set :value equals? get :value value2
 ]
 
-next-modify-mu: func ['value value2] [
+export next-modify-mu: func ['value value2] [
     ;-- Has to be a FUNC to set in callers environment...
     ;-- ...or could we leverage the caller's binding?
 
     set :value next get :value value2
 ]
 
-back-modify-mu: func ['value value2] [
+export back-modify-mu: func ['value value2] [
     ;-- Has to be a FUNC to set in callers environment...
     ;-- ...or could we leverage the caller's binding?
 
     set :value back get :value value2
 ]
 
-change-modify-mu: func ['series value] [
+export change-modify-mu: func ['series value] [
     ;-- Has to be a FUNC to set in callers environment...
     ;-- ...or could we leverage the caller's binding?
 
     also [change get :series value] [first+ :series]
 ]
 
-head-modify-mu: func ['series] [
+export head-modify-mu: func ['series] [
     ;-- Has to be a FUNC to set in callers environment...
     ;-- ...or could we leverage the caller's binding?
 
     set :series head get :series
 ]
 
-tail-modify-mu: func ['series] [
+export tail-modify-mu: func ['series] [
     ;-- Has to be a FUNC to set in callers environment...
     ;-- ...or could we leverage the caller's binding?
 
     set :series tail get :series
 ]
 
-skip-modify-mu: func ['series offset] [
+export skip-modify-mu: func ['series offset] [
     ;-- Has to be a FUNC to set in callers environment...
     ;-- ...or could we leverage the caller's binding?
 
     set :series skip get :series offset
 ]
 
-pre-parse-mu: use [digit lower-alpha upper-alpha hex-digit subs] [
+export pre-parse-mu: use [digit lower-alpha upper-alpha hex-digit subs] [
     digit: charset [#"0" - #"9"] ; digits charset
     hex-digit: charset [#"0" - #"9" #"A" - #"F" #"a" - #"f"] ; hex charset
     upper-alpha: charset [#"A" - #"Z"] ; uppercase
@@ -419,11 +421,11 @@ pre-parse-mu: use [digit lower-alpha upper-alpha hex-digit subs] [
     ]
 ]
 
-parse-mu: func [input [any-series!] rules [block! text! char! blank!]] [
+export parse-mu: func [input [any-series!] rules [block! text! char! blank!]] [
     if block? rules [rules: pre-parse-mu rules]
     parse/case input rules
 ]
 
-ceiling-mu: function [value] [
+export ceiling-mu: function [value] [
     to-integer round/ceiling value
 ]

@@ -10,7 +10,8 @@ Rebol [
 
     ; Header conventions: http://www.rebol.org/one-click-submission-help.r
     File: %unmush.reb
-    Type: dialect
+    Type: module
+    Name: Unmush
     Level: advanced
 
     Description: {
@@ -29,7 +30,7 @@ Rebol [
 ]
 
 
-unmush: function [
+export unmush: function [
     {Decode packed Rebmu data like "AxBy" into blocks like [a: x b: y]}
     value [any-value!]
 ][

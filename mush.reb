@@ -5,6 +5,8 @@ Rebol [
     Author: "Christopher Ross-Gill"
     Version: 0.1.0
     License: 'bsd
+    Type: module
+    Name: Mush
     History: [
         0.1.0 [14-Jul-2014 {First pass at a Mushing function. Limited scope:
 
@@ -18,7 +20,7 @@ Rebol [
     ]
 ]
 
-mush: function [
+export mush: function [
     {Mushes words in an array}
     source [any-array!] {Array containing words to be mushed}
 ][
@@ -56,7 +58,7 @@ mush: function [
     ] make type of source length of source
 ]
 
-mold-compact: function [
+export mold-compact: function [
     {Converts a value to a Rebol-readable string (compact)}
     source "The value to mold"
         [any-value!]
@@ -144,6 +146,6 @@ mold-compact: function [
     ]
 ]
 
-mush-and-mold-compact: adapt :mold-compact [
+export mush-and-mold-compact: adapt :mold-compact [
     value: mush :value
 ]

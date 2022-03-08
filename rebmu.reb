@@ -14,7 +14,8 @@ Rebol [
 
     ; Header conventions: http://www.rebol.org/one-click-submission-help.r
     File: %rebmu.reb
-    Type: 'dialect
+    Type: module
+    Name: Rebmu
     Level: 'genius
 
     Notes: {
@@ -183,16 +184,10 @@ Rebol [
     }
 ]
 
-; Functions that aren't mainline Rebol/Red at this point, but describe
-; proposals which Rebmu is being used to test.
-
-do %rebol-proposals/all-proposals.reb
-
-
 ; Load the modules implementing mush/unmush
 
-do %mush.reb
-do %unmush.reb
+import %mush.reb
+import %unmush.reb
 
 
 ; Load the library of xxx-mu functions; tricks that are specific to Rebmu
@@ -200,12 +195,12 @@ do %unmush.reb
 ;
 ; NOTE: While originally there was a tendency to be liberal with these,
 ; they are being excised as they can sort of be seen as interfering with
-; Rebmu's main mission, which is to teach/evangelize Rebol and Red
-; dialecting.  A trick just for the sake of helping win code golf that
-; does not really assist with that (or worse, inhibits learning the
-; languages proper) should be included sparingly--if at all
+; Rebmu's main mission, which is to teach/evangelize Rebol dialecting.
+; A trick just for the sake of helping win code golf that does not really
+; assist with that (or worse, inhibits learning the languages proper)
+; should be included sparingly--if at all
 
-do %mulibrary.reb
+import %mulibrary.reb
 
 
 ; returns a block of definitions to include in the context
@@ -708,7 +703,7 @@ rebmu-base-context: make object! compose [
     ; REVIEW: what kinds of meanings might be given to prefix question mark?
 ]
 
-rebmu: function [
+export rebmu: function [
     {Visit http://hostilefork.com/rebmu/}
 
     code "The Rebmu or Rebol code"
