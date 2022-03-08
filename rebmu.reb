@@ -596,6 +596,12 @@ rebmu-base-context: make object! compose [
     ;os: :onesigned-mu
     sp: :space
 
+    ; !!! Predefined character sets are something that has never been fully
+    ; worked out or worked through.  They were in the "proposals" module but
+    ; that has been removed.  New ideas for BITSET! implementation would allow
+    ; sparse character sets in Unicode at lower cost.
+    ;
+  comment [
     ws: :whitespace
     dg: :digit
     dgh: :digit/hex
@@ -605,6 +611,7 @@ rebmu-base-context: make object! compose [
     lt: :letter
     ltu: :letter/latin/uppercase
     ltl: :letter/latin/lowercase
+  ]
 
     ;----------------------------------------------------------------------
     ; MICRO MATH
