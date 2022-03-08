@@ -93,7 +93,7 @@ export unmush: function [
                         )
                     ]
 
-                    begin-run:
+                    begin-run: <here>
 
                     [
                         opt symbol some lower (
@@ -121,7 +121,7 @@ export unmush: function [
                         )
                     ]
 
-                    end-run:
+                    end-run: <here>
 
                     (
                         run-string: lowercase copy/part begin-run end-run

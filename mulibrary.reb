@@ -130,12 +130,11 @@ export to-http-url-mu: function ['target [word! path! text!] /secure][
 ]
 
 export caret-mu: function ['value] [
-    switch/default type-of/word :value [
+    switch type of :value [
         text! [return to-text debase value]
-    ][
-        throw "caret mu needs to be thought out for non-strings, see rebmu.reb"
-    ]
 
+        fail "caret-mu needs to be thought out for non-strings, see rebmu.reb"
+    ]
 ]
 
 export redefine-mu: func ['dest 'source] [
@@ -163,18 +162,18 @@ export make-string-initial-mu: function [length value] [
 
 ; if a pair, then the first digit is the digit
 export make-integer-mu: function [value] [
-    switch/default type-of/word :value [
+    switch type of :value [
         pair! [to-integer first value * (10 ** second value)]
         integer! [to-integer 10 ** value]
-    ][
-        throw "Unhandled type to make-integer-mu"
+
+        fail "Unhandled type to make-integer-mu"
     ]
 ]
 
 export quoth-mu: function [
     'arg
 ][
-    switch/default type-of/word :arg [
+    switch type of :arg [
         word! [
             str: to-text arg
             either 1 == length? str [
@@ -183,8 +182,8 @@ export quoth-mu: function [
                 str
             ]
         ]
-    ][
-        throw "Unhandled type to quoth-mu"
+
+        fail "Unhandled type to quoth-mu"
     ]
 ]
 
@@ -230,14 +229,14 @@ export readin-mu: func [
     ;-- Has to be a FUNC to set in callers environment...
     ;-- ...or could we leverage the caller's binding?
 
-    switch/default type-of/word get value [
+    switch type of get value [
         text! [prin "Input String: " set value input]
         integer! [set value to-integer ask "Input Integer: "]
         decimal! [set value to-integer ask "Input Float: "]
         block! [set value to-block ask "Input Series of Items: "]
         percent! [set value to-percent ask "Input Percent: "]
-    ][
-        throw "Unhandled type to readin-mu"
+
+        fail "Unhandled type to readin-mu"
     ]
 ]
 
@@ -246,29 +245,29 @@ export readin-mu: func [
 export inversion-mu: function [
     value
 ][
-    switch/default type-of/word :value [
+    switch type of :value [
         text! [empty? value]
         decimal!
         integer! [
             zero? value
         ]
-    ][
+    ] else [
         not value
     ]
 ]
 
 export next-mu: function [arg] [
-    switch/default type-of/word :arg [
+    switch type of :arg [
         integer! [arg + 1]
-    ][
+    ] else [
         next arg
     ]
 ]
 
 export back-mu: function [arg] [
-    switch/default type-of/word :arg [
+    switch type of :arg [
         integer! [arg - 1]
-    ][
+    ] else [
         back arg
     ]
 ]
@@ -301,8 +300,8 @@ export swap-exchange-mu: func [
     ;-- Has to be a FUNC to set in callers environment...
     ;-- ...or could we leverage the caller's binding?
 
-    if not equal? type-of a type-of b [
-        throw "swap-mu must be used with common types"
+    if not equal? (type of a) (type of b) [
+        fail "swap-mu must be used with common types"
     ]
     either word? a [
         x: get a
@@ -318,7 +317,7 @@ export div-mu: function [value1 value2] [
 ]
 
 export add-mu: function [value1 value2] [
-    switch/default type-of/word :value1 [
+    switch type of :value1 [
         text! [
             skip value1 value2
         ]
@@ -331,13 +330,13 @@ export add-mu: function [value1 value2] [
             ]
             head result
         ]
-    ][
+    ] else [
         add value1 value2
     ]
 ]
 
 export subtract-mu: function [value1 value2] [
-    switch/default type-of/word :value1 [
+    switch type of :value1 [
         block! [
             result: copy value1
             while [(not tail? value1) and (not tail? value2)] [
@@ -347,13 +346,13 @@ export subtract-mu: function [value1 value2] [
             ]
             head result
         ]
-    ][
+    ] else [
         subtract value1 value2
     ]
 ]
 
 export negate-mu: function [value] [
-    switch/default type-of/word :value [
+    switch type of :value [
         block! [
             result: copy value
             while [not tail? value] [
@@ -363,7 +362,7 @@ export negate-mu: function [value] [
             ]
             head result
         ]
-    ][
+    ] else [
         negate value
     ]
 ]
