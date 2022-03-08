@@ -68,6 +68,17 @@ export funqtion-mu: func [arg [<opt> any-value! <variadic>]] [
     fn spec body
 ]
 
+export if-mu: func [condition branch] [
+    lib.if :condition
+        (match [block! action!] :branch else '[:branch])
+]
+
+export either-mu: func [condition true-branch false-branch] [
+    lib.either :condition
+        (match [block! action!] :true-branch else '[:true-branch])
+        (match [block! action!] :false-branch else '[:false-branch])
+]
+
 export to-text-mu: function [
     value
 ][
