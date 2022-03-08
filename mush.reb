@@ -33,7 +33,7 @@ export mush: function [
                     lower?: true
 
                     keep to word! unspaced collect [
-                        if set-word? value/1 [
+                        if set-word? value.1 [
                             keep uppercase mold to word! take value
                         ]
 

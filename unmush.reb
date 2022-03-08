@@ -154,7 +154,7 @@ export unmush: function [
             ]]
 
             either length of result = 1 [
-                return :result/1
+                return :result.1
             ][
                 return result
             ]
@@ -182,7 +182,7 @@ export unmush: function [
             temp-path: none
             pos: back tail value
             forever [
-                unmushed: unmush pos/1
+                unmushed: unmush pos.1
                 next-path-symbol: none
 
                 either block? :unmushed [
@@ -249,7 +249,7 @@ export unmush: function [
             ]
 
             either 1 = length? result [
-                return :result/1
+                return :result.1
             ][
                 return result
             ]

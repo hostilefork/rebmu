@@ -452,7 +452,7 @@ export pre-parse-mu: use [digit lower-alpha upper-alpha hex-digit subs] [
         rule: [
             mark: [
                 'sm | 'an | 'th | 'cp | 'st | 'dg | 'hx | 'la | 'ua
-            ] (change mark select subs mark/1)
+            ] (change mark select subs mark.1)
             | and block! into [some rule]
             | skip
         ]
