@@ -37,34 +37,40 @@ Rebol [
         They are tracked here as an index and to-do list, while the actual
         definitions are in the functional group in the code.
 
-        . => redefine-mu
-        & => does/only (a.k.a. historical DOES with no locals gathering)
-        ~
+        The . character was once available but was taken for TUPLE!.
+        The & character was also once available, but reserved for future use.
+
+        ~ is generally not legal in WORD! as it is used to denote BAD-WORD!
+        but the single character ~ is available to be overridden.  Its default
+        behavior is to create an ~unset~ isotope, which may not sound useful in
+        code golf but constructs might decide to treat it in an "unusual" way
+        e.g. to opt out of taking any branch in a conditional.
+
         ?
         |
-        a ;-- usually a program argument or a-function variable
+        a  ; usually a program argument or a-function variable
         b
         c => copy
         d
-        e => either
-        f => for-each
+        e => else
+        f => for  ; now more generic
         g
         h
         i => if
         j
         k
-        l => loop
-        m
+        l => let
+        m => match
         n
         o
         p => print
-        q => quote ;-- Q is not QUIT in proposals, so not overriding
-        r => repeat
+        q => quote
+        r => return  ; only applies in functions, if not in function will QUIT
         s
-        t => to ;-- note: can use example types, e.g. t "foo" 10 is "10"
-        u => unless (vs. IF NOT as iNT or Int)
+        t => to  ; variants like TSW for TO-SET-WORD trumps T for THEN
+        u => until
         v
-        w => while
+        w => while  ; TBD
         x
         y
         z
@@ -75,9 +81,9 @@ Rebol [
         Because there are only so many single characters (unless you start
         using Unicode...) the majority of Rebmu function definitions live
         in the two-character space.  However, refinements follow a system...
-        so even if it would be *possible* to do APPEND/ONLY => AO, such
+        so even if it would be *possible* to do APPEND/DUP => AD, such
         compression tricks are seen as less consistent than if you have
-        APPEND => AP and APPEND/ONLY => APO.  So the two-character space
+        APPEND => AP and APPEND/DUP => APD.  So the two-character space
         is the baseline for growing further in a systemic way.
 
         Yet Rebol itself does define a few things already in the two character
@@ -88,6 +94,7 @@ Rebol [
         Very Reasonable Use of English Words
 
             TO    to conversion
+            AS    aliasing operator
             OR    or operator (infix)
             IN    word or block in the object's context
             IF    conditional if
@@ -95,37 +102,39 @@ Rebol [
             AT    returns the series at the specified index
             NO    logic false
             ON    logic true
+            SO    postfix assert (2 = 1 + 1 so print "math works")
+            AN    english pluralize (an "axe" -> "an axe", an "cat" -> "a cat")
+            ME    self-reference after set word (variable: me + 1)
+            MY    variant of ME for non-enfix (block: my append 10)
+            BE    (unused)
+            BY    (unused)
 
         Reasonably non-controversial use of Symbolic Operators
 
-            ++    increment and return previous value
-            --    decrement and return previous value
             >=    true if the first value is greater than the second (infix)
             <=    true if the first value is less than the second (infix)
-            **    first number raised to the power of the second (infix)
             !=    true if the values are not equal (infix)
+            <>    same function as != despite looking like empty tag
+            ->    lambda function (`x -> [print x]` is `func [x] [print x]`)
+            <-    pointfree function (`<- append b` is `func [x] [append b x]`)
 
-        More questionable Symbolic operator
+        Debug use of "drawing-looking" operators that pop off the page (their
+        non-English appearance makes them preferable for this purpose instead
+        of quirkier things like "-- decrements variables")
 
-            =?    true if the values are identical, === seems more logical
+            --    debug dump following variable name and its value
+            **    comment line out
+            !!    breakpoint
+            ++    (unused)
+            ==    section header (TBD, currently strict equality)
+            ??    Debug probe a word, path, block or such
 
-        Added by the rebol-proposals
+        Unapplied in Rebol but used in Red for questionable benefit; these are
+        likely to take on some kind of larger systemic purpose, possibly as
+        console DSL operations:
 
-            ~=    infix loose-equal?
-
-        Maybe okay name for a debugging function
-
-            ??    Debug print a word, path, block or such
-
-        Unapplied in Rebol but used in Red for questionable benefit:
-
-            <<    infix version of prefix shift left (why not strict-lesser?)
-            >>    infix version of prefix shift right (why not strict-greater?)
-
-        Bad things taken out by the proposals that shouldn't be legal:
-
-            <>    same function as != yet is jarringly <tag>-like (infix)
-            //    MODULO, but natural words shouldn't have slashes (infix)
+            <<    infix version of prefix shift left
+            >>    infix version of prefix shift right
 
         Deprecated shorthands for terms defined elsewhere, which have been
         reclaimed for Rebmu as "free terms" by the rebol-proposals (and should
@@ -139,14 +148,13 @@ Rebol [
             CD    change directory
             DS    temporary stack debug
 
-        It's worth pointing out that there is a proposal that would open up
-        several more options in two-character space.  It's hard to predict
-        how many of these might find meaningful default usaages in the box,
-        such as -> or >< or |>- ... but sticking to two-character space
-        these are what the proposals would define if they could:
+        Several more options were opened up in the two character space by the
+        so-called "arrow words".  They are things like |> and >< etc.  These
+        have experiments but nothing settled down completely.
 
-            ~<    loose-lesser?
-            ~>    loose-greater?
+        There are tricks for `/` acting like a WORD! even though it is actually
+        a path.  That opens up some potential space for `//`, `/.`, `./` and
+        `..` as being operations, but this concept has not been explored.
 
 
         ### SINGLE CHARACTER PLUS QUESTION MARK
@@ -156,30 +164,30 @@ Rebol [
         if E? is EQUAL? and EM? is EMAIL?
 
         A? => and?
-        B? ;-- could be... block?
-        C? ;-- could be... char?
+        B?  ; could be... block?
+        C?  ; could be... char?
         D? => distinct?
         E? => equal?
         F?
         G? => greater?
         H? => head?
-        I? ;-- could be... integer?
+        I?  ; could be... integer?
         J?
         K?
         L? => lesser?
-        M? => match? ;-- MM? is mismatch.
+        M? => match?  ; MM? is mismatch.
         N? => negative?
         O? => or?
         P? => positive?
         Q?
         R?
         S? => same?
-        T? => tail? ;-- can't be TRUE?, TAIL? is more important
+        T? => tail?  ; can't be TRUE?, TAIL? is more important
         U? => unequal?
         V? => value?
         W?
         X? => xor?
-        Y? => true? ;-- (a.k.a. yes?)
+        Y? => true?  ; (a.k.a. yes?)
         Z? => zero?
     }
 ]
@@ -234,36 +242,34 @@ rebmu-base-context: make object! compose [
 ; Shorcuts for datatypes.  Establishes both the type and the query functions.
 ; (so remapping "em" for EMAIL! makes EM! => EMAIL! and EM? => EMAIL?)
 
-    (remap-datatype email! "em")
+    (remap-datatype action! "ac")
     (remap-datatype block! "bl")
-    (remap-datatype char! "ch")
+    ; CHAR! is a "fake type" (meta word), review
     (remap-datatype decimal! "dc")
+    (remap-datatype email! "em")
     (remap-datatype error! "er")
-    (remap-datatype function! "fn")
     (remap-datatype get-word! "gw")
-    (remap-datatype paren! "pn")
+    (remap-datatype group! "gr")
     (remap-datatype integer! "in")
     (remap-datatype pair! "pr")
     (remap-datatype percent! "pc")
-    (remap-datatype closure! "cl")
     (remap-datatype logic! "lc")
     (remap-datatype map! "mp")
     (remap-datatype object! "ob")
     (remap-datatype path! "pa")
-    (remap-datatype lit-word! "lw")
-    (remap-datatype refinement! "rf")
-    (remap-datatype string! "st")
+    ; LIT-WORD! is a "fake type" (meta word), review
+    ; REFINEMENT! is a "fake type" (meta word), review
     (remap-datatype time! "tm")
     (remap-datatype tuple! "tu")
+    (remap-datatype text! "tx")
     (remap-datatype file! "fi")
     (remap-datatype word! "wd")
     (remap-datatype tag! "tg")
     (remap-datatype money! "mn")
     (remap-datatype binary! "bi")
 
-    ; there is no "to-none" operation in Rebol, all other datatypes have it...
-    (remap-datatype/noconvert none! "nn")
-    (remap-datatype/noconvert unset! "un")
+    ; there is no "to-blank" operation in Rebol, all other datatypes have it...
+    (remap-datatype/noconvert blank! "bn")
 
     ;----------------------------------------------------------------------
     ; TYPE CONVERSION SHORTHANDS
@@ -276,58 +282,15 @@ rebmu-base-context: make object! compose [
     t: :to
     tw: :to-word-mu
     tsw: :to-set-word
-    ts: :to-string-mu
+    tt: :to-text-mu
     tc: :to-char-mu
     tb: :to-block
     ti: :to-integer
 
     ;----------------------------------------------------------------------
-    ; CONDITIONALS
-    ;----------------------------------------------------------------------
-
-    ;-- Rebol's IF is already two characters
-    i: :if
-
-    ei: :either
-    e: :ei
-
-    sw: :switch
-    ca: :case ;-- should this be CS if CLOSURE is to be omitted?
-    caa: :case/all
-
-    ;----------------------------------------------------------------------
-    ; LOOPING CONSTRUCTS
-    ;----------------------------------------------------------------------
-
-    lp: :loop
-    l: :lp
-
-    fe: :for-each
-    f: :fe
-
-    fr: :for
-    ev: :every
-    me: :map-each
-    rme: :remove-each-mu
-    fa: :forall
-    fv: :forever
-
-    wh: :while
-    w: :wh
-
-    ut: :until
-    u: :ut
-
-    cn: :continue
-    br: :break
-    tr: :trap
-    ct: :catch
-    am: :attempt
-
-    qt: :quit
-
-    ;----------------------------------------------------------------------
     ; DEFINING FUNCTIONS
+    ;
+    ; Note: This is done first because its used in later definitions.
     ;
     ; The behavior of FUNCTION and FUNC vs. CLOSURE and CLOS has to do with
     ; performance optimization, and ideally only the closure and clos
@@ -338,13 +301,117 @@ rebmu-base-context: make object! compose [
 
     fn: :function-mu
 
-    dz: :does
+    ds: :does
+
+    ; DX is a variadic branch builder, delegated to by most constructs that
+    ; want to be able to "do more" than just a branch.
+    ;
+    dx: func [:args [<opt> any-value! <variadic>]] [
+        a: take args
+        if block? a [return does a]
+        if word? a [
+            ; !!! TBD
+        ]
+    ]
+    d: :dx
+
+    ; Function dialects in Rebmu employ a method of quoting their arguments
+    ; literally.  If not blocks, they are read as *instructions* for what spec
+    ; or body to build.  It is a compact dialect for function construction.
+    ;
+    fq: :funqtion-mu
+
+    ; FX is a particularly tweaked version of FQ that pulls from a list of
+    ; helpful memoizations of names for args and locals.  It's designed to
+    ; not stomp on common abbreviations like I for IF.
+    ;
+    ; !!! To be written...
+    ;
+    fx: :fq
+
+    f: :fx
+
+    ;----------------------------------------------------------------------
+    ; CONDITIONALS
+    ;----------------------------------------------------------------------
+
+    ; Conditionals in Rebmu are less conservative than in Rebol.  They are
+    ; willing to handle non-BLOCK! and non-FUNCTION! branches, returning the
+    ; values as-is.  For why this is not done in general, see:
+    ;
+    ; https://forum.rebol.info/t/backpedaling-on-non-block-branches/476
+    ;
+    ; !!! Should they also take isotope forms and treat them as false or pass
+    ; them through without running any brances?
+
+    if: :if-mu
+    i: :if
+
+    either: :either-mu
+    ei: :either
+
+    un: adapt :if [condition: not to-value :condition]
+
+    es: :else
+    e: :es
+
+    th: :then
+
+    ao: :also  ; AS is a valid language keyword, AL is ALL
+
+    sw: :switch
+    cs: :case
+    csa: :case/all
+
+
+    ;----------------------------------------------------------------------
+    ; LOOPING CONSTRUCTS
+    ;----------------------------------------------------------------------
+
+    lp: :loop  ; L is LET
+
+    fe: :for-each
+
+    fr: :for  ; !!! FOR-MU to tolerate more options, so `f x 10 [...]` works
+    f: :fr
+
+    ev: :every
+    me: :map-each
+    rme: :remove-each-mu
+    cy: :cycle
+
+    rp: :repeat  ; R is RETURN inside a function (globally R acts as QUIT)
+
+    ; More valuable to have a single character looping construct take U than
+    ; to have UNLESS take it.
+    ;
+    ut: :until
+    ux: macro [] [[until dx]]
+    u: :ux
+
+    uz: macro [] [[until .zero?]]
+    ue: macro [] [[until .equal?]]
+    ul: macro [] [[until .lesser?]]
+    ug: macro [] [[until .greater?]]
+
+    cn: :continue
+    br: :break  ; BK is BACK
+    tr: :trap
+    ct: :catch
+    am: :attempt
+
+    qt: :quit
+    r: :qt  ; inside functions, R is return; this is done to save Q for quote
 
     ;----------------------------------------------------------------------
     ; OBJECTS AND CONTEXTS
     ;----------------------------------------------------------------------
+
+    lt: :let
+    l: :lt
+
     us: :use
-    ob: :object
+    ob: specialize :make [type: object!]
 
     ;----------------------------------------------------------------------
     ; SERIES OPERATIONS
@@ -353,11 +420,9 @@ rebmu-base-context: make object! compose [
     po: :poke
     pc: :pick
     ap: :append
-    apo: :append/only
-    is: :insert ; IN is a keyword
-    iso: :insert/only
-    isp: :insert/part
-    ispo: :insert/part/only
+    ir: :insert  ; IN, IS, IT are standalone words
+    irp: :insert/part
+    ird: :insert/part/dup
     tk: :take
     mno: :minimum-of
     mxo: :maximum-of
@@ -365,17 +430,13 @@ rebmu-base-context: make object! compose [
     rv: :reverse
     sl: :split
 
-    ;-- note that Rebol uses RM for a DELETE alias, that's not very useful
-    ;-- if anything in the box RM should be a shorthand for it's Rebol's
-    ;-- notion of REMOVE, not Unix's.  Overriding in an act of protest...
-    ;--    --Dr. Rebmu
     rm: :remove
 
-    rp: :replace ;-- REPEND and REPEAT deprecated in Rebmu
-    rpa: :replace/all
-    rpac: :replace/all/case
-    rpat: :replace/all/tail
-    rpact: :replace/all/case/tail
+    rl: :replace  ; RP is repeat, REPEND is deprecated in Ren-C
+    rla: :replace/all
+    rlac: :replace/all/case
+    rlat: :replace/all/tail
+    rlact: :replace/all/case/tail
 
     hd: :head
     tl: :tail
@@ -385,40 +446,39 @@ rebmu-base-context: make object! compose [
     chp: :change/part
     sk: :skip
     fi: :find
-    fio: :find/only
     fis: :find/skip
     uq: :unique
     pa: :parse-mu
     pp: :pre-parse-mu
 
-    ln: :length
+    ln: specialize :reflect [property: 'length]
 
-    os: :offset-of ;-- being a real word, OF might get used in the language
+    os: :offset-of  ; OF is used in the language
     ix: :index-of
-    ty: :type-of
+    ty: specialize :reflect [property: 'type]
     t?: :tail?
     h?: :head?
     m?: :empty?
     v?: :value?
 
-    fs: :first ; FR might be confused with fourth
+    fs: :first  ; FR might be confused with fourth
     sc: :second
     th: :third
     fh: :fourth ; FR might be confused with first
     ff: :fifth
     sx: :sixth
     sv: :seventh
-    eh: :eighth ; EI is either, and EG is either-greater
+    eh: :eighth  ; EI is either, and EG is either-greater
     nh: :ninth
     tt: :tenth
-    ls: :last ; override LS list directory?  We need shell dialect
+    ls: :last  ; override LS list directory?  We need SHELL dialect
 
     ;----------------------------------------------------------------------
     ; PORTS
     ;----------------------------------------------------------------------
 
-    del: :delete ; If shipping in console, why not use the matching term?
-    dl: :delete ; Corresponding to the act of protest of changing RM
+    del: :delete  ; If shipping in console, why not use the matching term?
+    dl: :delete  ; Corresponding to the act of protest of changing RM
 
     ;----------------------------------------------------------------------
     ; METAPROGRAMMING
@@ -431,10 +491,9 @@ rebmu-base-context: make object! compose [
     re: :reduce
     rj: :rejoin
     cl: :collect-mu
-    lda: :load/all
 
-    qo: :quote
-    q: :qo
+    qo: :quote  ; QU is QUIT
+    q: :qo  ; more useful to abbreviate further than Q for QUIT
 
     ;----------------------------------------------------------------------
     ; MATH AND LOGIC OPERATIONS
@@ -452,13 +511,13 @@ rebmu-base-context: make object! compose [
 
     lg10: :log-10
     lg2: :log-2
-    ;-- is L2: LG2 worth it, or L+digit be used for something else?
-    lge: :log-e ;-- can't do "(L)og (N)atural" as LN, due to LN: LENGTH-OF
-    ;-- is LE: LGE worth it, or is LE better used or something else?
-    lg: :lg10 ;-- Rebmu's 10-fingered-human bias, also shortens LG10 more
+    ; is L2: LG2 worth it, or L+digit be used for something else?
+    lge: :log-e  ; can't do "(L)og (N)atural" as LN, due to LN: LENGTH-OF
+    ; is LE: LGE worth it, or is LE better used or something else?
+    lg: :lg10  ; Rebmu's 10-fingered-human bias, also shortens LG10 more
 
-    ; ** is the infix power operator, but infix is sometimes not what you
-    ; want so Rebol also has power as a prefix variant
+    ; POW is the infix power operator, but infix is sometimes not what you
+    ; want so Rebol also has power as a prefix variant.
     pw: :power
 
     ; CONDITIONAL LOGIC
@@ -469,10 +528,10 @@ rebmu-base-context: make object! compose [
     ; and AND are only 3-letter.  So it's probably better to save AN/AD for
     ; other purposes (XO/XR less useful...)
 
-    ;-- NT is prefix NOT (itself an alias for NOT?), we took N? for NEGATIVE?
+    ; NT is prefix NOT (itself an alias for NOT?), we took N? for NEGATIVE?
     a?: :and?
-    o?: :or?
-    x?: :xor?
+  ; o?: :or?  ; !!! Does not exist, needs to be added
+  ; x?: :xor?  ; !!! same
 
 
     ; BITWISE
@@ -487,11 +546,12 @@ rebmu-base-context: make object! compose [
     un: :union
     df: :difference
 
-
     ev?: :even?
-    op?: :odd?
-    ++: :increment-mu
-    --: :decrement-mu
+    od?: :odd?
+    inc: :increment-mu
+    ic: :inc
+    dec: :decrement-mu
+    dc: :dec
     g?: :greater?
     ge?: :greater-or-equal?
     l?: :lesser?
@@ -500,16 +560,19 @@ rebmu-base-context: make object! compose [
     n?: :negative?
     p?: :positive?
     sg: :sign-of
-    y?: :true?
-    n?: func [val] [not true? val] ; can be useful
+    y?: :did
+    n?: :not
     mn: :min
     mx: :max
-    ay: :any
+
+    ; The void-tolerating forms are more useful
+    ay: :any  ; AN is its own word
     al: :all
 
     ; to-integer (TI) always rounds down.  A "CEIL" operator is useful,
     ; though it's a bit verbose in Rebol as TO-INTEGER ROUND/CEILING VALUE.
     ; May be common enough in Code Golf math to warrant inclusion.
+    ;
     ce: :ceiling-mu
 
     ;----------------------------------------------------------------------
@@ -532,13 +595,14 @@ rebmu-base-context: make object! compose [
 
     rd: :read
     wr: :write
+    wrs: :write-stdout ;-- was PRINT/ONLY
     pb: :probe
 
     ri: :readin-mu
     r: :ri
 
     rl: :read/lines
-    nl: :newline
+    nl: :newline  ; already abbreviated as LF for line feed (?)
 
     ;----------------------------------------------------------------------
     ; STRINGS
@@ -563,37 +627,37 @@ rebmu-base-context: make object! compose [
     ; tildes looked better.
     ;----------------------------------------------------------------------
 
-    cp: :copy
-    c: :CP
-
     mk: :make
+
+    cp: :copy
+    c: :cp
     cpd: :copy/deep
     cpp: :copy/part
     cppd: :copy/part/deep
 
-    a~: :array
-    ai~: :array/initial
-    b~: does [copy []] ; two chars cheaper than cp[]
-    h~: :to-http-url-mu
-    hs~: :to-http-url-mu/secure
-    i~: :make-integer-mu
-    m~: :make-matrix-mu
-    s~: does [copy ""] ; two chars cheaper than cp""
-    si~: :make-string-initial-mu
+    ; !!! ~ became reserved for use with BAD-WORD!.
+  ;  A~: :array
+  ;  AI~: :array/initial
+  ;  B~: does [copy []] ; two chars cheaper than cp[]
+  ;  H~: :to-http-url-mu
+  ;  HS~: :to-http-url-mu/secure
+  ;  I~: :make-integer-mu
+  ;  M~: :make-matrix-mu
+  ;  S~: does [copy ""] ; two chars cheaper than cp""
+  ;  SI~: :make-string-initial-mu
 
     ;----------------------------------------------------------------------
     ; MISC
     ;----------------------------------------------------------------------
 
-    as: :also
-    nn: :none
+    bn: :blank
     st: :set
     gt: :get
 
     en: :encode
     swp: :swap-exchange-mu
     fm: :format
-    ;os: :onesigned-mu
+  ; os: :onesigned-mu
     sp: :space
 
     ; !!! Predefined character sets are something that has never been fully
@@ -663,24 +727,26 @@ rebmu-base-context: make object! compose [
     ;
     ; Idea is that these modify their arguments to save you from situations
     ; where you might otherwise have to make things the target of an assignment,
-    ; like [M: ADD M 2].  Shorter code with a+M2 than Ma+M2, and you also
+    ; like [m: add m 2].  Shorter code with a+M2 than Ma+M2, and you also
     ; are less likely to cause a mushing break.  Note that the plus doesn't
     ; mean "advance" or "add" in this context, LAST+ is actually an
     ; operator which traverses the series backwards.
 
-    a+: :add-modify-mu
-    f+: :first+
-    s+: :subtract-modify-mu
-    n+: :next-modify-mu
-    b+: :back-modify-mu
+ ;   a+: :add-modify-mu
+ ;   f+: :first+
+ ;   s+: :subtract-modify-mu
+ ;   n+: :next-modify-mu
+ ;   b+: :back-modify-mu
 
     ; How strange could we get?  Is it useful to do [Z: EQUALS? Z 3] on any
     ; kind of regular basis?  Maybe if you do that test often after but
     ; don't need the value
+    ;
     =+: :equal-modify-mu
 
     ; what about two character functions?  can they return different
     ; things than their non-modifier counterparts?
+    ;
     ch+: :change-modify-mu
     hd+: :head-modify-mu
     tl+: :tail-modify-mu
