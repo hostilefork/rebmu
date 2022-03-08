@@ -37,6 +37,37 @@ export function-mu: adapt :function [
     ]
 ]
 
+; FUNQTION: Dialecting The Function Definition Process
+;
+; https://forum.rebol.info/t/1796
+;
+; As an example: a naming pattern of a letter and a number could indicate to
+; make 3 args with names starting at that letter:
+;
+;     fqR3[...] => fq r3 [...] -> fn [r s t] [...]
+;
+; Inspired by the mechanic of DOES, if a WORD! naming a function is found when
+; it expects a body block, then that function will be implicit, e.g.
+;
+;     fqR2ay[r + s] => fq r2 ay [r + s] => fn [r s] [ay [r + s]]
+;
+export funqtion-mu: func [arg [<opt> any-value! <variadic>]] [
+    spec: collect [
+        keep switch spec [
+            a [[a]]
+            b [[a b]]
+            c [[a b c]]
+            d [[a b c d]]
+
+            z [[z]]
+            y [[z y]]
+            x [[z y x]]
+            w [[z y x w]]
+        ]
+    ]
+    fn spec body
+]
+
 export to-text-mu: function [
     value
 ][
