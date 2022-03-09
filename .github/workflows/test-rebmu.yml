@@ -1,0 +1,101 @@
+#
+# %test-rebmu.yml
+#
+# For the moment, this is a monolithic testing file which runs the Rebmu
+# example scripts and makes sure that they pass on basic input.  It will be
+# updated as the scripts are brought up to date after 7 years of rot relative
+# to the evolution of the Ren-C language.
+#
+
+name: Test Rebmu Example Scripts
+
+on:
+  push:
+    branches: [
+      master
+    ]
+  pull_request:
+    branches: [
+      master
+    ]
+  workflow_dispatch:  # Allows running this workflow manually from Actions tab
+
+
+jobs:
+  test-rebmu:
+
+
+    # Define release and debug builds on the main desktop platforms.
+    #
+    # (Rather than use the automatic-matrix'ing, we go ahead and list them
+    # manually, because that makes it easier to tweak specifics if desired.)
+    #
+    strategy:
+      matrix:
+        include:  # put in order of visibility importance (shown in UI)
+
+        - os: macos-latest
+          checked: false
+
+        - os: windows-latest
+          checked: false
+
+        - os: ubuntu-latest
+          checked: false
+
+        - os: macos-latest
+          checked: true
+
+        - os: windows-latest
+          checked: true
+
+        - os: ubuntu-latest
+          checked: true
+
+
+    # https://github.com/actions/virtual-environments#available-environments
+    #
+    runs-on: ${{ matrix.os }}
+
+
+    steps:
+
+
+  #====# CHECKOUT STEPS #=====================================================#
+
+
+    # GitHub CI checkout on Windows auto translates LF to CR/LF in files:
+    #
+    # https://github.com/actions/checkout/issues/135
+    #
+    # However, Ren-C is taking the long view on this and prohibiting CR/LF in
+    # source by default.
+    #
+    # https://forum.rebol.info/t/newlina-non-grata/1207
+    # https://forum.rebol.info/t/1264
+    #
+    - name: Disable LF to CRLF Auto Translation In Git
+      if: matrix.os == 'windows-latest'
+      run: |
+        git config --global core.autocrlf false
+        git config --global core.eol lf
+
+
+    # https://github.com/actions/checkout
+    #
+    - uses: actions/checkout@v2
+
+
+  #====# INSTALL R3 INTERPRETER #=============================================#
+
+    - name: Download and Cache the Interpreter
+      uses: metaeducation/ren-c-action@release
+      with:
+        checked: ${{ matrix.checked }}
+
+
+  #====# ROMAN.REBMU #========================================================#
+
+    - name: Roman Numeral Converter
+      run: |
+        r3 tests/roman-test.reb
