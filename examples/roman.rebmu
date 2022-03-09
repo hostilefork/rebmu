@@ -19,9 +19,12 @@ Rebmu [
 ]
 
 ; read string
-rS
+SaskTEXT!
 
 ; j and k both start out at zero
+; j is the last roman digit value
+; k is the overall sum, neglecting j
+J K 0
 
 ; foreach character in string
 feCs[
@@ -29,10 +32,10 @@ feCs[
     Nse[I01V05X10L50C100D500M1000]twC
 
     ; unless J is zero, do the sum step
-    uzJ[
+    inzJ[
         ; K is the sum of K and, if J < N, N - J (while setting N to 0)
         ; ...or otherwise j
-        a+KelJn[asSBnJ N00]j
+        a+KeiL?jN[sbNjEL N00]j
     ]
 
     ; assign n to j

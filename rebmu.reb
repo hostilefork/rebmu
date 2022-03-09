@@ -346,6 +346,7 @@ rebmu-base-context: make object! compose [
 
     if: :if-mu
     i: :if
+    inz: adapt :if [condition: :condition != 0]
 
     either: :either-mu
     ei: :either
@@ -494,6 +495,8 @@ rebmu-base-context: make object! compose [
 
     qo: :quote  ; QU is QUIT
     q: :qo  ; more useful to abbreviate further than Q for QUIT
+
+    el: :elide  ; ES is ELSE
 
     ;----------------------------------------------------------------------
     ; MATH AND LOGIC OPERATIONS
@@ -732,7 +735,7 @@ rebmu-base-context: make object! compose [
     ; mean "advance" or "add" in this context, LAST+ is actually an
     ; operator which traverses the series backwards.
 
- ;   a+: :add-modify-mu
+    a+: :add-modify-mu
  ;   f+: :first+
  ;   s+: :subtract-modify-mu
  ;   n+: :next-modify-mu

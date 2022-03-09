@@ -18,6 +18,9 @@ Rebol [
     }
 ]
 
+while: :lib.loop  ; pending change
+
+
 ; FN aims to be a fully compatible superset of Rebol's FUNCTION.  This means
 ; the spec and body parameters must be evaluative.
 ;
