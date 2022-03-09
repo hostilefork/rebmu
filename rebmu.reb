@@ -792,6 +792,7 @@ export rebmu: function [
     /env "Return runnable object plus environment without executing main"
     /inject "Run some test code in the environment after main function"
         [block! text!]
+    /output "Implicitly print the output result"
 
     <static>
     context (~unset~)
@@ -930,6 +931,10 @@ export rebmu: function [
 
     if error [
         fail error
+    ]
+
+    if output [
+        print [result]
     ]
 
     return get/any 'result
