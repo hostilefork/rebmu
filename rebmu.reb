@@ -40,12 +40,7 @@ Rebol [
         The . character was once available but was taken for TUPLE!.
         The & character was also once available, but reserved for future use.
 
-        ~ is generally not legal in WORD! as it is used to denote BAD-WORD!
-        but the single character ~ is available to be overridden.  Its default
-        behavior is to create an ~unset~ isotope, which may not sound useful in
-        code golf but constructs might decide to treat it in an "unusual" way
-        e.g. to opt out of taking any branch in a conditional.
-
+        ~  ; is hardwired as the "none isotope", variables holding it are unset
         ?
         |
         a  ; usually a program argument or a-function variable
@@ -797,7 +792,7 @@ export rebmu: function [
     /output "Implicitly print the output result"
 
     <static>
-    context (~unset~)
+    context (none)
 ][
     case [
         text? code [
@@ -928,7 +923,7 @@ export rebmu: function [
 
     ; If we exit the last "Rebmu user" context, then clear it
     if outermost [
-        context: ~unset~
+        context: ~
     ]
 
     if error [
