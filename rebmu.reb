@@ -70,7 +70,7 @@ Rebol [
         t => to  ; variants like TSW for TO-SET-WORD trumps T for THEN
         u => until
         v
-        w => while  ; TBD
+        w => while
         x
         y
         z
@@ -389,6 +389,8 @@ rebmu-base-context: make object! compose [
     ut: :until
     ux: macro [] [[until dx]]
     u: :ux
+
+    w: :while
 
     uz: macro [] [[until .zero?]]
     ue: macro [] [[until .equal?]]

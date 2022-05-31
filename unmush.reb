@@ -78,7 +78,7 @@ export unmush: function [
 
             result: copy []
 
-            assert [parse/case value-string [
+            assert [did parse/case value-string [
                 some [
                     opt [
                         lone-apostrophe (
