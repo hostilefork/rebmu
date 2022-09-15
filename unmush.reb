@@ -104,7 +104,7 @@ export unmush: function [
                         opt [lone-digit | lone-symbol]
                     |
                         some upper
-                        opt [[lone-digit | lone-symbol] if (not caps-means-set)] (
+                        opt [[lone-digit | lone-symbol] :(not caps-means-set)] (
                             if caps-means-set and (target-type = word!) [
                                 target-type: set-word!
                                 caps-means-set: false
