@@ -40,7 +40,7 @@ Rebol [
         The . character was once available but was taken for TUPLE!.
         The & character was also once available, but reserved for future use.
 
-        ~  ; is hardwired as the "none isotope", variables holding it are unset
+        ~  ; is hardwired as "quasi null", it evaluates to VOID
         ?
         |
         a  ; usually a program argument or a-function variable
@@ -792,7 +792,7 @@ export rebmu: function [
     /output "Implicitly print the output result"
 
     <static>
-    context (none)
+    context (void)
 ][
     case [
         text? code [
