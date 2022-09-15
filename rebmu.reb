@@ -916,7 +916,7 @@ export rebmu: function [
         return context
     ]
 
-    let [error result]: trap [
+    result: sys.util.enrescue [
         do inject
         do code
     ]
@@ -926,13 +926,13 @@ export rebmu: function [
         context: ~
     ]
 
-    if error [
-        fail error
+    if error? result [
+        fail result
     ]
 
     if output [
         print [result]
     ]
 
-    return get/any 'result
+    return unmeta result
 ]
