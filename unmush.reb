@@ -63,7 +63,7 @@ export unmush: function [
                 find upper first value-string
             ]
 
-            make-lone-rule: func [rule] [
+            make-lone-rule: lambda [rule] [
                 compose [(rule) not (rule)]
             ]
 

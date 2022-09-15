@@ -52,7 +52,7 @@ export function-mu: adapt :function [
 ;
 ;     fqR2ay[r + s] => fq r2 ay [r + s] => fn [r s] [ay [r + s]]
 ;
-export funqtion-mu: func [arg [<opt> any-value! <variadic>]] [
+export funqtion-mu: lambda [arg [<opt> any-value! <variadic>]] [
     spec: collect [
         keep switch spec [
             a [[a]]
@@ -69,18 +69,18 @@ export funqtion-mu: func [arg [<opt> any-value! <variadic>]] [
     fn spec body
 ]
 
-export if-mu: func [condition branch] [
+export if-mu: lambda [condition branch] [
     lib.if :condition
         (match [block! action!] :branch else '[:branch])
 ]
 
-export either-mu: func [condition true-branch false-branch] [
+export either-mu: lambda [condition true-branch false-branch] [
     lib.either :condition
         (match [block! action!] :true-branch else '[:true-branch])
         (match [block! action!] :false-branch else '[:false-branch])
 ]
 
-export to-text-mu: function [
+export to-text-mu: lambda [
     value
 ][
     either any-word? value [
@@ -99,7 +99,7 @@ export to-text-mu: function [
     ]
 ]
 
-export to-char-mu: function [
+export to-char-mu: lambda [
     value
 ][
     either any-word? value [
@@ -118,7 +118,7 @@ export to-char-mu: function [
     ]
 ]
 
-export to-word-mu: function [value] [
+export to-word-mu: lambda [value] [
     either char? value [
         to-word to-text value
     ][
@@ -126,34 +126,31 @@ export to-word-mu: function [value] [
     ]
 ]
 
-export to-http-url-mu: function ['target [word! path! text!] /secure][
+export to-http-url-mu: lambda ['target [word! path! text!] /secure][
     join either secure [https://][http://] target
 ]
 
-export caret-mu: function ['value] [
+export caret-mu: lambda ['value] [
     switch type of :value [
-        text! [return to-text debase value]
+        text! [to-text debase value]
 
         fail "caret-mu needs to be thought out for non-strings, see rebmu.reb"
     ]
 ]
 
-export redefine-mu: func ['dest 'source] [
-    ;-- Has to be a FUNC to set in caller's environment...
-    ;-- or does it?  Look into that.
-
+export redefine-mu: lambda ['dest 'source] [
     set :dest get :source
 ]
 
-export make-matrix-mu: function [columns value rows] [
+export make-matrix-mu: lambda [columns value rows] [
     result: copy []
     loop rows [
-        append/only result array/initial columns value
+        append result array/initial columns value
     ]
     result
 ]
 
-export make-string-initial-mu: function [length value] [
+export make-string-initial-mu: lambda [length value] [
     result: copy ""
     loop length [
         append result value
@@ -162,7 +159,7 @@ export make-string-initial-mu: function [length value] [
 ]
 
 ; if a pair, then the first digit is the digit
-export make-integer-mu: function [value] [
+export make-integer-mu: lambda [value] [
     switch type of :value [
         pair! [to-integer first value * (10 ** second value)]
         integer! [to-integer 10 ** value]
@@ -171,7 +168,7 @@ export make-integer-mu: function [value] [
     ]
 ]
 
-export quoth-mu: function [
+export quoth-mu: lambda [
     'arg
 ][
     switch type of :arg [
@@ -188,7 +185,7 @@ export quoth-mu: function [
     ]
 ]
 
-export insert-at-mu: function [
+export insert-at-mu: lambda [
     {Just insert and at combined}
     series
     index
@@ -197,11 +194,9 @@ export insert-at-mu: function [
     insert at series index value
 ]
 
-export increment-mu: func ['word-or-path] [
-    ;-- Has to be a FUNC to set in callers environment...
-    ;-- ...or could we leverage the caller's binding?
-
-    also get :word-or-path (
+export increment-mu: lambda ['word-or-path] [
+    get :word-or-path
+    elide (
         either path? :word-or-path [
             set :word-or-path add-mu old 1
         ][
@@ -210,11 +205,9 @@ export increment-mu: func ['word-or-path] [
     )
 ]
 
-export decrement-mu: func ['word-or-path ] [
-    ;-- Has to be a FUNC to set in callers environment...
-    ;-- ...or could we leverage the caller's binding?
-
-    also get :word-or-path (
+export decrement-mu: lambda ['word-or-path ] [
+    get :word-or-path
+    elide (
         either path? :word-or-path [
             set :word-or-path subtract-mu old 1
         ][
@@ -223,7 +216,7 @@ export decrement-mu: func ['word-or-path ] [
     )
 ]
 
-export readin-mu: func [
+export readin-mu: lambda [
     {Use data type after getting the quoted argument to determine input coercion}
     'value
 ][
@@ -243,7 +236,7 @@ export readin-mu: func [
 
 ; Don't think want to call it not-mu because we probably want a more powerful
 ; operator defined as ~ in order to compete with GolfScript/etc, rethink this.
-export inversion-mu: function [
+export inversion-mu: lambda [
     value
 ][
     switch type of :value [
@@ -257,7 +250,7 @@ export inversion-mu: function [
     ]
 ]
 
-export next-mu: function [arg] [
+export next-mu: lambda [arg] [
     switch type of :arg [
         integer! [arg + 1]
     ] else [
@@ -265,7 +258,7 @@ export next-mu: function [arg] [
     ]
 ]
 
-export back-mu: function [arg] [
+export back-mu: lambda [arg] [
     switch type of :arg [
         integer! [arg - 1]
     ] else [
@@ -280,7 +273,7 @@ export collect-mu: adapt :collect [  ; like COLLECT but K and KP shorthands for 
     ]
 ]
 
-export remove-each-mu: function [
+export remove-each-mu: lambda [
     'word [get-word! word! block!]
     data [any-series!]
     body [block!]
@@ -289,7 +282,7 @@ export remove-each-mu: function [
     data
 ]
 
-export swap-exchange-mu: func [
+export swap-exchange-mu: lambda [
     "Swap contents of variables."
     a [word! any-series!
         ; gob! is in r3 only
@@ -298,9 +291,6 @@ export swap-exchange-mu: func [
         ; gob! is in r3 only
     ]
 ][
-    ;-- Has to be a FUNC to set in callers environment...
-    ;-- ...or could we leverage the caller's binding?
-
     if not equal? (type of a) (type of b) [
         fail "swap-mu must be used with common types"
     ]
@@ -313,11 +303,11 @@ export swap-exchange-mu: func [
     ]
 ]
 
-export div-mu: function [value1 value2] [
+export div-mu: lambda [value1 value2] [
     to-integer divide value1 value2
 ]
 
-export add-mu: function [value1 value2] [
+export add-mu: lambda [value1 value2] [
     switch type of :value1 [
         text! [
             skip value1 value2
@@ -336,7 +326,7 @@ export add-mu: function [value1 value2] [
     ]
 ]
 
-export subtract-mu: function [value1 value2] [
+export subtract-mu: lambda [value1 value2] [
     switch type of :value1 [
         block! [
             result: copy value1
@@ -352,7 +342,7 @@ export subtract-mu: function [value1 value2] [
     ]
 ]
 
-export negate-mu: function [value] [
+export negate-mu: lambda [value] [
     switch type of :value [
         block! [
             result: copy value
@@ -368,66 +358,40 @@ export negate-mu: function [value] [
     ]
 ]
 
-export add-modify-mu: func ['value value2] [
-    ;-- Has to be a FUNC to set in callers environment...
-    ;-- ...or could we leverage the caller's binding?
-
+export add-modify-mu: lambda ['value value2] [
     set :value add-mu get :value value2
 ]
 
-export subtract-modify-mu: func ['value value2] [
-    ;-- Has to be a FUNC to set in callers environment...
-    ;-- ...or could we leverage the caller's binding?
-
+export subtract-modify-mu: lambda ['value value2] [
     set :value subtract-mu get :value value2
 ]
 
-export equal-modify-mu: func ['value value2] [
-    ;-- Has to be a FUNC to set in callers environment...
-    ;-- ...or could we leverage the caller's binding?
-
+export equal-modify-mu: lambda ['value value2] [
     set :value equals? get :value value2
 ]
 
-export next-modify-mu: func ['value value2] [
-    ;-- Has to be a FUNC to set in callers environment...
-    ;-- ...or could we leverage the caller's binding?
-
+export next-modify-mu: lambda ['value value2] [
     set :value next get :value value2
 ]
 
-export back-modify-mu: func ['value value2] [
-    ;-- Has to be a FUNC to set in callers environment...
-    ;-- ...or could we leverage the caller's binding?
-
+export back-modify-mu: lambda ['value value2] [
     set :value back get :value value2
 ]
 
-export change-modify-mu: func ['series value] [
-    ;-- Has to be a FUNC to set in callers environment...
-    ;-- ...or could we leverage the caller's binding?
-
-    also [change get :series value] [first+ :series]
+export change-modify-mu: lambda ['series value] [
+    change get :series value
+    elide first+ :series
 ]
 
-export head-modify-mu: func ['series] [
-    ;-- Has to be a FUNC to set in callers environment...
-    ;-- ...or could we leverage the caller's binding?
-
+export head-modify-mu: lambda ['series] [
     set :series head get :series
 ]
 
-export tail-modify-mu: func ['series] [
-    ;-- Has to be a FUNC to set in callers environment...
-    ;-- ...or could we leverage the caller's binding?
-
+export tail-modify-mu: lambda ['series] [
     set :series tail get :series
 ]
 
-export skip-modify-mu: func ['series offset] [
-    ;-- Has to be a FUNC to set in callers environment...
-    ;-- ...or could we leverage the caller's binding?
-
+export skip-modify-mu: lambda ['series offset] [
     set :series skip get :series offset
 ]
 
@@ -459,15 +423,15 @@ export pre-parse-mu: use [digit lower-alpha upper-alpha hex-digit subs] [
         ]
 
         parse parse-rule [some rule]
-        parse-rule
+        return parse-rule
     ]
 ]
 
 export parse-mu: func [input [any-series!] rules [block! text! char! blank!]] [
     if block? rules [rules: pre-parse-mu rules]
-    parse/case input rules
+    return parse/case input rules
 ]
 
-export ceiling-mu: function [value] [
+export ceiling-mu: lambda [value] [
     to-integer round/ceiling value
 ]

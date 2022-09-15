@@ -218,7 +218,7 @@ remap-datatype: function [type [datatype!] shorter [text!] /noconvert] [
             load-value unspaced [shorter "-" ":"] load-value unspaced [":" "to-" stem]
         ]
     ]
-    bind result system.contexts.user
+    return bind result system.contexts.user
 ]
 
 
