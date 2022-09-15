@@ -147,7 +147,7 @@ export unmush: function [
 
                         target: load run-string
 
-                        append result :target
+                        append result spread target
                         target-type: word!
                     )
                 ]
@@ -192,7 +192,7 @@ export unmush: function [
                         ; path, and we're done constructing it so add to the result
                         ;
                         insert temp-path take/last :unmushed
-                        insert/only result temp-path
+                        insert result temp-path
                         temp-path: none
                     ]
                     if not head? pos [
@@ -206,7 +206,7 @@ export unmush: function [
                     ; any symbols left over in the block after the above two
                     ; checks aren't parts of a path, so insert them as-is
                     ;
-                    insert result :unmushed
+                    insert result spread unmushed
                 ][
                     ;
                     ; If the unmush didn't return a block, then just consider its
@@ -264,13 +264,13 @@ export unmush: function [
             result: as (type of value) copy []
             for-each elem value [
                 unmushed: unmush :elem
-                either all [
+                all [
                     not block? :elem
                     block? :unmushed
-                ][
+                ] then [
+                    append result spread unmushed
+                ] else [
                     append result :unmushed
-                ][
-                    append/only result :unmushed
                 ]
             ]
 

@@ -214,7 +214,7 @@ remap-datatype: function [type [datatype!] shorter [text!] /noconvert] [
         load-value unspaced [shorter "?" ":"] load-value unspaced [":" stem "?"]
     ]
     if not noconvert [
-        append result reduce [
+        append result spread reduce [
             load-value unspaced [shorter "-" ":"] load-value unspaced [":" "to-" stem]
         ]
     ]
@@ -885,7 +885,7 @@ export rebmu: function [
 
     if outermost [
         context: copy rebmu-base-context
-        append context args
+        append context spread args
 
         ; Rebmu's own behavior replaces DO, no /NEXT support yet
         extend context 'do func [value] [
