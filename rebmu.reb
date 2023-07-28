@@ -432,8 +432,6 @@ rebmu-base-context: make object! compose [
     rl: :replace  ; RP is repeat, REPEND is deprecated in Ren-C
     rla: :replace/all
     rlac: :replace/all/case
-    rlat: :replace/all/tail
-    rlact: :replace/all/case/tail
 
     hd: :head
     tl: :tail
