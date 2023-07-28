@@ -207,8 +207,8 @@ import %mulibrary.reb
 
 
 ; returns a block of definitions to include in the context
-remap-datatype: function [type [datatype!] shorter [text!] /noconvert] [
-    stem: head remove back tail to-text to-word type
+remap-datatype: function [type [type-word!] shorter [text!] /noconvert] [
+    stem: to-text to-word type
     result: reduce [
         load-value unspaced [shorter "!" ":"] load-value unspaced [":" stem "!"]
         load-value unspaced [shorter "?" ":"] load-value unspaced [":" stem "?"]
@@ -248,7 +248,6 @@ rebmu-base-context: make object! compose [
     (remap-datatype integer! "in")
     (remap-datatype pair! "pr")
     (remap-datatype percent! "pc")
-    (remap-datatype logic! "lc")
     (remap-datatype map! "mp")
     (remap-datatype object! "ob")
     (remap-datatype path! "pa")
@@ -457,7 +456,8 @@ rebmu-base-context: make object! compose [
     t?: :tail?
     h?: :head?
     m?: :empty?
-    v?: :value?
+
+    ; v?: :value?  ; there's no value? anymore
 
     fs: :first  ; FR might be confused with fourth
     sc: :second
@@ -792,7 +792,7 @@ export rebmu: function [
     /output "Implicitly print the output result"
 
     <static>
-    context (void)
+    context (null)
 ][
     case [
         text? code [
@@ -881,7 +881,7 @@ export rebmu: function [
     ; This allows us to effectively create a "new" user context holding all
     ; the Rebmu overrides.
 
-    outermost: unset? 'context
+    outermost: null? context
 
     if outermost [
         context: copy rebmu-base-context
