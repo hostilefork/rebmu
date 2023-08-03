@@ -80,13 +80,13 @@ export unmush: function [
 
             assert [did parse/case value-string [
                 some [
-                    opt [
+                    try [
                         lone-apostrophe (
                             target-type: lit-word!
                             caps-means-set: true
                         )
                     ]
-                    opt [
+                    try [
                         lone-colon (
                             target-type: get-word!
                             caps-means-set: true
@@ -96,15 +96,15 @@ export unmush: function [
                     begin-run: <here>
 
                     [
-                        opt symbol some lower (
+                        try symbol some lower (
                             if target-type = word! [
                                 caps-means-set: false
                             ]
                         )
-                        opt [lone-digit | lone-symbol]
+                        try [lone-digit | lone-symbol]
                     |
                         some upper
-                        opt [[lone-digit | lone-symbol] :(not caps-means-set)] (
+                        try [[lone-digit | lone-symbol] :(not caps-means-set)] (
                             if caps-means-set and (target-type = word!) [
                                 target-type: set-word!
                                 caps-means-set: false
