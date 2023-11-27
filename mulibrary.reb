@@ -427,7 +427,7 @@ export pre-parse-mu: use [digit lower-alpha upper-alpha hex-digit subs] [
     ]
 ]
 
-export parse-mu: func [input [any-series!] rules [block! text! char! blank!]] [
+export parse-mu: func [input [any-series!] rules [block! text! char? blank!]] [
     if block? rules [rules: pre-parse-mu rules]
     return parse/case input rules
 ]

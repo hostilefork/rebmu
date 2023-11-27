@@ -237,12 +237,13 @@ rebmu-base-context: make object! compose [
 ; Shorcuts for datatypes.  Establishes both the type and the query functions.
 ; (so remapping "em" for EMAIL! makes EM! => EMAIL! and EM? => EMAIL?)
 
-    (remap-datatype action! "ac")
+    ; ACTION! is a "type constraint" in Ren-C, review
     (remap-datatype block! "bl")
-    ; CHAR! is a "fake type" (meta word), review
+    ; CHAR! is a "type constraint" in Ren-C, review
     (remap-datatype decimal! "dc")
     (remap-datatype email! "em")
     (remap-datatype error! "er")
+    (remap-datatype frame! "fr")
     (remap-datatype get-word! "gw")
     (remap-datatype group! "gr")
     (remap-datatype integer! "in")
@@ -251,8 +252,8 @@ rebmu-base-context: make object! compose [
     (remap-datatype map! "mp")
     (remap-datatype object! "ob")
     (remap-datatype path! "pa")
-    ; LIT-WORD! is a "fake type" (meta word), review
-    ; REFINEMENT! is a "fake type" (meta word), review
+    ; LIT-WORD! is a "type constraint" in Ren-C, review
+    ; REFINEMENT! is a "type constraint" in Ren-C, review
     (remap-datatype time! "tm")
     (remap-datatype tuple! "tu")
     (remap-datatype text! "tx")
